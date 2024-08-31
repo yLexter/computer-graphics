@@ -1,5 +1,4 @@
-#import tkinter as tk
-#import tk
+import tkinter as tk
 
 #print(tk.TkVersion)
 #NDCX
@@ -76,6 +75,6 @@ canvas.pack(padx=3, pady=3)
 
 yDoPixel = NDV - DCY #Vertical (dado pelo usuário) - Altura da Tela (calculado)
 
-canvas.create_rectangle(DCX, yDoPixel, DCX + 10, yDoPixel + 10, fill="black")
+canvas.create_rectangle(DCX, yDoPixel, DCX, yDoPixel, fill="black")
 
 tela.mainloop()
