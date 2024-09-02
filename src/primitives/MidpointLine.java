@@ -8,12 +8,11 @@ import java.awt.image.BufferedImage;
 
 public class MidpointLine extends BasePanel {
 
-    private BufferedImage image;
-
     public MidpointLine(int width, int height) {
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     }
 
+    @Override
     public void setPixel(int x, int y, int color) {
         int screenX = x + image.getWidth() / 2;
         int screenY = image.getHeight() / 2 - y;
@@ -23,7 +22,7 @@ public class MidpointLine extends BasePanel {
         }
     }
 
-    private void drawLine(int x1, int y1, int x2, int y2) {
+    public void drawLine(int x1, int y1, int x2, int y2) {
         int dx = Math.abs(x2 - x1);
         int dy = Math.abs(y2 - y1);
         int sx = (x1 < x2) ? 1 : -1;

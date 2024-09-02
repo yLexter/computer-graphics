@@ -40,6 +40,7 @@ public class CircleExplicitInputs extends JPanel {
             try {
                 int radius = Integer.parseInt(radiusField.getText());
 
+                // ToDo Mais números magicos
                 JFrame frame = new JFrame("Algoritmo Circulo Explicito");
                 CircleExplicit circleExplicit = new CircleExplicit(800, 600);
 

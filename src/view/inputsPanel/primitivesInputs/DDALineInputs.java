@@ -57,7 +57,7 @@ public class DDALineInputs extends JPanel {
             y2 =  Integer.parseInt(point2[1]);
 
 
-            // ToDo arrumar variaveis de tamanho
+            // ToDo Acho q já falei em numeros mágicos
             JFrame frame = new JFrame("Algoritmo DDA");
             DDALine ddaLinePanel = new DDALine(800, 600);
 

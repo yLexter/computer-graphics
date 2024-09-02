@@ -1,17 +1,19 @@
 package primitives;
 
+import utils.BasePanel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class MidpointElipse extends JPanel {
-    private BufferedImage image;
+public class MidpointElipse extends BasePanel {
 
     public MidpointElipse(int width, int height) {
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         drawAxes(); // Desenhar eixos inicialmente
     }
 
+    @Override
     public void setPixel(int x, int y, int color) {
         int screenX = x + image.getWidth() / 2;
         int screenY = image.getHeight() / 2 - y;
@@ -97,12 +99,6 @@ public class MidpointElipse extends JPanel {
                 y1 += sy;
             }
         }
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawImage(image, 0, 0, this);
     }
 
     public static void main(String[] args) {

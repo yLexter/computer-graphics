@@ -2,6 +2,7 @@ package view.inputsPanel;
 
 import javax.swing.*;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class DataOptions {
@@ -9,11 +10,11 @@ public class DataOptions {
     private final Map<String, Map<String, JPanel>> data;
 
     public DataOptions() {
-        data = new HashMap<>();
+        data = new LinkedHashMap<>();
     }
 
     public void addOption(String category, String option, JPanel panelInputs) {
-        data.computeIfAbsent(category, k -> new HashMap<>()).put(option, panelInputs);
+        data.computeIfAbsent(category, k -> new LinkedHashMap<>()).put(option, panelInputs);
     }
 
     public String[] getFirstComboBoxOptions() {

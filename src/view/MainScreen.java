@@ -3,10 +3,8 @@ package view;
 
 import primitives.CircleExplicit;
 import view.inputsPanel.pixelInputs.PixelInputs;
-import view.inputsPanel.primitivesInputs.CircleExplicitInputs;
-import view.inputsPanel.primitivesInputs.DDALineInputs;
+import view.inputsPanel.primitivesInputs.*;
 import view.inputsPanel.DataOptions;
-import view.inputsPanel.primitivesInputs.TrigonometricCircleInputs;
 import view.select.SelectOptions;
 
 import javax.swing.*;
@@ -25,7 +23,11 @@ public class MainScreen extends JFrame {
         dataOptions.addOption("Pixel", "Desenhar Pixel", new PixelInputs());
         dataOptions.addOption("Primitivas", "DDA", new DDALineInputs());
         dataOptions.addOption("Primitivas", "Equação explicita da circunferência ", new CircleExplicitInputs());
-        dataOptions.addOption("Primitivas", "Ponto médio da circunferência", new TrigonometricCircleInputs());
+        dataOptions.addOption("Primitivas", "Método trigonométrico da circunferência\n", new TrigonometricCircleInputs());
+
+        dataOptions.addOption("Primitivas", "Ponto médio da circunferência", new MidpointCircleInputs());
+        dataOptions.addOption("Primitivas", "Ponto médio das Retas", new MidpointLineInputs());
+        dataOptions.addOption("Primitivas", "Ponto médio da Elipse", new MidpointElipseInputs());
 
         add(new SelectOptions(dataOptions), BorderLayout.CENTER);
 

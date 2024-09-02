@@ -1,11 +1,12 @@
 package primitives;
 
+import utils.BasePanel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class MidpointCircle extends JPanel {
-    private BufferedImage image;
+public class MidpointCircle extends BasePanel {
 
     public MidpointCircle(int width, int height) {
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -81,12 +82,6 @@ public class MidpointCircle extends JPanel {
                 y1 += sy;
             }
         }
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawImage(image, 0, 0, this);
     }
 
     public static void main(String[] args) {
