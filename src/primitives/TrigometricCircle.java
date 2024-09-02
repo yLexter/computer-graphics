@@ -7,8 +7,12 @@ import java.awt.image.BufferedImage;
 
 public class TrigometricCircle extends BasePanel {
 
+    private int width, height;
+
     public TrigometricCircle(int width, int height) {
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        this.width = width;
+        this.height = height;
     }
 
     public void drawCircle(int centerX, int centerY, int radius) {
@@ -20,4 +24,11 @@ public class TrigometricCircle extends BasePanel {
         }
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
 }

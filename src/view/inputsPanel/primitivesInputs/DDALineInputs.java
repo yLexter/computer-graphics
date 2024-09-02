@@ -5,7 +5,6 @@ import primitives.DDALine;
 import javax.swing.*;
 import java.awt.*;
 
-
 public class DDALineInputs extends JPanel {
 
     public DDALineInputs() {
@@ -55,7 +54,6 @@ public class DDALineInputs extends JPanel {
 
             x2 =  Integer.parseInt(point2[0]);
             y2 =  Integer.parseInt(point2[1]);
-
 
             // ToDo Acho q já falei em numeros mágicos
             JFrame frame = new JFrame("Algoritmo DDA");

@@ -4,7 +4,6 @@ import primitives.MidpointElipse;
 
 import javax.swing.*;
 
-
 public class MidpointElipseInputs extends ShapePanel {
     private JTextField cxField;
     private JTextField cyField;
@@ -34,7 +33,6 @@ public class MidpointElipseInputs extends ShapePanel {
         JFrame frame = new JFrame("Mid-Point Ellipse");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // ToDo numeros mágicos
         frame.setSize(700, 700);
 
         MidpointElipse panel = new MidpointElipse(700, 700);
@@ -44,6 +42,4 @@ public class MidpointElipseInputs extends ShapePanel {
         frame.setVisible(true);
     }
 
-
 }
-

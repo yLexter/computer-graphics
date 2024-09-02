@@ -108,27 +108,26 @@ public class PixelInputs extends JPanel {
         add(calcularButton, gbc);
 
         calcularButton.addActionListener(e -> {
-            // ToDo Arrumare o bug dos NaN do NDY
-            double X = Double.parseDouble(fieldX.getText());
-            double Xm = Double.parseDouble(fieldXm.getText());
-            double XM = Double.parseDouble(fieldXM.getText());
-            double Y = Double.parseDouble(fieldY.getText());
-            double Ym = Double.parseDouble(fieldYm.getText());
-            double YM = Double.parseDouble(fieldYM.getText());
+            float X = Float.parseFloat(fieldX.getText());
+            float Xm = Float.parseFloat(fieldXm.getText());
+            float XM = Float.parseFloat(fieldXM.getText());
+            float Y = Float.parseFloat(fieldY.getText());
+            float Ym = Float.parseFloat(fieldYm.getText());
+            float YM = Float.parseFloat(fieldYM.getText());
 
-            double coordenadaInicialX = Double.parseDouble(fieldInicialX.getText());
-            double coordenadaFinalX = Double.parseDouble(fieldFinalX.getText());
-            double coordenadaInicialY = Double.parseDouble(fieldInicialY.getText());
-            double coordenadaFinalY = Double.parseDouble(fieldFinalY.getText());
+            float coordenadaInicialX = Float.parseFloat(fieldInicialX.getText());
+            float coordenadaFinalX = Float.parseFloat(fieldFinalX.getText());
+            float coordenadaInicialY = Float.parseFloat(fieldInicialY.getText());
+            float coordenadaFinalY = Float.parseFloat(fieldFinalY.getText());
 
             Coordinates coordenadas = new Coordinates();
-            double[] ndcValues = coordenadas.inpToNdc(X, Xm, XM, Y, Ym, YM, coordenadaInicialX, coordenadaFinalX, coordenadaInicialY, coordenadaFinalY);
-            double NDCX = ndcValues[0];
-            double NDCY = ndcValues[1];
+            float[] ndcValues = coordenadas.inpToNdc(X, Xm, XM, Y, Ym, YM, coordenadaInicialX, coordenadaFinalX, coordenadaInicialY, coordenadaFinalY);
+            float NDCX = ndcValues[0];
+            float NDCY = ndcValues[1];
 
-            double[] dcValues = coordenadas.ndcToDc(NDCX, NDCY, SCREEN_WIDTH, SCREEN_HEIGHT, coordenadaInicialX, coordenadaFinalX, coordenadaInicialY, coordenadaFinalY);
-            double DCX = dcValues[0];
-            double DCY = dcValues[1];
+            float[] dcValues = coordenadas.ndcToDc(NDCX, NDCY, SCREEN_WIDTH, SCREEN_HEIGHT, coordenadaInicialX, coordenadaFinalX, coordenadaInicialY, coordenadaFinalY);
+            float DCX = dcValues[0];
+            float DCY = dcValues[1];
 
             JFrame resultFrame = new JFrame("Resultado da Transformação");
             resultFrame.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);

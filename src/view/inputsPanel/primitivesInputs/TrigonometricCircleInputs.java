@@ -1,6 +1,5 @@
 package view.inputsPanel.primitivesInputs;
 
-import primitives.CircleExplicit;
 import primitives.TrigometricCircle;
 
 import javax.swing.*;
@@ -40,12 +39,11 @@ public class TrigonometricCircleInputs extends JPanel {
 
                 JFrame frame = new JFrame("Algoritmo Circulo Trigonometrico");
 
-                // ToDo Arrumar esses numeros magicos
                 TrigometricCircle trigometricCircle = new TrigometricCircle(800, 600);
-                trigometricCircle.drawCircle(400, 300, radius);
+                trigometricCircle.drawCircle(trigometricCircle.getWidth() / 2, trigometricCircle.getHeight() / 2, radius);
                 frame.add(trigometricCircle);
 
-                frame.setSize(800, 600);
+                frame.setSize(trigometricCircle.getWidth(), trigometricCircle.getHeight());
 
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.setVisible(true);

@@ -47,4 +47,3 @@ public abstract class ShapePanel extends JPanel {
 
     protected abstract void onCalculate();
 }
-

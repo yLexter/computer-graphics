@@ -1,17 +1,35 @@
 package primitives;
 
 import utils.BasePanel;
+import pixel.Coordinates;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class DDALine extends BasePanel {
 
+    private int width, height;
+
     public DDALine(int width, int height) {
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        this.width = width;
+        this.height = height;
     }
 
     public void drawLine(int x1, int y1, int x2, int y2) {
+        Coordinates coords = new Coordinates();
+        Graphics g = this.image.getGraphics();
+        g.setColor(Color.BLUE); // Define a cor do retângulo
+
+        int xMin = -250;
+        int xMax = 250;
+        int yMin = -250;
+        int yMax = 250;
+        int coordenadaInicialX = -1;
+        int coordenadaFinalX = 1;
+        int coordenadaInicialY = -1;
+        int coordenadaFinalY = 1;
+
         int dx = x2 - x1;
         int dy = y2 - y1;
 
@@ -24,10 +42,24 @@ public class DDALine extends BasePanel {
         float y = y1;
 
         for (int i = 0; i <= steps; i++) {
-            setPixel(Math.round(x), Math.round(y), Color.BLUE.getRGB());
+            float[] coordsNdcP1 = coords.inpToNdc(x, xMin, xMax, y, yMin, yMax, coordenadaInicialX, coordenadaFinalX, coordenadaInicialY, coordenadaFinalY);
+            
+            float[] coordsDcP1 = coords.ndcToDc(coordsNdcP1[0], coordsNdcP1[1], this.width, this.height, coordenadaInicialX, coordenadaFinalX, coordenadaInicialY, coordenadaFinalY);
+
+            int xPixel = Math.round(coordsDcP1[0]);
+            int yPixel = Math.round(this.height - coordsDcP1[1]);
+
+            // Desenhar um pequeno retângulo (que simula um pixel)
+            g.fillRect(xPixel, yPixel, 1, 1); // Define o tamanho do retângulo
+
+            // Incrementa x e y após desenhar o pixel
             x += xIncrement;
             y += yIncrement;
-        }
-    }
 
+            System.out.println("x: " + x);
+            System.out.println("y: " + y);
+        }
+        
+        g.dispose(); // Libera os recursos gráficos
+    }
 }

@@ -1,5 +1,3 @@
-import primitives.CircleExplicit;
-
 import view.MainScreen;
 import javax.swing.*;
 
@@ -8,5 +6,3 @@ public class Main {
         SwingUtilities.invokeLater(MainScreen::new);
     }
 }
-
-

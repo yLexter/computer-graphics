@@ -2,14 +2,17 @@ package primitives;
 
 import utils.BasePanel;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class MidpointElipse extends BasePanel {
 
+    private int width, height;
+
     public MidpointElipse(int width, int height) {
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        this.width = width;
+        this.height = height;
         drawAxes(); // Desenhar eixos inicialmente
     }
 
@@ -101,16 +104,11 @@ public class MidpointElipse extends BasePanel {
         }
     }
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Mid-Point Ellipse");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(700, 700);
+    public int getWidth() {
+        return width;
+    }
 
-        MidpointElipse panel = new MidpointElipse(700, 700);
-        frame.add(panel);
-        frame.setVisible(true);
-
-        panel.drawElipse(0, 0, 100, 50); //  semi-eixo maior 100 e semi-eixo menor 50
-        panel.repaint();
+    public int getHeight() {
+        return height;
     }
 }

@@ -1,12 +1,9 @@
 package view.inputsPanel.primitivesInputs;
 
 import primitives.CircleExplicit;
-import primitives.DDALine;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class CircleExplicitInputs extends JPanel {
 
@@ -40,14 +37,13 @@ public class CircleExplicitInputs extends JPanel {
             try {
                 int radius = Integer.parseInt(radiusField.getText());
 
-                // ToDo Mais números magicos
                 JFrame frame = new JFrame("Algoritmo Circulo Explicito");
                 CircleExplicit circleExplicit = new CircleExplicit(800, 600);
 
-                circleExplicit.drawCircle(400, 300, radius);
+                circleExplicit.drawCircle(circleExplicit.getWidth() / 2, circleExplicit.getHeight() / 2, radius);
 
                 frame.add(circleExplicit);
-                frame.setSize(800, 600);
+                frame.setSize(circleExplicit.getWidth(), circleExplicit.getHeight());
 
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.setVisible(true);
@@ -58,4 +54,3 @@ public class CircleExplicitInputs extends JPanel {
     }
 
 }
-

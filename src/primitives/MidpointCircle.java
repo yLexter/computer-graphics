@@ -2,7 +2,6 @@ package primitives;
 
 import utils.BasePanel;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -82,18 +81,5 @@ public class MidpointCircle extends BasePanel {
                 y1 += sy;
             }
         }
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Mid-Point Circle");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(700, 700);
-
-        MidpointCircle panel = new MidpointCircle(700, 700);
-        frame.add(panel);
-        frame.setVisible(true);
-
-        panel.drawCircle(50, 0, 100); // Desenhar uma circunferência com raio 100
-        panel.repaint(); // Atualizar a interface para exibir a circunferência
     }
 }

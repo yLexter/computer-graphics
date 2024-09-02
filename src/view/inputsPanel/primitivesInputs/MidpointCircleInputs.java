@@ -29,15 +29,13 @@ public class MidpointCircleInputs extends ShapePanel {
         JFrame frame = new JFrame("Mid-Point Circle");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // toDo e mais números magicossss
         frame.setSize(700, 700);
 
         MidpointCircle panel = new MidpointCircle(700, 700);
-        panel.drawCircle(cx, cy, radius); // Desenhar uma circunferência com raio 100
+        panel.drawCircle(cx, cy, radius); 
 
         frame.add(panel);
         frame.setVisible(true);
     }
-
 
 }

@@ -1,7 +1,6 @@
 package view.inputsPanel;
 
 import javax.swing.*;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
