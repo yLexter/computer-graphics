@@ -8,11 +8,10 @@ import java.awt.image.BufferedImage;
 public class DDALine extends BasePanel {
 
     public DDALine(int width, int height) {
-        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        drawLine(10, 10, 200, 100);
+        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     }
 
-    private void drawLine(int x1, int y1, int x2, int y2) {
+    public void drawLine(int x1, int y1, int x2, int y2) {
         int dx = x2 - x1;
         int dy = y2 - y1;
 
