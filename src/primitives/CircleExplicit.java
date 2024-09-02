@@ -9,6 +9,7 @@ public class CircleExplicit extends BasePanel {
 
     public CircleExplicit(int width, int height) {
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        drawCircle(400, 300, 100); // Exemplo: círculo com centro (400, 300) e raio 100
     }
 
     public void drawCircle(int centerX, int centerY, int radius) {
