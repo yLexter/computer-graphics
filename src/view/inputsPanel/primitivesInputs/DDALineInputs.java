@@ -59,7 +59,7 @@ public class DDALineInputs extends JPanel {
             JFrame frame = new JFrame("Algoritmo DDA");
             DDALine ddaLinePanel = new DDALine(800, 600);
 
-            ddaLinePanel.drawLine(x1, y1, x2, y2);
+            ddaLinePanel.desenhaLinha(x1, y1, x2, y2);
 
             frame.add(ddaLinePanel);
             frame.setSize(800, 600);

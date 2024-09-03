@@ -16,7 +16,7 @@ public class DDALine extends BasePanel {
         this.height = height;
     }
 
-    public void drawLine(int x1, int y1, int x2, int y2) {
+    public void desenhaLinha(int x1, int y1, int x2, int y2) {
         Coordinates coords = new Coordinates();
         Graphics g = this.image.getGraphics();
         g.setColor(Color.BLUE); // Define a cor do retângulo
@@ -50,14 +50,12 @@ public class DDALine extends BasePanel {
             int yPixel = Math.round(this.height - coordsDcP1[1]);
 
             // Desenhar um pequeno retângulo (que simula um pixel)
-            g.fillRect(xPixel, yPixel, 1, 1); // Define o tamanho do retângulo
+            setPixel(xPixel, yPixel, Color.red.getRGB()); // Define o tamanho do retângulo
 
             // Incrementa x e y após desenhar o pixel
             x += xIncrement;
             y += yIncrement;
 
-            System.out.println("x: " + x);
-            System.out.println("y: " + y);
         }
         
         g.dispose(); // Libera os recursos gráficos

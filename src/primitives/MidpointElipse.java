@@ -77,12 +77,12 @@ public class MidpointElipse extends BasePanel {
     // Desenhar eixos X e Y
     public void drawAxes() {
         // Desenhar o eixo X (horizontal)
-        drawLine(-getWidth() / 2, 0, getWidth() / 2, 0);
+        desenhaLinha(-getWidth() / 2, 0, getWidth() / 2, 0);
         // Desenhar o eixo Y (vertical)
-        drawLine(0, -getHeight() / 2, 0, getHeight() / 2);
+        desenhaLinha(0, -getHeight() / 2, 0, getHeight() / 2);
     }
 
-    private void drawLine(int x1, int y1, int x2, int y2) {
+    private void desenhaLinha(int x1, int y1, int x2, int y2) {
         int dx = Math.abs(x2 - x1);
         int dy = Math.abs(y2 - y1);
         int sx = (x1 < x2) ? 1 : -1;

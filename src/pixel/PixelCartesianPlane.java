@@ -76,7 +76,7 @@ public class PixelCartesianPlane extends JPanel {
 
     private void drawPoint(Graphics g, int x, int y) {
         g.setColor(Color.BLUE);
-        g.fillRect(x - 2, y - 2, 5, 5); // Desenha um pequeno quadrado de 7x7 pixels para representar o ponto
+        g.fillRect(x, y, 1, 1); // Desenha um pequeno quadrado de 7x7 pixels para representar o ponto
     }
 
 }

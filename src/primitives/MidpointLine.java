@@ -21,7 +21,7 @@ public class MidpointLine extends BasePanel {
         }
     }
 
-    public void drawLine(int x1, int y1, int x2, int y2) {
+    public void desenhaLinha(int x1, int y1, int x2, int y2) {
         int dx = Math.abs(x2 - x1);
         int dy = Math.abs(y2 - y1);
         int sx = (x1 < x2) ? 1 : -1;
@@ -45,9 +45,9 @@ public class MidpointLine extends BasePanel {
 
     public void drawAxes() {
         // Desenhar o eixo X (horizontal)
-        drawLine(-getWidth() / 2, 0, getWidth() / 2, 0);
+        desenhaLinha(-getWidth() / 2, 0, getWidth() / 2, 0);
         // Desenhar o eixo Y (vertical)
-        drawLine(0, -getHeight() / 2, 0, getHeight() / 2);
+        desenhaLinha(0, -getHeight() / 2, 0, getHeight() / 2);
     }
 
     @Override
