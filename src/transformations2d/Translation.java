@@ -1,4 +1,4 @@
-package tranformations2d;
+package transformations2d;
 
 import utils.BasePanel;
 
@@ -15,7 +15,7 @@ public class Translation extends BasePanel {
     }
 
     // Algoritmo de translação de cada ponto
-    private double[] translatingPoint(double x, double y, double tx, double ty){
+    public double[] translatingPoint(double x, double y, double tx, double ty){
         double xnew =  x + tx;
         double ynew = y + ty;
 
