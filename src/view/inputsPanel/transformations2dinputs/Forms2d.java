@@ -152,12 +152,13 @@ public class Forms2d extends JPanel {
 
         // Criação da janela de visualização
         visualizationFrame = new JFrame("Visualização da Forma");
-        drawingPanel = new DrawingPanel(coordinates);
+        drawingPanel = new DrawingPanel(coordinates); // Passe as coordenadas atualizadas
         visualizationFrame.add(drawingPanel);
         visualizationFrame.setSize(1200, 800);
         visualizationFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         visualizationFrame.setVisible(true);
 
+        // Revalida e repinta o painel para garantir que ele seja atualizado
         drawingPanel.revalidate();
         drawingPanel.repaint();
 
@@ -334,7 +335,6 @@ public class Forms2d extends JPanel {
         gbc.gridy = 5;
         transformationFrame.add(input2Field, gbc);
 
-        // Ocultar os inputs de Reflection e Shear
         transformationSelector.addActionListener(e -> {
             String selectedTransformation = (String) transformationSelector.getSelectedItem();
             if ("Rotation".equals(selectedTransformation)) {
@@ -539,19 +539,15 @@ public class Forms2d extends JPanel {
                 rotation = new Rotation(1200, 800);
                 double angle = Math.toRadians(value1); // Converte o ângulo para radianos
                 if (isCircle) {
-                   
-                        double[][] newCoords = rotation.rotation(new double[][]{{coordinates[0][0], coordinates[0][1]}}, angle);
-                        coordinates[0][0] = (int) newCoords[0][0];
-                        coordinates[0][1] = (int) newCoords[0][1];
-                        midpointCircle.drawCircle(coordinates[0][0], coordinates[0][1], radius);
-                    
+                    double[][] newCoords = rotation.rotation(new double[][]{{coordinates[0][0], coordinates[0][1]}}, angle);
+                    coordinates[0][0] = (int) newCoords[0][0];
+                    coordinates[0][1] = (int) newCoords[0][1];
+                    midpointCircle.drawCircle(coordinates[0][0], coordinates[0][1], radius);
                 } else if (isEllipse) {
-                     
-                        double[][] newCoords = rotation.rotation(new double[][]{{coordinates[0][0], coordinates[0][1]}}, angle);
-                        coordinates[0][0] = (int) newCoords[0][0];
-                        coordinates[0][1] = (int) newCoords[0][1];
-                        midpointElipse.drawElipse(coordinates[0][0], coordinates[0][1], majorAxis, minorAxis);
-                    
+                    double[][] newCoords = rotation.rotation(new double[][]{{coordinates[0][0], coordinates[0][1]}}, angle);
+                    coordinates[0][0] = (int) newCoords[0][0];
+                    coordinates[0][1] = (int) newCoords[0][1];
+                    midpointElipse.drawElipse(coordinates[0][0], coordinates[0][1], majorAxis, minorAxis);
                 } else {
                     double[][] coordsDouble = new double[coordinates.length][2];
                     for (int i = 0; i < coordinates.length; i++) {
@@ -621,5 +617,8 @@ class DrawingPanel extends JPanel {
 
     public void updateBufferedImage(BufferedImage image) {
         image = new BufferedImage(1200, 800, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = image.createGraphics();
+        paintComponent(g2d); // Chame paintComponent para desenhar na imagem
+        g2d.dispose();
     }
 }
