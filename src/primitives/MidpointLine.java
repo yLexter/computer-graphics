@@ -26,8 +26,15 @@ public class MidpointLine extends BasePanel {
         int dx = x2 - x1;
         int dy = y2 - y1;
 
-        if (dx == 0 && dy == 0) {
-            setPixel(x1, y1, Color.RED.getRGB());
+        // Caso especial: Linha vertical (dx = 0)
+        if (dx == 0) {
+            desenhaLinhaVertical(x1, y1, y2);
+            return;
+        }
+
+        // Caso especial: Linha horizontal (dy = 0)
+        if (dy == 0) {
+            desenhaLinhaHorizontal(x1, x2, y1);
             return;
         }
 
@@ -63,6 +70,25 @@ public class MidpointLine extends BasePanel {
         }
     }
 
+    // Função para desenhar uma linha vertical
+    private void desenhaLinhaVertical(int x, int y1, int y2) {
+        int yStart = Math.min(y1, y2);
+        int yEnd = Math.max(y1, y2);
+
+        for (int y = yStart; y <= yEnd; y++) {
+            setPixel(x, y, Color.RED.getRGB());
+        }
+    }
+
+    // Função para desenhar uma linha horizontal
+    private void desenhaLinhaHorizontal(int x1, int x2, int y) {
+        int xStart = Math.min(x1, x2);
+        int xEnd = Math.max(x1, x2);
+
+        for (int x = xStart; x <= xEnd; x++) {
+            setPixel(x, y, Color.RED.getRGB());
+        }
+    }
     // Determina em qual octante a linha está
     private int getOctante(int dx, int dy) {
         if (Math.abs(dy) <= Math.abs(dx)) {
