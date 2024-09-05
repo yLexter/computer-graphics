@@ -21,34 +21,194 @@ public class MidpointLine extends BasePanel {
         }
     }
 
+    // Função para determinar o octante e desenhar a linha
     public void desenhaLinha(int x1, int y1, int x2, int y2) {
-        int dx = Math.abs(x2 - x1);
-        int dy = Math.abs(y2 - y1);
-        int sx = (x1 < x2) ? 1 : -1;
-        int sy = (y1 < y2) ? 1 : -1;
-        int err = dx - dy;
+        int dx = x2 - x1;
+        int dy = y2 - y1;
 
-        while (true) {
+        if (dx == 0 && dy == 0) {
             setPixel(x1, y1, Color.RED.getRGB());
-            if (x1 == x2 && y1 == y2) break;
-            int e2 = err * 2;
-            if (e2 > -dy) {
-                err -= dy;
-                x1 += sx;
-            }
-            if (e2 < dx) {
-                err += dx;
-                y1 += sy;
-            }
+            return;
+        }
+
+        // Identifica o octante baseado em dx e dy
+        int octante = getOctante(dx, dy);
+
+        // Aplica a lógica de acordo com o octante
+        switch (octante) {
+            case 1:
+                desenhaOctante1(x1, y1, x2, y2);
+                break;
+            case 2:
+                desenhaOctante2(x1, y1, x2, y2);
+                break;
+            case 3:
+                desenhaOctante3(x1, y1, x2, y2);
+                break;
+            case 4:
+                desenhaOctante4(x1, y1, x2, y2);
+                break;
+            case 5:
+                desenhaOctante5(x1, y1, x2, y2);
+                break;
+            case 6:
+                desenhaOctante6(x1, y1, x2, y2);
+                break;
+            case 7:
+                desenhaOctante7(x1, y1, x2, y2);
+                break;
+            case 8:
+                desenhaOctante8(x1, y1, x2, y2);
+                break;
         }
     }
 
-    public void drawAxes() {
-        // Desenhar o eixo X (horizontal)
-        desenhaLinha(-getWidth() / 2, 0, getWidth() / 2, 0);
-        // Desenhar o eixo Y (vertical)
-        desenhaLinha(0, -getHeight() / 2, 0, getHeight() / 2);
+    // Determina em qual octante a linha está
+    private int getOctante(int dx, int dy) {
+        if (Math.abs(dy) <= Math.abs(dx)) {
+            if (dx > 0 && dy >= 0) return 1;  // Octante 1
+            if (dx > 0 && dy < 0) return 8;   // Octante 8
+            if (dx < 0 && dy >= 0) return 4;  // Octante 4
+            if (dx < 0 && dy < 0) return 5;   // Octante 5
+        } else {
+            if (dx > 0 && dy > 0) return 2;   // Octante 2
+            if (dx < 0 && dy > 0) return 3;   // Octante 3
+            if (dx > 0 && dy < 0) return 7;   // Octante 7
+            if (dx < 0 && dy < 0) return 6;   // Octante 6
+        }
+        return 1; // Octante padrão
     }
+
+    // Implementações para cada octante
+    private void desenhaOctante1(int x1, int y1, int x2, int y2) {
+        int dx = Math.abs(x2 - x1);
+        int dy = Math.abs(y2 - y1);
+        int d = 2 * dy - dx;
+        int y = y1;
+        for (int x = x1; x <= x2; x++) {
+            setPixel(x, y, Color.RED.getRGB());
+            if (d > 0) {
+                y++;
+                d -= 2 * dx;
+            }
+            d += 2 * dy;
+        }
+    }
+
+    private void desenhaOctante2(int x1, int y1, int x2, int y2) {
+        int dx = Math.abs(x2 - x1);
+        int dy = Math.abs(y2 - y1);
+        int d = 2 * dx - dy;
+        int x = x1;
+        for (int y = y1; y <= y2; y++) {
+            setPixel(x, y, Color.RED.getRGB());
+            if (d > 0) {
+                x++;
+                d -= 2 * dy;
+            }
+            d += 2 * dx;
+        }
+    }
+
+    private void desenhaOctante3(int x1, int y1, int x2, int y2) {
+        int dx = Math.abs(x2 - x1);
+        int dy = Math.abs(y2 - y1);
+        int d = 2 * dx - dy;
+        int x = x1;
+        for (int y = y1; y <= y2; y++) {
+            setPixel(x, y, Color.RED.getRGB());
+            if (d > 0) {
+                x--;
+                d -= 2 * dy;
+            }
+            d += 2 * dx;
+        }
+    }
+
+    private void desenhaOctante4(int x1, int y1, int x2, int y2) {
+        int dx = Math.abs(x2 - x1);
+        int dy = Math.abs(y2 - y1);
+        int d = 2 * dy - dx;
+        int y = y1;
+        for (int x = x1; x >= x2; x--) {
+            setPixel(x, y, Color.RED.getRGB());
+            if (d > 0) {
+                y++;
+                d -= 2 * dx;
+            }
+            d += 2 * dy;
+        }
+    }
+
+    private void desenhaOctante5(int x1, int y1, int x2, int y2) {
+        int dx = Math.abs(x2 - x1);
+        int dy = Math.abs(y2 - y1);
+        int d = 2 * dy - dx;
+        int y = y1;
+        for (int x = x1; x >= x2; x--) {
+            setPixel(x, y, Color.RED.getRGB());
+            if (d > 0) {
+                y--;
+                d -= 2 * dx;
+            }
+            d += 2 * dy;
+        }
+    }
+
+
+    private void desenhaOctante6(int x1, int y1, int x2, int y2) {
+        int dx = Math.abs(x2 - x1);
+        int dy = Math.abs(y2 - y1);
+        int d = 2 * dx - dy;
+        int x = x1;
+        for (int y = y1; y >= y2; y--) {
+            setPixel(x, y, Color.RED.getRGB());
+            if (d > 0) {
+                x--;
+                d -= 2 * dy;
+            }
+            d += 2 * dx;
+        }
+    }
+
+
+    private void desenhaOctante7(int x1, int y1, int x2, int y2) {
+        int dx = Math.abs(x2 - x1);
+        int dy = Math.abs(y2 - y1);
+        int d = 2 * dx - dy;
+        int x = x1;
+        for (int y = y1; y >= y2; y--) {
+            setPixel(x, y, Color.RED.getRGB());
+            if (d > 0) {
+                x++;
+                d -= 2 * dy;
+            }
+            d += 2 * dx;
+        }
+    }
+
+
+    private void desenhaOctante8(int x1, int y1, int x2, int y2) {
+        int dx = Math.abs(x2 - x1);
+        int dy = Math.abs(y2 - y1);
+        int d = 2 * dy - dx;
+        int y = y1;
+        for (int x = x1; x <= x2; x++) {
+            setPixel(x, y, Color.RED.getRGB());
+            if (d > 0) {
+                y--;
+                d -= 2 * dx;
+            }
+            d += 2 * dy;
+        }
+    }
+
+//    public void drawAxes() {
+//        // Desenhar o eixo X (horizontal)
+//        desenhaLinha(-getWidth() / 2, 0, getWidth() / 2, 0);
+//        // Desenhar o eixo Y (vertical)
+//        desenhaLinha(0, -getHeight() / 2, 0, getHeight() / 2);
+//    }
 
     @Override
     public void paintComponent(Graphics g) {

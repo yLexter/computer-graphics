@@ -38,7 +38,7 @@ public class MidpointLineInputs extends ShapePanel {
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setVisible(true);
 
-        panel.drawAxes(); // Desenhar eixos X e Y
+        //panel.drawAxes(); // Desenhar eixos X e Y
         panel.desenhaLinha(x1, y1, x2, y2);
         panel.repaint(); // Atualizar a interface para exibir os eixos
     }
