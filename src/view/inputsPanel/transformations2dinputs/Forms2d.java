@@ -28,6 +28,7 @@ public class Forms2d extends JPanel {
     private Translation translation; // Instância da classe Translation para realizar translação
     private Scale scale;
     private Rotation rotation; // Instância da classe Rotation para realizar a rotação
+    private BufferedImage image;
 
     private boolean isCircle = false, isEllipse = false; // Flags para identificar o tipo de forma
 
@@ -328,70 +329,192 @@ public class Forms2d extends JPanel {
 
         JLabel input2Label = new JLabel("Input 2:");
         gbc.gridy = 4;
-        transformationFrame.add(input2Label, gbc);
-
         JTextField input2Field = new JTextField(10);
+        transformationFrame.add(input2Label, gbc);
         gbc.gridy = 5;
         transformationFrame.add(input2Field, gbc);
+
+        // Ocultar os inputs de Reflection e Shear
+        transformationSelector.addActionListener(e -> {
+            String selectedTransformation = (String) transformationSelector.getSelectedItem();
+            if ("Rotation".equals(selectedTransformation)) {
+                input2Label.setVisible(false);
+                input2Field.setVisible(false);
+            } else if ("Reflection".equals(selectedTransformation) || "Shear".equals(selectedTransformation)) {
+                input1Label.setVisible(false);
+                input1Field.setVisible(false);
+                input2Label.setVisible(false);
+                input2Field.setVisible(false);
+            } else {
+                input1Label.setVisible(true);
+                input1Field.setVisible(true);
+                input2Label.setVisible(true);
+                input2Field.setVisible(true);
+            }
+        });
 
         JButton applyButton = new JButton("Aplicar Transformação");
         gbc.gridy = 6;
         transformationFrame.add(applyButton, gbc);
 
-        applyButton.addActionListener(e -> applyTransformation(transformationSelector.getSelectedItem().toString(),
-                input1Field.getText(), input2Field.getText()));
+        applyButton.addActionListener(e -> {
+            String transformation = (String) transformationSelector.getSelectedItem();
+            if ("Reflection".equals(transformation)) {
+                applyReflection();
+            } else if ("Shear".equals(transformation)) {
+                applyShear();
+            } else {
+                applyTransformation(transformation, input1Field.getText(), input2Field.getText());
+            }
+        });
 
         transformationFrame.pack();
         transformationFrame.setVisible(true);
     }
 
+    private void applyReflection() {
+        Reflection reflection = new Reflection(1200, 800);
+        String reflectionType = JOptionPane.showInputDialog(null, "Digite o tipo de reflexão (X, Y, Origem, YX):");
+
+        if (isCircle || isEllipse) {
+            double[][] newCoords = null;
+            if (reflectionType.equalsIgnoreCase("X")) {
+                newCoords = reflection.reflectionInX(new double[][]{{coordinates[0][0], coordinates[0][1]}});
+            } else if (reflectionType.equalsIgnoreCase("Y")) {
+                newCoords = reflection.reflectionInY(new double[][]{{coordinates[0][0], coordinates[0][1]}});
+            } else if (reflectionType.equalsIgnoreCase("Origem")) {
+                newCoords = reflection.reflectingPointInOrigin(new double[][]{{coordinates[0][0], coordinates[0][1]}});
+            } else if (reflectionType.equalsIgnoreCase("YX")) {
+                newCoords = reflection.reflectingPointInLineYX(new double[][]{{coordinates[0][0], coordinates[0][1]}});
+            }
+            coordinates[0][0] = (int) newCoords[0][0];
+            coordinates[0][1] = (int) newCoords[0][1];
+            if (isCircle) {
+                midpointCircle.drawCircle(coordinates[0][0], coordinates[0][1], radius);
+            } else {
+                midpointElipse.drawElipse(coordinates[0][0], coordinates[0][1], majorAxis, minorAxis);
+            }
+        } else {
+            double[][] coordsDouble = new double[coordinates.length][2];
+            for (int i = 0; i < coordinates.length; i++) {
+                coordsDouble[i][0] = coordinates[i][0];
+                coordsDouble[i][1] = coordinates[i][1];
+            }
+            double[][] newCoords = null;
+            if (reflectionType.equalsIgnoreCase("X")) {
+                newCoords = reflection.reflectionInX(coordsDouble);
+            } else if (reflectionType.equalsIgnoreCase("Y")) {
+                newCoords = reflection.reflectionInY(coordsDouble);
+            } else if (reflectionType.equalsIgnoreCase("Origem")) {
+                newCoords = reflection.reflectingPointInOrigin(coordsDouble);
+            } else if (reflectionType.equalsIgnoreCase("YX")) {
+                newCoords = reflection.reflectingPointInLineYX(coordsDouble);
+            }
+            for (int i = 0; i < newCoords.length; i++) {
+                coordinates[i][0] = (int) newCoords[i][0];
+                coordinates[i][1] = (int) newCoords[i][1];
+            }
+        }
+
+        drawingPanel.setCoordinates(coordinates);
+        drawingPanel.revalidate();
+        drawingPanel.repaint();
+        drawingPanel.updateBufferedImage(image);
+    }
+
+    private void applyShear() {
+        Shear shear = new Shear(1200, 800);
+        String shearType = JOptionPane.showInputDialog(null, "Digite o tipo de cisalhamento (X, Y, XY):");
+        double a = 0;
+        double b = 0;
+
+        if (shearType.equalsIgnoreCase("X") || shearType.equalsIgnoreCase("XY")) {
+            b = Double.parseDouble(JOptionPane.showInputDialog(null, "Digite o valor de b (cisalhamento em X):"));
+        }
+        if (shearType.equalsIgnoreCase("Y") || shearType.equalsIgnoreCase("XY")) {
+            a = Double.parseDouble(JOptionPane.showInputDialog(null, "Digite o valor de a (cisalhamento em Y):"));
+        }
+
+        if (isCircle || isEllipse) {
+            if (shearType.equalsIgnoreCase("X")) {
+                double[][] newCoords = shear.shearInX(new double[][]{{coordinates[0][0], coordinates[0][1]}}, b);
+                coordinates[0][0] = (int) newCoords[0][0];
+                coordinates[0][1] = (int) newCoords[0][1];
+            } else if (shearType.equalsIgnoreCase("Y")) {
+                double[][] newCoords = shear.shearInY(new double[][]{{coordinates[0][0], coordinates[0][1]}}, a);
+                coordinates[0][0] = (int) newCoords[0][0];
+                coordinates[0][1] = (int) newCoords[0][1];
+            } else if (shearType.equalsIgnoreCase("XY")) {
+                double[][] newCoords = shear.shearInXY(new double[][]{{coordinates[0][0], coordinates[0][1]}}, b, a);
+                coordinates[0][0] = (int) newCoords[0][0];
+                coordinates[0][1] = (int) newCoords[0][1];
+            }
+
+            if (isCircle) {
+                midpointCircle.drawCircle(coordinates[0][0], coordinates[0][1], radius);
+            } else {
+                midpointElipse.drawElipse(coordinates[0][0], coordinates[0][1], majorAxis, minorAxis);
+            }
+        } else {
+            double[][] coordsDouble = new double[coordinates.length][2];
+            for (int i = 0; i < coordinates.length; i++) {
+                coordsDouble[i][0] = coordinates[i][0];
+                coordsDouble[i][1] = coordinates[i][1];
+            }
+
+            double[][] newCoords = null;
+
+            if (shearType.equalsIgnoreCase("X")) {
+                newCoords = shear.shearInX(coordsDouble, b);
+            } else if (shearType.equalsIgnoreCase("Y")) {
+                newCoords = shear.shearInY(coordsDouble, a);
+            } else if (shearType.equalsIgnoreCase("XY")) {
+                newCoords = shear.shearInXY(coordsDouble, b, a);
+            }
+
+            for (int i = 0; i < newCoords.length; i++) {
+                coordinates[i][0] = (int) newCoords[i][0];
+                coordinates[i][1] = (int) newCoords[i][1];
+            }
+        }
+
+        drawingPanel.setCoordinates(coordinates);
+        drawingPanel.revalidate();
+        drawingPanel.repaint();
+        drawingPanel.updateBufferedImage(image);
+    }
+
     private void applyTransformation(String transformation, String input1, String input2) {
         try {
             int value1 = Integer.parseInt(input1); // valor para transformação
-            int value2 = Integer.parseInt(input2); // valor para transformação
+            int value2 = input2.isEmpty() ? 0 : Integer.parseInt(input2); // valor para transformação (se for rotação, será ignorado)
 
             if ("Translation".equals(transformation)) {
-                // Usar a classe Translation para realizar a translação
                 translation = new Translation(1200, 800);
-
                 if (isCircle || isEllipse) {
-                    // Para circunferência ou elipse, apenas o centro é transladado
                     double[] newCoords = translation.translatingPoint(coordinates[0][0], coordinates[0][1], value1, value2);
                     coordinates[0][0] = (int) newCoords[0];
                     coordinates[0][1] = (int) newCoords[1];
-
-                    if (isCircle)
-                        midpointCircle.drawCircle(coordinates[0][0], coordinates[0][1], radius);
-                    else
-                        midpointElipse.drawElipse(coordinates[0][0], coordinates[0][1], majorAxis, minorAxis);
+                    if (isCircle) midpointCircle.drawCircle(coordinates[0][0], coordinates[0][1], radius);
+                    else midpointElipse.drawElipse(coordinates[0][0], coordinates[0][1], majorAxis, minorAxis);
                 } else {
-                    // Para polígonos, transladar todos os pontos
                     double[][] coordsDouble = new double[coordinates.length][2];
-
-                    // Converte coordenadas de int para double
                     for (int i = 0; i < coordinates.length; i++) {
                         coordsDouble[i][0] = coordinates[i][0];
                         coordsDouble[i][1] = coordinates[i][1];
                     }
-
                     double[][] newCoords = translation.translation(coordsDouble, value1, value2);
-
-                    // Converte coordenadas de volta para int
                     for (int i = 0; i < newCoords.length; i++) {
                         coordinates[i][0] = (int) newCoords[i][0];
                         coordinates[i][1] = (int) newCoords[i][1];
                     }
                 }
             } else if ("Scale".equals(transformation)) {
-                // Usar a classe Scale para realizar a escala
                 scale = new Scale(1200, 800);
-
                 if (isCircle || isEllipse) {
-                    // Para circunferências e elipses, escalar o centro e as dimensões (raio ou eixos)
                     double[][] newCoords = scale.scalation(new double[][]{{coordinates[0][0], coordinates[0][1]}}, value1, value2);
                     coordinates[0][0] = (int) newCoords[0][0];
                     coordinates[0][1] = (int) newCoords[0][1];
-
                     if (isCircle) {
                         radius *= value1;
                         midpointCircle.drawCircle(coordinates[0][0], coordinates[0][1], radius);
@@ -401,196 +524,52 @@ public class Forms2d extends JPanel {
                         midpointElipse.drawElipse(coordinates[0][0], coordinates[0][1], majorAxis, minorAxis);
                     }
                 } else {
-                    // Para polígonos, escalar todos os pontos
                     double[][] coordsDouble = new double[coordinates.length][2];
                     for (int i = 0; i < coordinates.length; i++) {
                         coordsDouble[i][0] = coordinates[i][0];
                         coordsDouble[i][1] = coordinates[i][1];
                     }
-
                     double[][] newCoords = scale.scalation(coordsDouble, value1, value2);
-
-                    // Atualizar as coordenadas com os valores escalados
                     for (int i = 0; i < newCoords.length; i++) {
                         coordinates[i][0] = (int) newCoords[i][0];
                         coordinates[i][1] = (int) newCoords[i][1];
                     }
                 }
             } else if ("Rotation".equals(transformation)) {
-                // Usar a classe Rotation para realizar a rotação
                 rotation = new Rotation(1200, 800);
                 double angle = Math.toRadians(value1); // Converte o ângulo para radianos
-                    
                 if (isCircle) {
-                    if (coordinates[0][0] == 0 && coordinates[0][1] == 0) {
-                        // Rotaciona diretamente no ponto (0, 0)
-                        midpointCircle.drawCircle(0, 0, radius);
-                    } else {
-                        // Aplicar rotação no centro deslocado
+                   
                         double[][] newCoords = rotation.rotation(new double[][]{{coordinates[0][0], coordinates[0][1]}}, angle);
                         coordinates[0][0] = (int) newCoords[0][0];
                         coordinates[0][1] = (int) newCoords[0][1];
-            
                         midpointCircle.drawCircle(coordinates[0][0], coordinates[0][1], radius);
-                    }
+                    
                 } else if (isEllipse) {
-                    if (coordinates[0][0] == 0 && coordinates[0][1] == 0) {
-                        // Rotaciona diretamente no ponto (0, 0)
-                        midpointElipse.drawElipse(0, 0, majorAxis, minorAxis);
-                    } else {
-                        // Aplicar rotação no centro deslocado
+                     
                         double[][] newCoords = rotation.rotation(new double[][]{{coordinates[0][0], coordinates[0][1]}}, angle);
                         coordinates[0][0] = (int) newCoords[0][0];
                         coordinates[0][1] = (int) newCoords[0][1];
-            
                         midpointElipse.drawElipse(coordinates[0][0], coordinates[0][1], majorAxis, minorAxis);
-                    }
+                    
                 } else {
-                    // Para polígonos, rotacionar todos os pontos
                     double[][] coordsDouble = new double[coordinates.length][2];
                     for (int i = 0; i < coordinates.length; i++) {
                         coordsDouble[i][0] = coordinates[i][0];
                         coordsDouble[i][1] = coordinates[i][1];
                     }
-            
                     double[][] newCoords = rotation.rotation(coordsDouble, angle);
-            
-                    // Atualizar as coordenadas com os valores rotacionados
-                    for (int i = 0; i < newCoords.length; i++) {
-                        coordinates[i][0] = (int) newCoords[i][0];
-                        coordinates[i][1] = (int) newCoords[i][1];
-                    }
-                }
-            } else if ("Reflection".equals(transformation)) {
-                // Usar a classe Reflection para realizar a reflexão
-                Reflection reflection = new Reflection(1200, 800);
-                
-                String reflectionType = JOptionPane.showInputDialog(null, "Digite o tipo de reflexão (X, Y, Origem, YX):");
-        
-                if (isCircle || isEllipse) {
-                    // Circulos e Elipses são simétricos, logo a reflexão será aplicada ao centro apenas
-                    if (reflectionType.equalsIgnoreCase("X")) {
-                        double[][] newCoords = reflection.reflectionInX(new double[][]{{coordinates[0][0], coordinates[0][1]}});
-                        coordinates[0][0] = (int) newCoords[0][0];
-                        coordinates[0][1] = (int) newCoords[0][1];
-
-                    } else if (reflectionType.equalsIgnoreCase("Y")) {
-                        double[][] newCoords = reflection.reflectionInY(new double[][]{{coordinates[0][0], coordinates[0][1]}});
-                        coordinates[0][0] = (int) newCoords[0][0];
-                        coordinates[0][1] = (int) newCoords[0][1];
-
-                    } else if (reflectionType.equalsIgnoreCase("Origem")) {
-                        double[][] newCoords = reflection.reflectingPointInOrigin(new double[][]{{coordinates[0][0], coordinates[0][1]}});
-                        coordinates[0][0] = (int) newCoords[0][0];
-                        coordinates[0][1] = (int) newCoords[0][1];
-
-                    } else if (reflectionType.equalsIgnoreCase("YX")) {
-                        double[][] newCoords = reflection.reflectingPointInLineYX(new double[][]{{coordinates[0][0], coordinates[0][1]}});
-                        coordinates[0][0] = (int) newCoords[0][0];
-                        coordinates[0][1] = (int) newCoords[0][1];
-                    }
-
-                    // Desenhar circunferência ou elipse refletida
-                    if (isCircle) {
-                        midpointCircle.drawCircle(coordinates[0][0], coordinates[0][1], radius);
-                    } else {
-                        midpointElipse.drawElipse(coordinates[0][0], coordinates[0][1], majorAxis, minorAxis);
-                    }
-
-                } else {
-                    // Para polígonos, refletir todos os pontos
-                    double[][] coordsDouble = new double[coordinates.length][2];
-                    for (int i = 0; i < coordinates.length; i++) {
-                        coordsDouble[i][0] = coordinates[i][0];
-                        coordsDouble[i][1] = coordinates[i][1];
-                    }
-
-                    double[][] newCoords = null;
-
-                    if (reflectionType.equalsIgnoreCase("X")) {
-                        newCoords = reflection.reflectionInX(coordsDouble);
-                    } else if (reflectionType.equalsIgnoreCase("Y")) {
-                        newCoords = reflection.reflectionInY(coordsDouble);
-                    } else if (reflectionType.equalsIgnoreCase("Origem")) {
-                        newCoords = reflection.reflectingPointInOrigin(coordsDouble);
-                    } else if (reflectionType.equalsIgnoreCase("YX")) {
-                        newCoords = reflection.reflectingPointInLineYX(coordsDouble);
-                    }
-
-                    // Atualizar as coordenadas com os valores refletidos
-                    for (int i = 0; i < newCoords.length; i++) {
-                        coordinates[i][0] = (int) newCoords[i][0];
-                        coordinates[i][1] = (int) newCoords[i][1];
-                    }
-                }
-            } else if ("Shear".equals(transformation)) {
-                // Usar a classe Shear para realizar o cisalhamento
-                Shear shear = new Shear(1200, 800);
-
-                String shearType = JOptionPane.showInputDialog(null, "Digite o tipo de cisalhamento (X, Y, XY):");
-                double a = 0;
-                double b = 0;
-
-                if (shearType.equalsIgnoreCase("X") || shearType.equalsIgnoreCase("XY")) {
-                    b = Double.parseDouble(JOptionPane.showInputDialog(null, "Digite o valor de b (cisalhamento em X):"));
-                }
-                if (shearType.equalsIgnoreCase("Y") || shearType.equalsIgnoreCase("XY")) {
-                    a = Double.parseDouble(JOptionPane.showInputDialog(null, "Digite o valor de a (cisalhamento em Y):"));
-                }
-
-                if (isCircle || isEllipse) {
-                    // Aplicar o cisalhamento apenas ao centro do círculo ou elipse (seu formato não muda com cisalhamento)
-                    if (shearType.equalsIgnoreCase("X")) {
-                        double[][] newCoords = shear.shearInX(new double[][]{{coordinates[0][0], coordinates[0][1]}}, b);
-                        coordinates[0][0] = (int) newCoords[0][0];
-                        coordinates[0][1] = (int) newCoords[0][1];
-                    } else if (shearType.equalsIgnoreCase("Y")) {
-                        double[][] newCoords = shear.shearInY(new double[][]{{coordinates[0][0], coordinates[0][1]}}, a);
-                        coordinates[0][0] = (int) newCoords[0][0];
-                        coordinates[0][1] = (int) newCoords[0][1];
-                    } else if (shearType.equalsIgnoreCase("XY")) {
-                        double[][] newCoords = shear.shearInXY(new double[][]{{coordinates[0][0], coordinates[0][1]}}, b, a);
-                        coordinates[0][0] = (int) newCoords[0][0];
-                        coordinates[0][1] = (int) newCoords[0][1];
-                    }
-
-                    // Desenhar circunferência ou elipse cisalhada (apenas o centro se move)
-                    if (isCircle) {
-                        midpointCircle.drawCircle(coordinates[0][0], coordinates[0][1], radius);
-                    } else {
-                        midpointElipse.drawElipse(coordinates[0][0], coordinates[0][1], majorAxis, minorAxis);
-                    }
-
-                } else {
-                    // Para polígonos, aplicar o cisalhamento em todos os pontos
-                    double[][] coordsDouble = new double[coordinates.length][2];
-                    for (int i = 0; i < coordinates.length; i++) {
-                        coordsDouble[i][0] = coordinates[i][0];
-                        coordsDouble[i][1] = coordinates[i][1];
-                    }
-
-                    double[][] newCoords = null;
-
-                    if (shearType.equalsIgnoreCase("X")) {
-                        newCoords = shear.shearInX(coordsDouble, b);
-                    } else if (shearType.equalsIgnoreCase("Y")) {
-                        newCoords = shear.shearInY(coordsDouble, a);
-                    } else if (shearType.equalsIgnoreCase("XY")) {
-                        newCoords = shear.shearInXY(coordsDouble, b, a);
-                    }
-
-                    // Atualizar as coordenadas com os valores cisalhados
                     for (int i = 0; i < newCoords.length; i++) {
                         coordinates[i][0] = (int) newCoords[i][0];
                         coordinates[i][1] = (int) newCoords[i][1];
                     }
                 }
             }
-            
-            // Atualiza a visualização
+
             drawingPanel.setCoordinates(coordinates);
-            drawingPanel.revalidate(); // Revalida o layout do painel
-            drawingPanel.repaint();    // Repinta o painel
+            drawingPanel.revalidate();
+            drawingPanel.repaint();
+            drawingPanel.updateBufferedImage(image);
 
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(null, "Por favor, insira valores válidos para os inputs.");
@@ -618,8 +597,6 @@ class DrawingPanel extends JPanel {
         this.midpointLine = new MidpointLine(1200, 800);
     }
 
-
-
     public void setCoordinates(int[][] coordinates) {
         this.coordinates = coordinates;
         repaint();
@@ -640,5 +617,9 @@ class DrawingPanel extends JPanel {
             midpointLine.desenhaLinha(coordinates[coordinates.length - 1][0], coordinates[coordinates.length - 1][1],
                     coordinates[0][0], coordinates[0][1]);
         }
+    }
+
+    public void updateBufferedImage(BufferedImage image) {
+        image = new BufferedImage(1200, 800, BufferedImage.TYPE_INT_RGB);
     }
 }

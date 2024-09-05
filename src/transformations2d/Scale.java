@@ -15,26 +15,25 @@ public class Scale extends BasePanel{
     }
 
     // Algoritmo de escala de cada ponto
-    private double[][] scalingPoint(double x, double y, double sx, double sy){
-        double[][] newCoords = new double[2][1]; //sempre vai resultar em uma matriz 2x1 por se tratar de um ponto
-
-        for(int i = 0; i < newCoords.length; i++){
-            newCoords[i][0] = sx * x;
-            newCoords[i][1] = sy * y;
-        }
-
+    private double[] scalingPoint(double x, double y, double sx, double sy){
+        double[] newCoords = new double[2]; // Coordenadas resultantes para o ponto (x, y)
+    
+        newCoords[0] = sx * x; // Escala a coordenada X
+        newCoords[1] = sy * y; // Escala a coordenada Y
+    
         return newCoords;
     }
 
     // Algoritmo que realiza a escala de todos os pontos
     public double[][] scalation(double[][] sides, double sx, double sy){
-        double[][] newCoords = new double[sides.length][2]; // matriz das coordenadas dos pontos
-
+        double[][] newCoords = new double[sides.length][2]; // Matriz das coordenadas dos pontos escalados
+    
         for(int i = 0; i < sides.length; i++){
-            newCoords[i][0] = scalingPoint(sides[i][0], sides[i][1], sx, sy)[i][0];
-            newCoords[i][1] = scalingPoint(sides[i][0], sides[i][1], sx, sy)[i][1];
+            double[] scaledPoint = scalingPoint(sides[i][0], sides[i][1], sx, sy); // Escala o ponto atual
+            newCoords[i][0] = scaledPoint[0]; // Atualiza a coordenada X
+            newCoords[i][1] = scaledPoint[1]; // Atualiza a coordenada Y
         }
-
+    
         return newCoords;
     }
 
