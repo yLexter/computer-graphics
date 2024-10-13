@@ -1,42 +1,37 @@
 package transformations2d;
 
-import utils.BasePanel;
+import geomtry.points.Point2D;
+import view.utils.Matrix;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Rotation extends BasePanel{
-    private int width, height;
+public class Rotation {
 
-    public Rotation(int width, int height) {
-        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        this.width = width;
-        this.height = height;
+    public static Point2D rotatePoint(Point2D point, double angle) {
+        double[][] pointHomogeneous = new double[][] {
+                { point.x, point.y, 1 },
+        };
+
+        double[][] matrix = getMatrixRotation(angle);
+        double[][] result = Matrix.multiply(pointHomogeneous, matrix);
+
+        return new Point2D(
+                result[0][0],
+                result[0][1]
+        );
     }
 
-    private double[] rotatingPoint(double x, double y, double angulo){
-        double xnew = x * Math.cos(angulo) - y * Math.sin(angulo);
-        double ynew = x * Math.sin(angulo) + y * Math.cos(angulo);
-        
-        return new double[]{xnew, ynew};
+    public static double[][] getMatrixRotation(double angle) {
+        double radians = Math.toRadians(angle);
+
+        return new double[][] {
+                { Math.cos(radians), -Math.sin(radians), 0 },
+                { Math.sin(radians), Math.cos(radians), 0 },
+                { 0, 0, 1 }
+        };
     }
 
-    public double[][] rotation(double[][] sides, double angulo){
-        double[][] newCoords = new double[sides.length][2];
 
-        for(int i = 0; i < sides.length; i++){
-            newCoords[i][0] = rotatingPoint(sides[i][0], sides[i][1], angulo)[0];
-            newCoords[i][1] = rotatingPoint(sides[i][0], sides[i][1], angulo)[1];
-        }
-        return newCoords;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
 
 }

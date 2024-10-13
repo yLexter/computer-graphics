@@ -1,44 +1,35 @@
 package transformations2d;
 
-import utils.BasePanel;
+import geomtry.points.Point2D;
+import view.utils.Matrix;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Translation extends BasePanel {
-    private int width, height;
+public class Translation {
 
-    public Translation(int width, int height) {
-        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        this.width = width;
-        this.height = height;
+    public static Point2D translatePoint(Point2D point, double tx, double ty) {
+        double[][] pointHomogeneous = new double[][] {
+                { point.x, point.y, 1 },
+        };
+
+        double[][] matrix = getMatrixTranslation(tx, ty);
+        double[][] result = Matrix.multiply(pointHomogeneous, matrix);
+
+        return new Point2D(
+                result[0][0],
+                result[0][1]
+        );
     }
 
-    // Algoritmo de translação de cada ponto
-    public double[] translatingPoint(double x, double y, double tx, double ty){
-        double xnew =  x + tx;
-        double ynew = y + ty;
-
-        return new double[]{xnew, ynew};
+    public static double[][] getMatrixTranslation(double tx, double ty) {
+        return new double[][] {
+                { 1, 0, 0 },
+                { 0, 1, 0 },
+                { tx, ty, 1 }
+        };
     }
 
-    // Algoritmo que realiza a translação de todos os pontos
-    public double[][] translation(double[][] sides, double tx, double ty){
-        double[][] newCoords = new double[sides.length][2]; // matriz das coordenadas dos pontos
 
-        for(int i = 0; i < sides.length; i++){
-            newCoords[i][0] = translatingPoint(sides[i][0], sides[i][1], tx, ty)[0];
-            newCoords[i][1] = translatingPoint(sides[i][0], sides[i][1], tx, ty)[1];
-        }
 
-        return newCoords;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
 }

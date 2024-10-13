@@ -1,81 +1,77 @@
 package transformations2d;
 
-import utils.BasePanel;
+import geomtry.points.Point2D;
+import view.utils.Matrix;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Reflection extends BasePanel{
-    private int width, height;
+public class Reflection  {
 
-    public Reflection(int width, int height) {
-        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        this.width = width;
-        this.height = height;
+    public static Point2D reflectPpintInX(Point2D point) {
+        double[][] pointHomogeneous = new double[][] {
+                { point.x, point.y, 1 },
+        };
+
+        double[][] matrix = getReflectionMatrixInX();
+        double[][] result = Matrix.multiply(pointHomogeneous, matrix);
+
+        return new Point2D(
+                result[0][0],
+                result[0][1]
+        );
     }
 
-    private double[] reflectingPointInX(double x, double y){
-        return new double[]{x, -y};
-    }
- 
-    private double[] reflectingPointInY(double x, double y){
-        return new double[]{-x, y};
-    }
+    public static Point2D reflectPpintInY(Point2D point) {
+        double[][] pointHomogeneous = new double[][] {
+                { point.x, point.y, 1 },
+        };
 
-    private double[] reflectingPointInOrigin(double x, double y){
-        return new double[]{-x, -y};
-    }
+        double[][] matrix = getReflectionMatrixInY();
+        double[][] result = Matrix.multiply(pointHomogeneous, matrix);
 
-    private double[] reflectingPointInLineYX(double x, double y){
-        return new double[]{y, x};
+        return new Point2D(
+                result[0][0],
+                result[0][1]
+        );
     }
 
-    public double[][] reflectionInX(double[][] sides){
-        double[][] newCoords = new double[sides.length][2];
+    public static Point2D reflectPpintInOrigin(Point2D point) {
+        double[][] pointHomogeneous = new double[][] {
+                { point.x, point.y, 1 },
+        };
 
-        for(int i = 0; i < sides.length; i++){
-            newCoords[i][0] = reflectingPointInX(sides[i][0], sides[i][1])[0];
-            newCoords[i][1] = reflectingPointInX(sides[i][0], sides[i][1])[1];
-        }
-        return newCoords;
+        double[][] matrix = getReflectionMatrixInOrigin();
+        double[][] result = Matrix.multiply(pointHomogeneous, matrix);
+
+        return new Point2D(
+                result[0][0],
+                result[0][1]
+        );
     }
 
-    public double[][] reflectionInY(double[][] sides){
-        double[][] newCoords = new double[sides.length][2];
-
-        for(int i = 0; i < sides.length; i++){
-            newCoords[i][0] = reflectingPointInY(sides[i][0], sides[i][1])[0];
-            newCoords[i][1] = reflectingPointInY(sides[i][0], sides[i][1])[1];
-        }
-        return newCoords;
+    public static double[][] getReflectionMatrixInOrigin() {
+        return new double[][]{
+                { -1, 0, 0 },
+                { 0, -1, 0 },
+                { 0, 0, 1 }
+        };
     }
 
-    public double[][] reflectingPointInOrigin(double[][] sides){
-        double[][] newCoords = new double[sides.length][2];
-
-        for(int i = 0; i < sides.length; i++){
-            newCoords[i][0] = reflectingPointInOrigin(sides[i][0], sides[i][1])[0];
-            newCoords[i][1] = reflectingPointInOrigin(sides[i][0], sides[i][1])[1];
-        }
-        return newCoords;
+    public static double[][] getReflectionMatrixInX() {
+        return new double[][]{
+                { 1, 0, 0 },
+                { 0, -1, 0 },
+                { 0, 0, 1 }
+        };
     }
 
-    public double[][] reflectingPointInLineYX(double[][] sides){
-        double[][] newCoords = new double[sides.length][2];
-
-        for(int i = 0; i < sides.length; i++){
-            newCoords[i][0] = reflectingPointInLineYX(sides[i][0], sides[i][1])[0];
-            newCoords[i][1] = reflectingPointInLineYX(sides[i][0], sides[i][1])[1];
-        }
-        return newCoords;
+    public static double[][] getReflectionMatrixInY() {
+        return new double[][]{
+                {-1, 0, 0 },
+                { 0, 1, 0 },
+                { 0, 0, 1 }
+        };
     }
 
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-    
 }

@@ -1,48 +1,33 @@
 package transformations2d;
 
-import utils.BasePanel;
+import geomtry.points.Point2D;
+import view.utils.Matrix;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Scale extends BasePanel{
-    private int width, height;
+public class Scale {
 
-    public Scale(int width, int height) {
-        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        this.width = width;
-        this.height = height;
+    public static Point2D scalePoint(Point2D point, double sx, double sy) {
+        double[][] pointHomogeneous = new double[][] {
+            { point.x, point.y, 1 },
+        };
+
+        double[][] matrix = getMatrixScala(sx, sy);
+        double[][] result = Matrix.multiply(pointHomogeneous, matrix);
+
+        return new Point2D(
+           result[0][0],
+           result[0][1]
+        );
     }
 
-    // Algoritmo de escala de cada ponto
-    private double[] scalingPoint(double x, double y, double sx, double sy){
-        double[] newCoords = new double[2]; // Coordenadas resultantes para o ponto (x, y)
-    
-        newCoords[0] = sx * x; // Escala a coordenada X
-        newCoords[1] = sy * y; // Escala a coordenada Y
-    
-        return newCoords;
+    public static double[][] getMatrixScala(double sx, double sy) {
+        return new double[][]{
+             { sx, 0, 0 },
+             { 0, sy, 0 },
+             { 0, 0,  1 }
+        };
     }
 
-    // Algoritmo que realiza a escala de todos os pontos
-    public double[][] scalation(double[][] sides, double sx, double sy){
-        double[][] newCoords = new double[sides.length][2]; // Matriz das coordenadas dos pontos escalados
-    
-        for(int i = 0; i < sides.length; i++){
-            double[] scaledPoint = scalingPoint(sides[i][0], sides[i][1], sx, sy); // Escala o ponto atual
-            newCoords[i][0] = scaledPoint[0]; // Atualiza a coordenada X
-            newCoords[i][1] = scaledPoint[1]; // Atualiza a coordenada Y
-        }
-    
-        return newCoords;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-    
 }

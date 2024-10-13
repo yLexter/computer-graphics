@@ -1,67 +1,77 @@
 package transformations2d;
 
-import utils.BasePanel;
+import geomtry.points.Point2D;
+import view.utils.Matrix;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
 
-public class Shear extends BasePanel{ //Cisalhamento
-    private int width, height;
+public class Shear { //Cisalhamento
 
-    public Shear(int width, int height) {
-        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        this.width = width;
-        this.height = height;
+    public static Point2D shearX(Point2D point, double shx) {
+        double[][] pointHomogeneous = new double[][] {
+                { point.x, point.y, 1 },
+        };
+
+        double[][] matrix = getMatrixShearX(shx);
+        double[][] result = Matrix.multiply(pointHomogeneous, matrix);
+
+        return new Point2D(
+                result[0][0],
+                result[0][1]
+        );
     }
 
-    private double[] shearingInX(double x, double y, double b){ // b = grau de distorção
-        return new double[]{x + b * y, y};
+    public static Point2D shearY(Point2D point, double shy) {
+        double[][] pointHomogeneous = new double[][] {
+                { point.x, point.y, 1 },
+        };
+
+        double[][] matrix = getMatrixShearY(shy);
+        double[][] result = Matrix.multiply(pointHomogeneous, matrix);
+
+        return new Point2D(
+                result[0][0],
+                result[0][1]
+        );
     }
 
-    private double[] shearingInY(double x, double y, double a){ // a = grau de distorção
-        return new double[]{x, y + a * x};
+    public static Point2D shearXY(Point2D point, double shx, double shy) {
+        double[][] pointHomogeneous = new double[][] {
+                { point.x, point.y, 1 },
+        };
+
+        double[][] matrix = getMatrixShearXY(shx, shy);
+        double[][] result = Matrix.multiply(pointHomogeneous, matrix);
+
+        return new Point2D(
+                result[0][0],
+                result[0][1]
+        );
     }
 
-    private double[] shearingInXY(double x, double y, double b, double a){ // a e b = grau de distorção
-        return new double[]{x + b * y, y + a * x};
+
+    public static double[][] getMatrixShearY(double shy) {
+        return new double[][] {
+                { 1, 0, 0 },
+                { shy, 1, 0 },   // Shear along Y-axis
+                { 0, 0, 1 }
+        };
     }
 
-    public double[][] shearInX(double[][] sides, double b){
-        double[][] newCoords = new double[sides.length][2];
-
-        for(int i = 0; i < sides.length; i++){
-            newCoords[i][0] = shearingInX(sides[i][0], sides[i][1], b)[0];
-            newCoords[i][1] = shearingInX(sides[i][0], sides[i][1], b)[1];
-        }
-        return newCoords;
+    public static double[][] getMatrixShearX(double shx) {
+        return new double[][] {
+                { 1, shx, 0 },   // Shear along X-axis
+                { 0, 1, 0 },
+                { 0, 0, 1 }
+        };
     }
 
-    public double[][] shearInY(double[][] sides, double a){
-        double[][] newCoords = new double[sides.length][2];
-
-        for(int i = 0; i < sides.length; i++){
-            newCoords[i][0] = shearingInY(sides[i][0], sides[i][1], a)[0];
-            newCoords[i][1] = shearingInY(sides[i][0], sides[i][1], a)[1];
-        }
-        return newCoords;
+    public static double[][] getMatrixShearXY(double shx, double shy) {
+        return new double[][] {
+                { 1, shx, 0 },   // Shear along X-axis
+                { shy, 1, 0 },   // Shear along Y-axis
+                { 0, 0, 1 }
+        };
     }
 
-    public double[][] shearInXY(double[][] sides, double b, double a){
-        double[][] newCoords = new double[sides.length][2];
-
-        for(int i = 0; i < sides.length; i++){
-            newCoords[i][0] = shearingInXY(sides[i][0], sides[i][1], b, a)[0];
-            newCoords[i][1] = shearingInXY(sides[i][0], sides[i][1], b, a)[1];
-        }
-        return newCoords;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
 
 }
