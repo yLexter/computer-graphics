@@ -1,41 +1,37 @@
 package view.inputsPanel.primitivesInputs;
 
 import primitives.MidpointCircle;
+import utils.Constants;
+import view.inputsPanel.ShapePanel;
+import geomtry.planeCartesians.CartesianPlane2D;
+import view.mainScreen.MainScreenSingleton;
 
 import javax.swing.*;
 
 public class MidpointCircleInputs extends ShapePanel {
-    private JTextField cxField;
-    private JTextField cyField;
+
     private JTextField radiusField;
 
     @Override
     protected void initializeInputs() {
-        cxField = new JTextField(10);
-        cyField = new JTextField(10);
         radiusField = new JTextField(10);
 
-        addInputField("Centro X:", cxField, 0);
-        addInputField("Centro Y:", cyField, 1);
-        addInputField("Raio:", radiusField, 2);
+        addInputField("Raio:", radiusField);
     }
 
     @Override
     protected void onCalculate() {
-        int cx = Integer.parseInt(cxField.getText());
-        int cy = Integer.parseInt(cyField.getText());
         int radius = Integer.parseInt(radiusField.getText());
 
-        JFrame frame = new JFrame("Mid-Point Circle");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        CartesianPlane2D cartesianPlanePanel = MainScreenSingleton.getCartesianPlane2D();
 
-        frame.setSize(700, 700);
+        MidpointCircle panel = new MidpointCircle(
+                (point2D -> cartesianPlanePanel.setPixel(point2D, Constants.COLOR_PRIMITEVES))
+        );
 
-        MidpointCircle panel = new MidpointCircle(700, 700);
-        panel.drawCircle(cx, cy, radius); 
+        panel.drawCircle(radius);
 
-        frame.add(panel);
-        frame.setVisible(true);
+        cartesianPlanePanel.repaint();
     }
 
 }

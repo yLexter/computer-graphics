@@ -1,14 +1,12 @@
 package view.inputsPanel.pixelInputs;
 
 import pixel.Coordinates;
-import pixel.PixelCartesianPlane;
 
 import javax.swing.*;
 import java.awt.*;
 
-import static pixel.PixelCartesianPlane.SCREEN_HEIGHT;
-import static pixel.PixelCartesianPlane.SCREEN_WIDTH;
 
+/*
 public class PixelInputs extends JPanel {
 
     private static JTextField fieldX;
@@ -153,3 +151,4 @@ public class PixelInputs extends JPanel {
 
     }
 }
+*/

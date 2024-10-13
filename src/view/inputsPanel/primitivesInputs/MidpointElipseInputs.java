@@ -1,6 +1,10 @@
 package view.inputsPanel.primitivesInputs;
 
 import primitives.MidpointElipse;
+import utils.Constants;
+import view.inputsPanel.ShapePanel;
+import geomtry.planeCartesians.CartesianPlane2D;
+import view.mainScreen.MainScreenSingleton;
 
 import javax.swing.*;
 
@@ -17,29 +21,23 @@ public class MidpointElipseInputs extends ShapePanel {
         aField = new JTextField(10);
         bField = new JTextField(10);
 
-        addInputField("Centro X:", cxField, 0);
-        addInputField("Centro Y:", cyField, 1);
-        addInputField("Eixo A:", aField, 2);
-        addInputField("Eixo B:", bField, 3);
+        addInputField("Eixo A:", aField);
+        addInputField("Eixo B:", bField);
     }
 
     @Override
     protected void onCalculate() {
-        int cx = Integer.parseInt(cxField.getText());
-        int cy = Integer.parseInt(cyField.getText());
         int a = Integer.parseInt(aField.getText());
         int b = Integer.parseInt(bField.getText());
 
-        JFrame frame = new JFrame("Mid-Point Ellipse");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        CartesianPlane2D cartesianPlanePanel = MainScreenSingleton.getCartesianPlane2D();
 
-        frame.setSize(700, 700);
+        MidpointElipse midPointElipse = new MidpointElipse(
+                (point2D -> cartesianPlanePanel.setPixel(point2D, Constants.COLOR_PRIMITEVES))
+        );
 
-        MidpointElipse panel = new MidpointElipse(700, 700);
-        panel.drawElipse(cx, cy, a, b);
-
-        frame.add(panel);
-        frame.setVisible(true);
+        midPointElipse.drawElipse(a, b);
+        cartesianPlanePanel.repaint();
     }
 
 }

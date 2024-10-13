@@ -1,6 +1,11 @@
 package view.inputsPanel.primitivesInputs;
 
+import geomtry.points.Point2D;
 import primitives.MidpointLine;
+import utils.Constants;
+import view.inputsPanel.ShapePanel;
+import geomtry.planeCartesians.CartesianPlane2D;
+import view.mainScreen.MainScreenSingleton;
 
 import javax.swing.*;
 
@@ -17,30 +22,28 @@ public class MidpointLineInputs extends ShapePanel {
         x2Field = new JTextField(10);
         y2Field = new JTextField(10);
 
-        addInputField("X1:", x1Field, 0);
-        addInputField("Y1:", y1Field, 1);
-        addInputField("X2:", x2Field, 2);
-        addInputField("Y2:", y2Field, 3);
+        addInputField("X1:", x1Field);
+        addInputField("Y1:", y1Field);
+        addInputField("X2:", x2Field);
+        addInputField("Y2:", y2Field);
     }
 
-    // ToDo mudar os Valores estão fixo (Colocar o do inputs)
     @Override
     protected void onCalculate() {
         int x1 = Integer.parseInt(x1Field.getText());
         int y1 = Integer.parseInt(y1Field.getText());
+
         int x2 = Integer.parseInt(x2Field.getText());
         int y2 = Integer.parseInt(y2Field.getText());
 
-        JFrame frame = new JFrame("Mid-Point Line");
-        MidpointLine panel = new MidpointLine(700, 700);
-        frame.add(panel);
-        frame.setSize(700, 700);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setVisible(true);
+        CartesianPlane2D cartesianPlanePanel = MainScreenSingleton.getCartesianPlane2D();
 
-        //panel.drawAxes(); // Desenhar eixos X e Y
-        panel.desenhaLinha(x1, y1, x2, y2);
-        panel.repaint(); // Atualizar a interface para exibir os eixos
+        MidpointLine midPointLine = new MidpointLine(
+                (point2D -> cartesianPlanePanel.setPixel(point2D, Constants.COLOR_PRIMITEVES))
+        );
+
+        midPointLine.desenhaLinha(new Point2D(x1, y1), new Point2D(x2, y2));
+        cartesianPlanePanel.repaint();
     }
 
 
