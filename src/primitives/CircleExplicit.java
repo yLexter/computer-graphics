@@ -1,43 +1,38 @@
 package primitives;
 
-import utils.BasePanel;
+import geomtry.points.Point2D;
+import utils.BasePrimitives;
+import geomtry.planeCartesians.CartesianPlane2D;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.util.function.Consumer;
 
-public class CircleExplicit extends BasePanel {
+public class CircleExplicit extends BasePrimitives {
 
-    private int width, height;
-    
-    public CircleExplicit(int width, int height) {
-        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        this.width = width;
-        this.height = height;
+    public CircleExplicit(Consumer<Point2D> callback) {
+        super(callback);
     }
 
-    public void drawCircle(int centerX, int centerY, int radius) {
+    public void drawCircle(int radius) {
         int rSquared = radius * radius;
 
-        for (int x = centerX - radius; x <= centerX + radius; x++) {
-            int dx = x - centerX;
-            double dxSquared = dx * dx;
+        // Desenha a partir da origem (0, 0)
+        for (int x = 0; x <= radius; x++) {
+            int dxSquared = x * x;
             double ySquared = rSquared - dxSquared;
 
             if (ySquared >= 0) {
-                int y1 = (int) (centerY + Math.sqrt(ySquared));
-                int y2 = (int) (centerY - Math.sqrt(ySquared));
-                setPixel(x, y1, Color.RED.getRGB());
-                setPixel(x, y2, Color.RED.getRGB());
+                double y = Math.sqrt(ySquared);
+
+                // Desenha em todos os quadrantes do círculo
+                callback.accept(new Point2D(x, y));
+                callback.accept(new Point2D(x, -y));
+                callback.accept(new Point2D(-x, y));
+                callback.accept(new Point2D(-x, -y));
             }
         }
     }
 
-    public int getWidth() {
-        return width;
-    }
 
-    public int getHeight() {
-        return height;
-    }
 
 }

@@ -1,40 +1,37 @@
 package primitives;
 
-import utils.BasePanel;
+import geomtry.points.Point2D;
+import utils.BasePrimitives;
+import geomtry.planeCartesians.CartesianPlane2D;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.util.function.Consumer;
 
-public class MidpointLine extends BasePanel {
 
-    public MidpointLine(int width, int height) {
-        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+public class MidpointLine extends BasePrimitives {
+
+    public MidpointLine(Consumer<Point2D> callback) {
+        super(callback);
     }
 
-    @Override
-    public void setPixel(int x, int y, int color) {
-        int screenX = x + image.getWidth() / 2;
-        int screenY = image.getHeight() / 2 - y;
+    // Função para determinar o octante e desenhar a linha usando pontos Point2D
+    public void desenhaLinha(Point2D start, Point2D end) {
+        int x1 = (int) start.x;
+        int y1 = (int) start.y;
+        int x2 = (int) end.x;
+        int y2 = (int) end.y;
 
-        if (screenX >= 0 && screenX < image.getWidth() && screenY >= 0 && screenY < image.getHeight()) {
-            image.setRGB(screenX, screenY, color);
-        }
-    }
-
-    // Função para determinar o octante e desenhar a linha
-    public void desenhaLinha(int x1, int y1, int x2, int y2) {
         int dx = x2 - x1;
         int dy = y2 - y1;
 
         // Caso especial: Linha vertical (dx = 0)
         if (dx == 0) {
-            desenhaLinhaVertical(x1, y1, y2);
+            desenhaLinhaVertical(start, end);
             return;
         }
 
         // Caso especial: Linha horizontal (dy = 0)
         if (dy == 0) {
-            desenhaLinhaHorizontal(x1, x2, y1);
+            desenhaLinhaHorizontal(start, end);
             return;
         }
 
@@ -44,51 +41,54 @@ public class MidpointLine extends BasePanel {
         // Aplica a lógica de acordo com o octante
         switch (octante) {
             case 1:
-                desenhaOctante1(x1, y1, x2, y2);
+                desenhaOctante1(start, end);
                 break;
             case 2:
-                desenhaOctante2(x1, y1, x2, y2);
+                desenhaOctante2(start, end);
                 break;
             case 3:
-                desenhaOctante3(x1, y1, x2, y2);
+                desenhaOctante3(start, end);
                 break;
             case 4:
-                desenhaOctante4(x1, y1, x2, y2);
+                desenhaOctante4(start, end);
                 break;
             case 5:
-                desenhaOctante5(x1, y1, x2, y2);
+                desenhaOctante5(start, end);
                 break;
             case 6:
-                desenhaOctante6(x1, y1, x2, y2);
+                desenhaOctante6(start, end);
                 break;
             case 7:
-                desenhaOctante7(x1, y1, x2, y2);
+                desenhaOctante7(start, end);
                 break;
             case 8:
-                desenhaOctante8(x1, y1, x2, y2);
+                desenhaOctante8(start, end);
                 break;
         }
     }
 
-    // Função para desenhar uma linha vertical
-    private void desenhaLinhaVertical(int x, int y1, int y2) {
-        int yStart = Math.min(y1, y2);
-        int yEnd = Math.max(y1, y2);
+    // Função para desenhar uma linha vertical usando Point2D
+    private void desenhaLinhaVertical(Point2D start, Point2D end) {
+        int x = (int) start.x;
+        int yStart = (int) Math.min(start.y, end.y);
+        int yEnd = (int) Math.max(start.y, end.y);
 
         for (int y = yStart; y <= yEnd; y++) {
-            setPixel(x, y, Color.RED.getRGB());
+            callback.accept(new Point2D(x, y));
         }
     }
 
-    // Função para desenhar uma linha horizontal
-    private void desenhaLinhaHorizontal(int x1, int x2, int y) {
-        int xStart = Math.min(x1, x2);
-        int xEnd = Math.max(x1, x2);
+    // Função para desenhar uma linha horizontal usando Point2D
+    private void desenhaLinhaHorizontal(Point2D start, Point2D end) {
+        int y = (int) start.y;
+        int xStart = (int) Math.min(start.x, end.x);
+        int xEnd = (int) Math.max(start.x, end.x);
 
         for (int x = xStart; x <= xEnd; x++) {
-            setPixel(x, y, Color.RED.getRGB());
+            callback.accept(new Point2D(x, y));
         }
     }
+
     // Determina em qual octante a linha está
     private int getOctante(int dx, int dy) {
         if (Math.abs(dy) <= Math.abs(dx)) {
@@ -105,14 +105,16 @@ public class MidpointLine extends BasePanel {
         return 1; // Octante padrão
     }
 
-    // Implementações para cada octante
-    private void desenhaOctante1(int x1, int y1, int x2, int y2) {
+    // Implementações para cada octante, agora com Point2D
+    private void desenhaOctante1(Point2D start, Point2D end) {
+        int x1 = (int) start.x, y1 = (int) start.y, x2 = (int) end.x, y2 = (int) end.y;
         int dx = Math.abs(x2 - x1);
         int dy = Math.abs(y2 - y1);
         int d = 2 * dy - dx;
         int y = y1;
+
         for (int x = x1; x <= x2; x++) {
-            setPixel(x, y, Color.RED.getRGB());
+            callback.accept(new Point2D(x, y));
             if (d > 0) {
                 y++;
                 d -= 2 * dx;
@@ -121,13 +123,15 @@ public class MidpointLine extends BasePanel {
         }
     }
 
-    private void desenhaOctante2(int x1, int y1, int x2, int y2) {
+    private void desenhaOctante2(Point2D start, Point2D end) {
+        int x1 = (int) start.x, y1 = (int) start.y, x2 = (int) end.x, y2 = (int) end.y;
         int dx = Math.abs(x2 - x1);
         int dy = Math.abs(y2 - y1);
         int d = 2 * dx - dy;
         int x = x1;
+
         for (int y = y1; y <= y2; y++) {
-            setPixel(x, y, Color.RED.getRGB());
+            callback.accept(new Point2D(x, y));
             if (d > 0) {
                 x++;
                 d -= 2 * dy;
@@ -136,13 +140,15 @@ public class MidpointLine extends BasePanel {
         }
     }
 
-    private void desenhaOctante3(int x1, int y1, int x2, int y2) {
+    private void desenhaOctante3(Point2D start, Point2D end) {
+        int x1 = (int) start.x, y1 = (int) start.y, x2 = (int) end.x, y2 = (int) end.y;
         int dx = Math.abs(x2 - x1);
         int dy = Math.abs(y2 - y1);
         int d = 2 * dx - dy;
         int x = x1;
+
         for (int y = y1; y <= y2; y++) {
-            setPixel(x, y, Color.RED.getRGB());
+            callback.accept(new Point2D(x, y));
             if (d > 0) {
                 x--;
                 d -= 2 * dy;
@@ -151,13 +157,15 @@ public class MidpointLine extends BasePanel {
         }
     }
 
-    private void desenhaOctante4(int x1, int y1, int x2, int y2) {
+    private void desenhaOctante4(Point2D start, Point2D end) {
+        int x1 = (int) start.x, y1 = (int) start.y, x2 = (int) end.x, y2 = (int) end.y;
         int dx = Math.abs(x2 - x1);
         int dy = Math.abs(y2 - y1);
         int d = 2 * dy - dx;
         int y = y1;
+
         for (int x = x1; x >= x2; x--) {
-            setPixel(x, y, Color.RED.getRGB());
+            callback.accept(new Point2D(x, y));
             if (d > 0) {
                 y++;
                 d -= 2 * dx;
@@ -166,13 +174,15 @@ public class MidpointLine extends BasePanel {
         }
     }
 
-    private void desenhaOctante5(int x1, int y1, int x2, int y2) {
+    private void desenhaOctante5(Point2D start, Point2D end) {
+        int x1 = (int) start.x, y1 = (int) start.y, x2 = (int) end.x, y2 = (int) end.y;
         int dx = Math.abs(x2 - x1);
         int dy = Math.abs(y2 - y1);
         int d = 2 * dy - dx;
         int y = y1;
+
         for (int x = x1; x >= x2; x--) {
-            setPixel(x, y, Color.RED.getRGB());
+            callback.accept(new Point2D(x, y));
             if (d > 0) {
                 y--;
                 d -= 2 * dx;
@@ -181,14 +191,15 @@ public class MidpointLine extends BasePanel {
         }
     }
 
-
-    private void desenhaOctante6(int x1, int y1, int x2, int y2) {
+    private void desenhaOctante6(Point2D start, Point2D end) {
+        int x1 = (int) start.x, y1 = (int) start.y, x2 = (int) end.x, y2 = (int) end.y;
         int dx = Math.abs(x2 - x1);
         int dy = Math.abs(y2 - y1);
         int d = 2 * dx - dy;
         int x = x1;
+
         for (int y = y1; y >= y2; y--) {
-            setPixel(x, y, Color.RED.getRGB());
+            callback.accept(new Point2D(x, y));
             if (d > 0) {
                 x--;
                 d -= 2 * dy;
@@ -197,14 +208,15 @@ public class MidpointLine extends BasePanel {
         }
     }
 
-
-    private void desenhaOctante7(int x1, int y1, int x2, int y2) {
+    private void desenhaOctante7(Point2D start, Point2D end) {
+        int x1 = (int) start.x, y1 = (int) start.y, x2 = (int) end.x, y2 = (int) end.y;
         int dx = Math.abs(x2 - x1);
         int dy = Math.abs(y2 - y1);
         int d = 2 * dx - dy;
         int x = x1;
+
         for (int y = y1; y >= y2; y--) {
-            setPixel(x, y, Color.RED.getRGB());
+            callback.accept(new Point2D(x, y));
             if (d > 0) {
                 x++;
                 d -= 2 * dy;
@@ -213,14 +225,15 @@ public class MidpointLine extends BasePanel {
         }
     }
 
-
-    private void desenhaOctante8(int x1, int y1, int x2, int y2) {
+    private void desenhaOctante8(Point2D start, Point2D end) {
+        int x1 = (int) start.x, y1 = (int) start.y, x2 = (int) end.x, y2 = (int) end.y;
         int dx = Math.abs(x2 - x1);
         int dy = Math.abs(y2 - y1);
         int d = 2 * dy - dx;
         int y = y1;
+
         for (int x = x1; x <= x2; x++) {
-            setPixel(x, y, Color.RED.getRGB());
+            callback.accept(new Point2D(x, y));
             if (d > 0) {
                 y--;
                 d -= 2 * dx;
@@ -229,16 +242,5 @@ public class MidpointLine extends BasePanel {
         }
     }
 
-//    public void drawAxes() {
-//        // Desenhar o eixo X (horizontal)
-//        desenhaLinha(-getWidth() / 2, 0, getWidth() / 2, 0);
-//        // Desenhar o eixo Y (vertical)
-//        desenhaLinha(0, -getHeight() / 2, 0, getHeight() / 2);
-//    }
-
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawImage(image, 0, 0, null);
-    }
 }
+

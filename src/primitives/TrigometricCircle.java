@@ -1,34 +1,26 @@
 package primitives;
 
-import utils.BasePanel;
+import geomtry.points.Point2D;
+import utils.BasePrimitives;
+import geomtry.planeCartesians.CartesianPlane2D;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.util.function.Consumer;
 
-public class TrigometricCircle extends BasePanel {
+public class TrigometricCircle extends BasePrimitives {
 
-    private int width, height;
-
-    public TrigometricCircle(int width, int height) {
-        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        this.width = width;
-        this.height = height;
+    public TrigometricCircle(Consumer<Point2D> callback) {
+        super(callback);
     }
 
-    public void drawCircle(int centerX, int centerY, int radius) {
+    public void drawCircle(int radius) {
+
         for (int angle = 0; angle < 360; angle++) {
             double radians = Math.toRadians(angle);
-            int x = (int) (centerX + radius * Math.cos(radians));
-            int y = (int) (centerY + radius * Math.sin(radians));
-            setPixel(x, y, Color.RED.getRGB());
+            double x = (radius * Math.cos(radians));
+            double y = (radius * Math.sin(radians));
+
+            callback.accept(new Point2D(x, y));
         }
     }
 
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
 }

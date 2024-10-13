@@ -1,40 +1,26 @@
 package primitives;
 
-import utils.BasePanel;
+import geomtry.points.Point2D;
+import utils.BasePrimitives;
+import geomtry.planeCartesians.CartesianPlane2D;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.util.function.Consumer;
 
-public class MidpointElipse extends BasePanel {
+public class MidpointElipse extends BasePrimitives {
 
-    private int width, height;
-
-    public MidpointElipse(int width, int height) {
-        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        this.width = width;
-        this.height = height;
-        drawAxes(); // Desenhar eixos inicialmente
+    public MidpointElipse(Consumer<Point2D> callback) {
+        super(callback);
     }
 
-    @Override
-    public void setPixel(int x, int y, int color) {
-        int screenX = x + image.getWidth() / 2;
-        int screenY = image.getHeight() / 2 - y;
-
-        if (screenX >= 0 && screenX < image.getWidth() && screenY >= 0 && screenY < image.getHeight()) {
-            image.setRGB(screenX, screenY, color);
-        }
-    }
-
-    // Algoritmo de ponto médio para desenhar a elipse
-    public void drawElipse(int cx, int cy, int a, int b) {
+    // Algoritmo de ponto médio para desenhar a elipse centrada na origem
+    public void drawElipse(int a, int b) {
         int x = 0;
         int y = b;
         int d1 = b * b - a * a * b + a * a / 4;
         int dx = 2 * b * b * x;
         int dy = 2 * a * a * y;
 
-        plotEllipsePoints(cx, cy, x, y);
+        plotEllipsePoints(x, y);
 
         // Região 1
         while (dx < dy) {
@@ -47,7 +33,8 @@ public class MidpointElipse extends BasePanel {
                 dy -= 2 * a * a;
                 d1 += dx - dy + b * b;
             }
-            plotEllipsePoints(cx, cy, x, y);
+
+            plotEllipsePoints(x, y);
         }
 
         // Região 2
@@ -62,53 +49,17 @@ public class MidpointElipse extends BasePanel {
                 dx += 2 * b * b;
                 d2 += a * a - dy + dx;
             }
-            plotEllipsePoints(cx, cy, x, y);
+            plotEllipsePoints(x, y);
         }
     }
 
-    // Plota os pontos da elipse em todos os octantes
-    private void plotEllipsePoints(int cx, int cy, int x, int y) {
-        setPixel(cx + x, cy + y, Color.RED.getRGB());
-        setPixel(cx - x, cy + y, Color.RED.getRGB());
-        setPixel(cx + x, cy - y, Color.RED.getRGB());
-        setPixel(cx - x, cy - y, Color.RED.getRGB());
+    // Plota os pontos da elipse em todos os octantes sem depender de cx e cy
+    private void plotEllipsePoints(int x, int y) {
+        callback.accept(new Point2D(x, y));
+        callback.accept(new Point2D(-x, y));
+        callback.accept(new Point2D(x, -y));
+        callback.accept(new Point2D(-x, -y));
     }
 
-    // Desenhar eixos X e Y
-    public void drawAxes() {
-        // Desenhar o eixo X (horizontal)
-        desenhaLinha(-getWidth() / 2, 0, getWidth() / 2, 0);
-        // Desenhar o eixo Y (vertical)
-        desenhaLinha(0, -getHeight() / 2, 0, getHeight() / 2);
-    }
 
-    private void desenhaLinha(int x1, int y1, int x2, int y2) {
-        int dx = Math.abs(x2 - x1);
-        int dy = Math.abs(y2 - y1);
-        int sx = (x1 < x2) ? 1 : -1;
-        int sy = (y1 < y2) ? 1 : -1;
-        int err = dx - dy;
-
-        while (true) {
-            setPixel(x1, y1, Color.BLACK.getRGB());
-            if (x1 == x2 && y1 == y2) break;
-            int e2 = err * 2;
-            if (e2 > -dy) {
-                err -= dy;
-                x1 += sx;
-            }
-            if (e2 < dx) {
-                err += dx;
-                y1 += sy;
-            }
-        }
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
 }
