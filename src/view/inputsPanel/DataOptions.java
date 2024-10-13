@@ -1,18 +1,27 @@
 package view.inputsPanel;
 
+import view.mainScreen.MainScreen;
+import view.mainScreen.MainScreenSingleton;
+
 import javax.swing.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class DataOptions {
 
-    private final Map<String, Map<String, JPanel>> data;
+    private final Map<String, Map<String, ShapePanel>> data;
 
     public DataOptions() {
-        data = new LinkedHashMap<>();
+        this.data = new LinkedHashMap<>();
     }
 
-    public void addOption(String category, String option, JPanel panelInputs) {
+    public void addOption(String category, String option, ShapePanel panelInputs) {
+        MainScreen mainScreen = MainScreenSingleton.getMainScreen();
+
+        if (mainScreen.cartesianPlaneHandler.getCartesianPlaneByCategory(category) == null) {
+            throw new IllegalArgumentException("A Cateogria precisa de uma tela principal");
+        }
+
         data.computeIfAbsent(category, k -> new LinkedHashMap<>()).put(option, panelInputs);
     }
 
@@ -26,9 +35,11 @@ public class DataOptions {
 
     public JPanel getPanelInputsForOption(String option) {
 
-        for (Map<String, JPanel> options : data.values()) {
+        for (Map<String, ShapePanel> options : data.values()) {
             if (options.containsKey(option)) {
-                return options.get(option);
+                var selected = options.get(option);
+                selected.resetAll();
+                return selected;
             }
         }
 
