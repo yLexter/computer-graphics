@@ -1,5 +1,8 @@
 package view.inputsPanel.primitivesInputs;
 
+import geomtry.points.Point2D;
+import primitives.DDALine;
+import utils.Constants;
 import view.inputsPanel.ShapePanel;
 import view.mainScreen.MainScreenSingleton;
 import geomtry.planeCartesians.CartesianPlane2D;
@@ -35,10 +38,13 @@ public class DDALineInputs extends ShapePanel {
             int y2 = Integer.parseInt(point2[1]);
 
             CartesianPlane2D cartesianPlanePanel = MainScreenSingleton.getCartesianPlane2D();
-            // DDALine ddaLine = new DDALine(cartesianPlanePanel)
-            // ddaLine.desenhaLinha(x1, y1, x2, y2);
+             DDALine ddaLine = new DDALine(
+                     (point2D -> cartesianPlanePanel.setPixel(point2D, Constants.COLOR_PRIMITEVES))
+             );
 
-            cartesianPlanePanel.repaint();
+             ddaLine.drawLine(new Point2D(x1, y1), new Point2D(x2, y2));
+
+             cartesianPlanePanel.repaint();
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Por favor, insira valores válidos para P1 e P2.");
         }

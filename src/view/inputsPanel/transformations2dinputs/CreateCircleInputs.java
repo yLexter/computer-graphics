@@ -35,10 +35,6 @@ public class CreateCircleInputs extends ShapePanel {
 
         Circle circle = new Circle(radius);
 
-        circle.iterateToPoints(
-             point2D -> cartesianPlanePanel.setPixel(point2D, Constants.COLOR_PRIMITEVES)
-        );
-
         mainScreen.geometricFiguresHandler.addFigure(circle);
         mainScreen.updateFigures();
 

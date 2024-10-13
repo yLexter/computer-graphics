@@ -44,10 +44,6 @@ public class CreateEllipseInputs extends ShapePanel {
 
         Ellipse ellipse = new Ellipse(majorAxis, minorAxis);
 
-        ellipse.iterateToPoints(
-                point2D -> cartesianPlanePanel.setPixel(point2D, Constants.COLOR_PRIMITEVES)
-        );
-
         mainScreen.geometricFiguresHandler.addFigure(ellipse);
         mainScreen.updateFigures();
 
