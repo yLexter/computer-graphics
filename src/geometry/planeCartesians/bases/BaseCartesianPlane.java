@@ -1,6 +1,6 @@
-package geomtry.planeCartesians;
+package geometry.planeCartesians;
 
-import geomtry.points.Point2D;
+import geometry.points.Point2D;
 import javax.swing.*;
 
 public abstract class BaseCartesianPlane extends JPanel {
