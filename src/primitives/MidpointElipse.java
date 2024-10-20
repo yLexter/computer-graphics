@@ -1,19 +1,22 @@
 package primitives;
 
-import geomtry.points.Point2D;
-import utils.BasePrimitives;
-import geomtry.planeCartesians.CartesianPlane2D;
+import geometry.points.Point2D;
+import primitives.bases.BaseEllipse;
+import primitives.bases.BasePrimitives;
 
 import java.util.function.Consumer;
 
-public class MidpointElipse extends BasePrimitives {
+public class MidpointElipse extends BaseEllipse {
 
     public MidpointElipse(Consumer<Point2D> callback) {
         super(callback);
     }
 
+    public MidpointElipse() {}
+
     // Algoritmo de ponto médio para desenhar a elipse centrada na origem
-    public void drawElipse(int a, int b) {
+    @Override
+    public void drawEllipse(int a, int b) {
         int x = 0;
         int y = b;
         int d1 = b * b - a * a * b + a * a / 4;

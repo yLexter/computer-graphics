@@ -1,17 +1,13 @@
 package view.inputsPanel.transformations2dinputs;
 
-import geomtry.figures.BaseFigure;
-import geomtry.planeCartesians.CartesianPlane2D;
-import geomtry.points.Point2D;
-import transformations2d.Scale;
+import geometry.figures.BaseFigure;
+import geometry.points.Point2D;
 import transformations2d.Translation;
-import utils.Constants;
 import view.inputsPanel.ShapePanel;
 import view.mainScreen.MainScreen;
 import view.mainScreen.MainScreenSingleton;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class TranslationInputs extends ShapePanel {
     private JTextField translationX, translationY;

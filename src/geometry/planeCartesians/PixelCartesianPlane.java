@@ -1,6 +1,7 @@
-package geomtry.planeCartesians;
+package geometry.planeCartesians;
 
-import geomtry.points.Point2D;
+import geometry.planeCartesians.bases.BaseCartesianPlane;
+import geometry.points.Point2D;
 
 import java.awt.*;
 

@@ -1,26 +1,41 @@
 package view.utils;
 
-import geomtry.planeCartesians.BaseCartesianPlane;
+import geometry.planeCartesians.bases.BaseCartesianPlane;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CartesianPlaneHandler {
 
-    private BaseCartesianPlane cartesianPlane;
-
     private final Map<String, BaseCartesianPlane> cartesiansPlane;
+
+    private String currentCartesianPlaneString;
 
     public CartesianPlaneHandler() {
         this.cartesiansPlane = new LinkedHashMap<>();
     }
 
     public BaseCartesianPlane getCurrentCartesianPlane() {
-        return cartesianPlane;
+        return cartesiansPlane.get(currentCartesianPlaneString);
     }
 
-    public void setCartesianPlane(BaseCartesianPlane cartesianPlane) {
-        this.cartesianPlane = cartesianPlane;
+    public String getCurrentCategory () {
+        return currentCartesianPlaneString;
+    }
+
+    public void setCurrentCategory(String currentCartesianPlaneString) {
+        this.currentCartesianPlaneString = currentCartesianPlaneString;
+    }
+
+    public List<String> getCategories() {
+        return new ArrayList<>(cartesiansPlane.keySet().stream().toList());
+    }
+
+    public void resetCurrentCartesianPlane() {
+        BaseCartesianPlane currentCartesianPlane = getCurrentCartesianPlane();
+        this.cartesiansPlane.put(currentCartesianPlaneString, currentCartesianPlane.reset());
     }
 
     public void addCartesianPlane(String category, BaseCartesianPlane cartesianPlane) {

@@ -1,6 +1,6 @@
-package geomtry.figures;
+package geometry.figures;
 
-import geomtry.points.Point2D;
+import geometry.points.Point2D;
 import utils.Constants;
 
 import java.util.ArrayList;
@@ -9,8 +9,8 @@ import java.util.function.Consumer;
 
 public abstract class BaseFigure {
 
-
     protected List<Point2D> points = new ArrayList<>();
+
     public abstract String getID();
 
     public List<Point2D> getPoints() {
@@ -21,11 +21,12 @@ public abstract class BaseFigure {
         return Constants.COLOR_PRIMITEVES;
     }
 
+    public abstract void generatePoints();
+
     public void iterateToPoints(Consumer<Point2D> callback) {
         for (Point2D point : points) {
             callback.accept(point);
         }
     }
-
 }
 

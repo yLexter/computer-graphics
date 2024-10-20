@@ -1,45 +1,64 @@
 package view.utils;
 
-import geomtry.figures.BaseFigure;
-import geomtry.figures.Square;
+import geometry.figures.BaseFigure;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class GeometricFiguresHandler {
 
 
-    public List<BaseFigure> figures ;
+    public Map<String, List<BaseFigure>> hashFigures;
 
-    public JComboBox<String> comboBox = new JComboBox<>();
+    public CartesianPlaneHandler cartesianPlaneHandler;
 
-    public GeometricFiguresHandler() {
-        this.figures = new ArrayList<>();
+    public GeometricFiguresHandler(CartesianPlaneHandler cartesianPlaneHandler) {
+        this.hashFigures = new LinkedHashMap<>();
+        this.cartesianPlaneHandler = cartesianPlaneHandler;
+
+        this.setCategorys();
     }
 
     public void addFigure(BaseFigure figure) {
+        List<BaseFigure> figures = getFigures();
+
         figures.add(figure);
     }
 
+    public void setCategorys() {
+        List<String> categories = cartesianPlaneHandler.getCategories();
+
+        for (String category : categories) {
+            hashFigures.put(category, new ArrayList<>());
+        }
+
+    }
+
     public BaseFigure getFigureByID(String id) {
+        List<BaseFigure> figures = getFigures();
+
         return figures
                 .stream()
                 .filter(figure -> figure.getID().equals(id))
                 .findAny()
                 .orElse(null);
     }
+
     public List<BaseFigure> getFigures() {
-        return figures;
+        return hashFigures.get(cartesianPlaneHandler.getCurrentCategory());
     }
 
     public void resetFigures() {
-        this.figures = new ArrayList<>();
+        hashFigures.put(cartesianPlaneHandler.getCurrentCategory(), new ArrayList<>());
     }
 
     public JComboBox<String> getComboBoxFigures() {
+        List<BaseFigure> figures = getFigures();
         JComboBox<String> comboBox = new JComboBox<>();
+
+        if (figures == null) {
+            return comboBox;
+        }
 
         for (BaseFigure figure : figures) {
             comboBox.addItem(figure.getID());

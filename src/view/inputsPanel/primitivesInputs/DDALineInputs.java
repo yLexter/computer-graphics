@@ -1,11 +1,14 @@
 package view.inputsPanel.primitivesInputs;
 
-import geomtry.points.Point2D;
+import geometry.figures.Line;
+import geometry.planeCartesians.bases.BaseCartesianPlane2D;
+import geometry.points.Point2D;
 import primitives.DDALine;
 import utils.Constants;
 import view.inputsPanel.ShapePanel;
+import view.mainScreen.MainScreen;
 import view.mainScreen.MainScreenSingleton;
-import geomtry.planeCartesians.CartesianPlane2D;
+import geometry.planeCartesians.CartesianPlane2D;
 // import primitives.DDALine;
 
 import javax.swing.*;
@@ -37,14 +40,19 @@ public class DDALineInputs extends ShapePanel {
             int x2 = Integer.parseInt(point2[0]);
             int y2 = Integer.parseInt(point2[1]);
 
-            CartesianPlane2D cartesianPlanePanel = MainScreenSingleton.getCartesianPlane2D();
-             DDALine ddaLine = new DDALine(
-                     (point2D -> cartesianPlanePanel.setPixel(point2D, Constants.COLOR_PRIMITEVES))
-             );
+            MainScreen mainScreen = MainScreenSingleton.getMainScreen();
 
-             ddaLine.drawLine(new Point2D(x1, y1), new Point2D(x2, y2));
+            DDALine ddaLine = new DDALine();
 
-             cartesianPlanePanel.repaint();
+            Line line = new Line(
+                new Point2D(x1, y1),
+                new Point2D(x2, y2),
+                ddaLine
+            );
+
+            mainScreen.geometricFiguresHandler.addFigure(line);
+            mainScreen.updateFigures();
+
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Por favor, insira valores válidos para P1 e P2.");
         }

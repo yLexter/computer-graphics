@@ -1,18 +1,20 @@
 package primitives;
 
-import geomtry.points.Point2D;
-import utils.BasePrimitives;
-import geomtry.planeCartesians.CartesianPlane2D;
+import geometry.points.Point2D;
+import primitives.bases.BaseCircle;
+import primitives.bases.BasePrimitives;
 
-import java.awt.*;
 import java.util.function.Consumer;
 
-public class CircleExplicit extends BasePrimitives {
+public class CircleExplicit extends BaseCircle {
 
     public CircleExplicit(Consumer<Point2D> callback) {
         super(callback);
     }
 
+    public CircleExplicit() {}
+
+    @Override
     public void drawCircle(int radius) {
         int rSquared = radius * radius;
 
@@ -32,7 +34,5 @@ public class CircleExplicit extends BasePrimitives {
             }
         }
     }
-
-
 
 }

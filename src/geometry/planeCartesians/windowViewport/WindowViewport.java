@@ -1,71 +1,24 @@
-package geometry.planeCartesians;
+package geometry.planeCartesians.windowViewport;
 
+import geometry.planeCartesians.bases.BaseCartesianPlane;
+import geometry.planeCartesians.bases.BaseCartesianPlane2D;
 import geometry.points.Point2D;
 import utils.Constants;
 
-class Window {
-    public double xMin, xMax, yMin, yMax;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
-    public Window(double xMin, double xMax, double yMin, double yMax) {
-        this.xMin = xMin;
-        this.xMax = xMax;
-        this.yMin = yMin;
-        this.yMax = yMax;
-    }
 
-    public double getXMin() {
-        return xMin;
-    }
-
-    public double getXMax() {
-        return xMax;
-    }
-
-    public double getYMin() {
-        return yMin;
-    }
-
-    public double getYMax() {
-        return yMax;
-    }
-}
-
-class Viewport {
-    public int xMin, xMax, yMin, yMax;
-
-    public Viewport(int xMin, int xMax, int yMin, int yMax) {
-        this.xMin = xMin;
-        this.xMax = xMax;
-        this.yMin = yMin;
-        this.yMax = yMax;
-    }
-
-    public int getXMin() {
-        return xMin;
-    }
-
-    public int getXMax() {
-        return xMax;
-    }
-
-    public int getYMin() {
-        return yMin;
-    }
-
-    public int getYMax() {
-        return yMax;
-    }
-}
-
-class CartesianPlane2DWithWindow extends CartesianPlane2D {
-
+public class WindowViewport extends BaseCartesianPlane2D {
     private Window window;
     private Viewport viewport;
 
-    public CartesianPlane2DWithWindow(Window window, Viewport viewport, int width, int height) {
-        super(width, height);
-        this.window = window;
-        this.viewport = viewport;
+    public WindowViewport() {
+        super(Constants.WIDTH_CARTESIAN_PLANE, Constants.HEIGHT_CARTESIAN_PLANE);
+        this.window =  new Window(0, width, 0, height);
+        this.viewport = new Viewport(40, 300, 40, 300);
+
+        drawCartesianPlane();
     }
 
     private Point2D transformToViewport(Point2D point) {
@@ -74,17 +27,15 @@ class CartesianPlane2DWithWindow extends CartesianPlane2D {
 
         // Transformação de coordenadas
         double screenX = viewport.xMin + ((xWindow - window.xMin) * (viewport.xMax - viewport.xMin)) / (window.xMax - window.xMin);
-        double screenY = viewport.yMax - ((yWindow - window.yMin) * (viewport.yMax - viewport.yMin)) / (window.yMax - window.yMin); // Inverte o eixo Y
+        double screenY = viewport.yMax - ((yWindow - window.yMin) * (viewport.yMax - viewport.yMin)) / (window.yMax - window.yMin);
 
         return new Point2D(screenX, screenY);
     }
 
     @Override
     public void setPixel(Point2D point, int rgb) {
-        Point2D viewportPoint = transformToViewport(point);
-
-        int screenX = (int) viewportPoint.x;
-        int screenY = (int) viewportPoint.y;
+        int screenX = (int) (point.x + image.getWidth() / 2);
+        int screenY = (int) (image.getHeight() / 2 - point.y);
 
         if (screenX >= 0 && screenX < image.getWidth() && screenY >= 0 && screenY < image.getHeight()) {
             image.setRGB(screenX, screenY, rgb);
@@ -93,20 +44,31 @@ class CartesianPlane2DWithWindow extends CartesianPlane2D {
 
     @Override
     public void drawCartesianPlane() {
+
         super.drawCartesianPlane();
 
         for (int x = viewport.xMin; x < viewport.xMax; x++) {
-            image.setRGB(x, viewport.yMin, Constants.COLOR_LINES_CARTESIAN_PLANE); // Linha inferior da viewport
-            image.setRGB(x, viewport.yMax, Constants.COLOR_LINES_CARTESIAN_PLANE); // Linha superior da viewport
+            setPixel(new Point2D(x, viewport.yMin), Constants.COLOR_LINES_CARTESIAN_PLANE); // Linha inferior da viewport
+            setPixel(new Point2D(x, viewport.yMax), Constants.COLOR_LINES_CARTESIAN_PLANE); // Linha superior da viewport
         }
 
         for (int y = viewport.yMin; y < viewport.yMax; y++) {
-            image.setRGB(viewport.xMin, y, Constants.COLOR_LINES_CARTESIAN_PLANE); // Linha esquerda da viewport
-            image.setRGB(viewport.xMax, y, Constants.COLOR_LINES_CARTESIAN_PLANE); // Linha direita da viewport
+            setPixel(new Point2D(viewport.xMin, y), Constants.COLOR_LINES_CARTESIAN_PLANE); // Linha esquerda da viewport
+            setPixel(new Point2D(viewport.xMax, y), Constants.COLOR_LINES_CARTESIAN_PLANE); // Linha direita da viewport
         }
 
         repaint();
     }
 
+    @Override
+    public BaseCartesianPlane2D reset() {
+        return new WindowViewport();
+    }
+
+    @Override
+    public void clearCartesianPlane() {
+        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        this.drawCartesianPlane();
+    }
 
 }

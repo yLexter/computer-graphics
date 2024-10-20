@@ -1,16 +1,18 @@
 package primitives;
 
-import geomtry.points.Point2D;
-import utils.BasePrimitives;
-import geomtry.planeCartesians.CartesianPlane2D;
+import geometry.points.Point2D;
+import primitives.bases.BaseCircle;
+import primitives.bases.BasePrimitives;
 
 import java.util.function.Consumer;
 
-public class MidpointCircle extends BasePrimitives {
+public class MidpointCircle extends BaseCircle {
 
     public MidpointCircle(Consumer<Point2D> callback) {
         super(callback);
     }
+
+    public MidpointCircle() {}
 
     public void drawCircle(int radius) {
         int x = 0;

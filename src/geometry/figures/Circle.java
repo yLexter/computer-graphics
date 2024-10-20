@@ -1,27 +1,26 @@
-package geomtry.figures;
+package geometry.figures;
 
-import geomtry.points.Point2D;
 import primitives.MidpointCircle;
+import primitives.bases.BaseCircle;
 
 import java.awt.*;
-import java.util.List;
 
 public class Circle extends BaseFigure {
 
     private int radius;
 
-    public Circle(int radius) {
+    private BaseCircle circleAlgorithm;
+
+    public Circle(int radius, BaseCircle circleAlgorithm) {
         this.radius = radius;
+        this.circleAlgorithm = circleAlgorithm;
 
         generatePoints();
     }
 
     public void generatePoints() {
-        MidpointCircle midpointCircle = new MidpointCircle(
-                (point2D -> this.points.add(point2D))
-        );
-
-        midpointCircle.drawCircle(radius);
+        circleAlgorithm.setCallback((point2D -> this.points.add(point2D)));
+        circleAlgorithm.drawCircle(radius);
     }
 
     @Override

@@ -1,10 +1,9 @@
 package view.mainScreen;
 
-import geomtry.figures.BaseFigure;
-import geomtry.figures.Square;
+import geometry.planeCartesians.bases.BaseCartesianPlane2D;
 import view.mainScreen.mainScreenPanels.LogsOperationPanel;
-import geomtry.planeCartesians.BaseCartesianPlane;
-import geomtry.planeCartesians.CartesianPlane2D;
+import geometry.planeCartesians.bases.BaseCartesianPlane;
+import geometry.planeCartesians.CartesianPlane2D;
 
 import javax.swing.*;
 
@@ -23,21 +22,14 @@ public class MainScreenSingleton {
         return mainScreen;
     }
 
-    public static CartesianPlane2D getCartesianPlane2D() {
+    public static BaseCartesianPlane2D getCartesianPlane2D() {
         var mainScreen = getMainScreen();
-
-        return (CartesianPlane2D) mainScreen.getCartesianPlane();
+        return (BaseCartesianPlane2D) mainScreen.getCartesianPlane();
     }
 
     public static JComboBox<String> getComboBoxGeometriFigures() {
         var mainScreen = getMainScreen();
         return mainScreen.geometricFiguresHandler.getComboBoxFigures();
     }
-
-    public static BaseCartesianPlane getCartesianPlane() {
-        var mainScreen = getMainScreen();
-        return mainScreen.getCartesianPlane();
-    }
-
 
 }

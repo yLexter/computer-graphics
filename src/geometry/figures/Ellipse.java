@@ -1,6 +1,7 @@
-package geomtry.figures;
+package geometry.figures;
 
 import primitives.MidpointElipse;
+import primitives.bases.BaseEllipse;
 
 import java.awt.*;
 
@@ -8,19 +9,19 @@ public class Ellipse extends BaseFigure {
 
     private int axisA, axisB;
 
-    public Ellipse(int axisA, int axisB) {
+    private BaseEllipse ellipseAlgorithm;
+
+    public Ellipse(int axisA, int axisB, BaseEllipse ellipseAlgorithm) {
         this.axisA = axisA;
         this.axisB = axisB;
+        this.ellipseAlgorithm = ellipseAlgorithm;
 
         generatePoints();
     }
 
     public void generatePoints() {
-        MidpointElipse midpointElipse = new MidpointElipse(
-              point2D -> this.points.add(point2D)
-        );
-
-        midpointElipse.drawElipse(axisA, axisB);
+        ellipseAlgorithm.setCallback(point2D -> this.points.add(point2D));
+        ellipseAlgorithm.drawEllipse(axisA, axisB);
     }
 
     @Override

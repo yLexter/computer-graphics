@@ -1,9 +1,14 @@
 package view.inputsPanel.primitivesInputs;
 
+import geometry.figures.Circle;
+import geometry.planeCartesians.bases.BaseCartesianPlane2D;
+import primitives.CircleExplicit;
 import primitives.MidpointCircle;
+import primitives.bases.BaseCircle;
 import utils.Constants;
 import view.inputsPanel.ShapePanel;
-import geomtry.planeCartesians.CartesianPlane2D;
+import geometry.planeCartesians.CartesianPlane2D;
+import view.mainScreen.MainScreen;
 import view.mainScreen.MainScreenSingleton;
 
 import javax.swing.*;
@@ -21,17 +26,20 @@ public class MidpointCircleInputs extends ShapePanel {
 
     @Override
     protected void onCalculate() {
-        int radius = Integer.parseInt(radiusField.getText());
+        try {
+            int radius = Integer.parseInt(radiusField.getText());
 
-        CartesianPlane2D cartesianPlanePanel = MainScreenSingleton.getCartesianPlane2D();
+            MainScreen mainScreen = MainScreenSingleton.getMainScreen();
 
-        MidpointCircle panel = new MidpointCircle(
-                (point2D -> cartesianPlanePanel.setPixel(point2D, Constants.COLOR_PRIMITEVES))
-        );
+            BaseCircle circleExplicit = new MidpointCircle();
+            Circle circle = new Circle(radius, circleExplicit);
 
-        panel.drawCircle(radius);
+            mainScreen.geometricFiguresHandler.addFigure(circle);
+            mainScreen.updateFigures();
 
-        cartesianPlanePanel.repaint();
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Por favor, insira um número válido.");
+        }
     }
 
 }

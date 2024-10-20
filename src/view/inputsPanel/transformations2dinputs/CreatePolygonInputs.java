@@ -1,11 +1,11 @@
 package view.inputsPanel.transformations2dinputs;
 
-import geomtry.figures.Square;
-import geomtry.points.Point2D;
-import utils.Constants;
+import geometry.figures.Square;
+import geometry.points.Point2D;
+import primitives.MidpointLine;
 import view.mainScreen.MainScreen;
 import view.inputsPanel.ShapePanel;
-import geomtry.planeCartesians.CartesianPlane2D;
+import geometry.planeCartesians.CartesianPlane2D;
 import view.mainScreen.MainScreenSingleton;
 
 import javax.swing.*;
@@ -62,13 +62,17 @@ public class CreatePolygonInputs extends ShapePanel {
                 .toArray();
 
         MainScreen mainScreen = MainScreenSingleton.getMainScreen();
-        CartesianPlane2D cartesianPlanePanel = MainScreenSingleton.getCartesianPlane2D();
+
+        MidpointLine midpointLine = new MidpointLine();
 
         Square square = new Square(
-            new Point2D(points1[0], points1[1]),
-            new Point2D(points2[0], points2[1]),
-            new Point2D(points3[0], points3[1]),
-            new Point2D(points4[0], points4[1])
+            new Point2D[] {
+                new Point2D(points1[0], points1[1]),
+                new Point2D(points2[0], points2[1]),
+                new Point2D(points3[0], points3[1]),
+                new Point2D(points4[0], points4[1])
+            },
+            midpointLine
         );
 
        mainScreen.geometricFiguresHandler.addFigure(square);

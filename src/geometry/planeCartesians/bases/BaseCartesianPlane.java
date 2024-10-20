@@ -1,4 +1,4 @@
-package geometry.planeCartesians;
+package geometry.planeCartesians.bases;
 
 import geometry.points.Point2D;
 import javax.swing.*;

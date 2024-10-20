@@ -1,11 +1,9 @@
 package view.inputsPanel.transformations2dinputs;
 
-import geomtry.figures.BaseFigure;
-import geomtry.planeCartesians.CartesianPlane2D;
-import geomtry.points.Point2D;
+import geometry.figures.BaseFigure;
+import geometry.planeCartesians.CartesianPlane2D;
+import geometry.points.Point2D;
 import transformations2d.Rotation;
-import transformations2d.Scale;
-import utils.Constants;
 import view.inputsPanel.ShapePanel;
 import view.mainScreen.MainScreen;
 import view.mainScreen.MainScreenSingleton;
@@ -31,7 +29,6 @@ public class RotationInputs extends ShapePanel {
         int angle = Integer.parseInt(angleInput.getText());
 
         MainScreen mainScreen = MainScreenSingleton.getMainScreen();
-        CartesianPlane2D cartesianPlanePanel = MainScreenSingleton.getCartesianPlane2D();
 
         String figureSelected = (String) comboBoxFigures.getSelectedItem();
         BaseFigure figure = mainScreen.geometricFiguresHandler.getFigureByID(figureSelected);

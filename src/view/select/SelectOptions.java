@@ -1,9 +1,10 @@
 package view.select;
 
+import geometry.planeCartesians.bases.BaseCartesianPlane2D;
 import utils.Constants;
 import view.mainScreen.MainScreen;
 import view.inputsPanel.DataOptions;
-import geomtry.planeCartesians.BaseCartesianPlane;
+import geometry.planeCartesians.bases.BaseCartesianPlane;
 import view.mainScreen.MainScreenSingleton;
 
 import javax.swing.*;
@@ -73,12 +74,10 @@ public class SelectOptions extends JPanel {
                 optionPanel.updatePanel(null);
             } else {
                 comboBox2.setEnabled(true);
-
                 MainScreen mainScreen = MainScreenSingleton.getMainScreen();
-                BaseCartesianPlane cartesianPlane = mainScreen.cartesianPlaneHandler.getCartesianPlaneByCategory(selectedCategory);
-
                 updateComboBox2(dataOptions.getSecondComboBoxOptions(selectedCategory));
-                mainScreen.updateCartesianPlane(cartesianPlane);
+
+                mainScreen.changeCartesianPlaneScreen(selectedCategory);
             }
         });
 

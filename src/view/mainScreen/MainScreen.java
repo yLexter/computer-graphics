@@ -1,9 +1,10 @@
 package view.mainScreen;
 
-import geomtry.figures.BaseFigure;
-import geomtry.points.Point2D;
+import geometry.figures.BaseFigure;
+import geometry.planeCartesians.bases.BaseCartesianPlane2D;
+import geometry.points.Point2D;
 import utils.Constants;
-import geomtry.planeCartesians.BaseCartesianPlane;
+import geometry.planeCartesians.bases.BaseCartesianPlane;
 import view.utils.CartesianPlaneHandler;
 import view.utils.GeometricFiguresHandler;
 
@@ -22,13 +23,20 @@ public class MainScreen extends JFrame {
         this.cartesianPlaneHandler = new CartesianPlaneHandler();
         this.operationLogsScroll = new JScrollPane(operationLogs);
         this.cartesianPlane = cartesianPlane;
-        this.geometricFiguresHandler = new GeometricFiguresHandler();
 
         initializeScreen();
     }
 
+    public CartesianPlaneHandler getCartesianPlaneHandler() {
+        return cartesianPlaneHandler;
+    }
+
     public void setInputs(JPanel inputs) {
         this.inputsScroll = new JScrollPane(inputs);
+    }
+
+    public void setGeometricFiguresHandler(GeometricFiguresHandler geometricFiguresHandler) {
+        this.geometricFiguresHandler = geometricFiguresHandler;
     }
 
     public void setLayoutPanel(JPanel mainPanel) {
@@ -95,8 +103,19 @@ public class MainScreen extends JFrame {
         return cartesianPlaneHandler.getCurrentCartesianPlane();
     }
 
-    public void updateCartesianPlane(BaseCartesianPlane cartesianPlane) {
-        cartesianPlaneHandler.setCartesianPlane(cartesianPlane);
+    public void changeCartesianPlaneScreen(String categoryCatersianPlane) {
+        this.cartesianPlaneHandler.setCurrentCategory(categoryCatersianPlane);
+        this.cartesianPlane = cartesianPlaneHandler.getCurrentCartesianPlane();
+
+        getContentPane().removeAll();
+        setLayoutPanel(cartesianPlane);
+        revalidate();
+        repaint();
+    }
+
+    public void resetCartesianPlaneScreen() {
+        this.cartesianPlaneHandler.resetCurrentCartesianPlane();
+        this.cartesianPlane = this.cartesianPlaneHandler.getCurrentCartesianPlane();
 
         getContentPane().removeAll();
         setLayoutPanel(cartesianPlane);
@@ -105,14 +124,12 @@ public class MainScreen extends JFrame {
     }
 
     public void resetCartesianPlane() {
-        BaseCartesianPlane cartesianPlane = cartesianPlaneHandler.getCurrentCartesianPlane();
-        updateCartesianPlane(cartesianPlane.reset());
-        geometricFiguresHandler.resetFigures();
+        this.resetCartesianPlaneScreen();
+        this.geometricFiguresHandler.resetFigures();
     }
 
     public void updateFigures() {
         BaseCartesianPlane cartesianPlane1 = cartesianPlaneHandler.getCurrentCartesianPlane();
-
         cartesianPlane1.clearCartesianPlane();
 
         for(BaseFigure figure : geometricFiguresHandler.getFigures()) {

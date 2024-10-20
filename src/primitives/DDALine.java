@@ -1,19 +1,21 @@
 package primitives;
 
-import geomtry.points.Point2D;
-import pixel.Coordinates;
-import utils.BasePrimitives;
-import geomtry.planeCartesians.CartesianPlane2D;
+import geometry.points.Point2D;
+import primitives.bases.BaseLine;
+import primitives.bases.BasePrimitives;
 
 
 import java.util.function.Consumer;
 
-public class DDALine extends BasePrimitives {
+public class DDALine extends BaseLine {
 
     public DDALine(Consumer<Point2D> callback) {
         super(callback);
     }
 
+    public DDALine() {}
+
+    @Override
     public void drawLine(Point2D start, Point2D end) {
         double x1 = start.x;
         double y1 = start.y;

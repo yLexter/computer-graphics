@@ -1,16 +1,18 @@
 package primitives;
 
-import geomtry.points.Point2D;
-import utils.BasePrimitives;
-import geomtry.planeCartesians.CartesianPlane2D;
+import geometry.points.Point2D;
+import primitives.bases.BaseCircle;
+import primitives.bases.BasePrimitives;
 
 import java.util.function.Consumer;
 
-public class TrigometricCircle extends BasePrimitives {
+public class TrigometricCircle extends BaseCircle {
 
     public TrigometricCircle(Consumer<Point2D> callback) {
         super(callback);
     }
+
+    public TrigometricCircle() {}
 
     public void drawCircle(int radius) {
 

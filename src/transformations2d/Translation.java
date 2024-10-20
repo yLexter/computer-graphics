@@ -1,10 +1,7 @@
 package transformations2d;
 
-import geomtry.points.Point2D;
+import geometry.points.Point2D;
 import view.utils.Matrix;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class Translation {
 

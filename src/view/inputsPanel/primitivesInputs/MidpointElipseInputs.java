@@ -1,9 +1,15 @@
 package view.inputsPanel.primitivesInputs;
 
+import geometry.figures.Circle;
+import geometry.figures.Ellipse;
+import geometry.planeCartesians.bases.BaseCartesianPlane2D;
+import primitives.CircleExplicit;
 import primitives.MidpointElipse;
+import primitives.bases.BaseCircle;
 import utils.Constants;
 import view.inputsPanel.ShapePanel;
-import geomtry.planeCartesians.CartesianPlane2D;
+import geometry.planeCartesians.CartesianPlane2D;
+import view.mainScreen.MainScreen;
 import view.mainScreen.MainScreenSingleton;
 
 import javax.swing.*;
@@ -30,14 +36,14 @@ public class MidpointElipseInputs extends ShapePanel {
         int a = Integer.parseInt(aField.getText());
         int b = Integer.parseInt(bField.getText());
 
-        CartesianPlane2D cartesianPlanePanel = MainScreenSingleton.getCartesianPlane2D();
+        MainScreen mainScreen = MainScreenSingleton.getMainScreen();
+        MidpointElipse midPointElipse = new MidpointElipse();
 
-        MidpointElipse midPointElipse = new MidpointElipse(
-                (point2D -> cartesianPlanePanel.setPixel(point2D, Constants.COLOR_PRIMITEVES))
-        );
+        Ellipse ellipse = new Ellipse(a, b, midPointElipse);
 
-        midPointElipse.drawElipse(a, b);
-        cartesianPlanePanel.repaint();
+        mainScreen.geometricFiguresHandler.addFigure(ellipse);
+        mainScreen.updateFigures();
     }
 
 }
+

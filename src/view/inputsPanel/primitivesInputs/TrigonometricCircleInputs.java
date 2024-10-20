@@ -1,9 +1,14 @@
 package view.inputsPanel.primitivesInputs;
 
+import geometry.figures.Circle;
+import geometry.planeCartesians.bases.BaseCartesianPlane2D;
+import primitives.CircleExplicit;
+import primitives.bases.BaseCircle;
 import utils.Constants;
 import view.inputsPanel.ShapePanel;
+import view.mainScreen.MainScreen;
 import view.mainScreen.MainScreenSingleton;
-import geomtry.planeCartesians.CartesianPlane2D;
+import geometry.planeCartesians.CartesianPlane2D;
 import primitives.TrigometricCircle;
 
 import javax.swing.*;
@@ -23,14 +28,14 @@ public class TrigonometricCircleInputs extends ShapePanel {
         try {
             int radius = Integer.parseInt(radiusField.getText());
 
-            CartesianPlane2D cartesianPlanePanel = MainScreenSingleton.getCartesianPlane2D();
-            TrigometricCircle trigometricCircle = new TrigometricCircle(
-                    point2D -> cartesianPlanePanel.setPixel(point2D, Constants.COLOR_PRIMITEVES)
-            );
+            MainScreen mainScreen = MainScreenSingleton.getMainScreen();
 
-            trigometricCircle.drawCircle(radius);
+            BaseCircle circleExplicit = new TrigometricCircle();
+            Circle circle = new Circle(radius, circleExplicit);
 
-            cartesianPlanePanel.repaint();
+            mainScreen.geometricFiguresHandler.addFigure(circle);
+            mainScreen.updateFigures();
+
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Por favor, insira um número válido.");
         }

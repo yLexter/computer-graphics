@@ -1,4 +1,4 @@
-package geomtry.points;
+package geometry.points;
 
 public class Point2D {
 

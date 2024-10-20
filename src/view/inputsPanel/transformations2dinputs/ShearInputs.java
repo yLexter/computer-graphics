@@ -1,18 +1,14 @@
 package view.inputsPanel.transformations2dinputs;
 
-import geomtry.figures.BaseFigure;
-import geomtry.planeCartesians.CartesianPlane2D;
-import geomtry.points.Point2D;
-import transformations2d.Reflection;
+import geometry.figures.BaseFigure;
+import geometry.planeCartesians.CartesianPlane2D;
+import geometry.points.Point2D;
 import transformations2d.Shear;
-import utils.Constants;
 import view.inputsPanel.ShapePanel;
 import view.mainScreen.MainScreen;
 import view.mainScreen.MainScreenSingleton;
 
 import javax.swing.*;
-import java.util.Objects;
-import java.util.function.Function;
 
 public class ShearInputs extends ShapePanel {
     private JComboBox<String> shearTypeComboBox;
@@ -43,7 +39,6 @@ public class ShearInputs extends ShapePanel {
         String shearType = (String) shearTypeComboBox.getSelectedItem();
 
         MainScreen mainScreen = MainScreenSingleton.getMainScreen();
-        CartesianPlane2D cartesianPlanePanel = MainScreenSingleton.getCartesianPlane2D();
 
         String squareSelected = (String) comboBoxFigures.getSelectedItem();
         BaseFigure figure = mainScreen.geometricFiguresHandler.getFigureByID(squareSelected);

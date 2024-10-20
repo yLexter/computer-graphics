@@ -1,11 +1,8 @@
 package view.inputsPanel.transformations2dinputs;
 
-import geomtry.figures.BaseFigure;
-import geomtry.figures.Square;
-import geomtry.planeCartesians.CartesianPlane2D;
-import geomtry.points.Point2D;
+import geometry.figures.BaseFigure;
+import geometry.points.Point2D;
 import transformations2d.Scale;
-import utils.Constants;
 import view.inputsPanel.ShapePanel;
 import view.mainScreen.MainScreen;
 import view.mainScreen.MainScreenSingleton;

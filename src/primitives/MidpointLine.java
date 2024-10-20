@@ -1,20 +1,24 @@
 package primitives;
 
-import geomtry.points.Point2D;
-import utils.BasePrimitives;
-import geomtry.planeCartesians.CartesianPlane2D;
+import geometry.points.Point2D;
+import primitives.bases.BaseLine;
+import primitives.bases.BasePrimitives;
 
 import java.util.function.Consumer;
 
 
-public class MidpointLine extends BasePrimitives {
+public class MidpointLine extends BaseLine {
+
 
     public MidpointLine(Consumer<Point2D> callback) {
         super(callback);
     }
 
+    public MidpointLine() {}
+
     // Função para determinar o octante e desenhar a linha usando pontos Point2D
-    public void desenhaLinha(Point2D start, Point2D end) {
+    @Override
+    public void drawLine (Point2D start, Point2D end) {
         int x1 = (int) start.x;
         int y1 = (int) start.y;
         int x2 = (int) end.x;
