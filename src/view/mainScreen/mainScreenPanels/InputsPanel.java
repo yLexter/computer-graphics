@@ -57,10 +57,11 @@ public class InputsPanel extends JPanel {
         MidpointElipseInputs midpointElipseInputs = new MidpointElipseInputs();
 
         // Adicionando as opções de transformação
-        dataOptions.addOption("Transformações", "Desenhar Circulo", midpointCircleInputs);
+        // dataOptions.addOption("Transformações", "Desenhar Circulo", midpointCircleInputs);
+        //dataOptions.addOption("Transformações", "Desenhar Ellipse", midpointElipseInputs);
+        // dataOptions.addOption("Transformações", "Desenhar Reta", midpointLineInputs);
+
         dataOptions.addOption("Transformações", "Desenhar Quadrado", polygonInputs);
-        dataOptions.addOption("Transformações", "Desenhar Ellipse", midpointElipseInputs);
-        dataOptions.addOption("Transformações", "Desenhar Reta", midpointLineInputs);
         dataOptions.addOption("Transformações", "Aplicar Rotação", rotationInputs);
         dataOptions.addOption("Transformações", "Aplicar Escala", scaleInputs);
         dataOptions.addOption("Transformações", "Aplicar Cisalhamento", shearInputs);
