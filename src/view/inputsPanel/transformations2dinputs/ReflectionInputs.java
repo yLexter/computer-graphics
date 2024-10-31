@@ -42,7 +42,7 @@ public class ReflectionInputs extends ShapePanel {
         String squareSelected = (String) comboBoxFigures.getSelectedItem();
         BaseFigure figure = mainScreen.geometricFiguresHandler.getFigureByID(squareSelected);
 
-        figure.iterateToPoints(
+        figure.getVertex(
                 point2D -> {
                     assert reflectionFunnction != null;
                     Point2D pointReflected = reflectionFunnction.apply(point2D);

@@ -34,7 +34,7 @@ public class TranslationInputs extends ShapePanel {
         String figureSelected = (String) comboBoxFigures.getSelectedItem();
         BaseFigure figure = mainScreen.geometricFiguresHandler.getFigureByID(figureSelected);
 
-        figure.iterateToPoints(
+        figure.getVertex(
                 point2D -> {
                     Point2D pointTransladed = Translation.translatePoint(point2D, tx, ty);
                     point2D.updatePoint(pointTransladed);

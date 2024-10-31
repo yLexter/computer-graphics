@@ -36,7 +36,7 @@ public class ScaleInputs extends ShapePanel {
         String figureSelected = (String) comboBoxFigures.getSelectedItem();
         BaseFigure figure = mainScreen.geometricFiguresHandler.getFigureByID(figureSelected);
 
-        figure.scaleFigureSize(
+        figure.getVertex(
                 point2D -> {
                     Point2D pointScaled = Scale.scalePoint(point2D, sx, sy);
                     point2D.updatePoint(pointScaled);

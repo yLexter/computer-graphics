@@ -29,7 +29,7 @@ public class Square extends BaseFigure {
     }
 
     @Override
-    public void scaleFigureSize(Consumer<Point2D> callback) {
+    public void getVertex(Consumer<Point2D> callback) {
         for (int i = 0; i < 4; i++) {
           callback.accept(this.vertices[i]);
         }

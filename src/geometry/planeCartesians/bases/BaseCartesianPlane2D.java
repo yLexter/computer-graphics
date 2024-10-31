@@ -1,7 +1,6 @@
 package geometry.planeCartesians.bases;
 
 import geometry.planeCartesians.CartesianPlane2D;
-import geometry.points.Point2D;
 import utils.Constants;
 
 import java.awt.*;

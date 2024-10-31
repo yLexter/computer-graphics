@@ -33,7 +33,7 @@ public class RotationInputs extends ShapePanel {
         String figureSelected = (String) comboBoxFigures.getSelectedItem();
         BaseFigure figure = mainScreen.geometricFiguresHandler.getFigureByID(figureSelected);
 
-        figure.iterateToPoints(
+        figure.getVertex(
                 point2D -> {
                     Point2D pointRotated = Rotation.rotatePoint(point2D, angle);
                     point2D.updatePoint(pointRotated);

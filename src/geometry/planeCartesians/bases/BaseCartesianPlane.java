@@ -9,7 +9,3 @@ public abstract class BaseCartesianPlane extends JPanel {
     public abstract BaseCartesianPlane reset();
     public abstract void clearCartesianPlane();
 }
-
-
-
-

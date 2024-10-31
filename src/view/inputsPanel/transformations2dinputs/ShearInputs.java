@@ -43,7 +43,7 @@ public class ShearInputs extends ShapePanel {
         String squareSelected = (String) comboBoxFigures.getSelectedItem();
         BaseFigure figure = mainScreen.geometricFiguresHandler.getFigureByID(squareSelected);
 
-        figure.iterateToPoints(
+        figure.getVertex(
                 point2D -> {
                     assert shearType != null;
 

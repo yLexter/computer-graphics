@@ -1,15 +1,12 @@
 package geometry.planeCartesians;
 
-import geometry.planeCartesians.bases.BaseCartesianPlane;
 import geometry.planeCartesians.bases.BaseCartesianPlane2D;
 import geometry.points.Point2D;
 import utils.Constants;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class CartesianPlane2D extends BaseCartesianPlane2D {
-
 
     public CartesianPlane2D() {
         super(Constants.WIDTH_CARTESIAN_PLANE, Constants.HEIGHT_CARTESIAN_PLANE);

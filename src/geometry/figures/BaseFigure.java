@@ -17,7 +17,7 @@ public abstract class BaseFigure {
         return points;
     }
 
-    public void scaleFigureSize(Consumer<Point2D> callback) {
+    public void getVertex(Consumer<Point2D> callback) {
         throw new IllegalArgumentException("Método não implementado");
     }
 
