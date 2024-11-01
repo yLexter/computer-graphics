@@ -44,7 +44,7 @@ public class Square extends BaseFigure {
         for (int i = 0; i < 4; i++) {
             Point2D start = vertices[i];
             Point2D end = vertices[(i + 1) % 4];
-            lineAlgorithm.drawLine(start, end);
+            lineAlgorithm.desenhaLinha(start, end);
         }
 
     }

@@ -18,7 +18,7 @@ public class MidpointLine extends BaseLine {
 
     // Função para determinar o octante e desenhar a linha usando pontos Point2D
     @Override
-    public void drawLine (Point2D start, Point2D end) {
+    public void desenhaLinha (Point2D start, Point2D end) {
         int x1 = (int) start.x;
         int y1 = (int) start.y;
         int x2 = (int) end.x;

@@ -16,7 +16,7 @@ public class DDALine extends BaseLine {
     public DDALine() {}
 
     @Override
-    public void drawLine(Point2D start, Point2D end) {
+    public void desenhaLinha(Point2D start, Point2D end) {
         double x1 = start.x;
         double y1 = start.y;
         double x2 = end.x;

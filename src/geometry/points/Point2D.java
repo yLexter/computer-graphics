@@ -14,6 +14,14 @@ public class Point2D {
         this.y = point.y;
     }
 
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
     @Override
     public String toString() {
        return "(" + x + ", " + y + ")";

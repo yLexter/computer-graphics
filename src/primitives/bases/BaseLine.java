@@ -12,6 +12,6 @@ public abstract class BaseLine extends BasePrimitives {
 
     public BaseLine() {}
 
-    public abstract void drawLine(Point2D start, Point2D end);
+    public abstract void desenhaLinha(Point2D start, Point2D end);
 
 }

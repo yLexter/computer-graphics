@@ -20,7 +20,7 @@ public class Line extends BaseFigure {
     @Override
     public void generatePoints() {
         lineAlgorithm.setCallback((point2D -> this.points.add(point2D)));
-        lineAlgorithm.drawLine(start, end);
+        lineAlgorithm.desenhaLinha(start, end);
     }
 
     @Override

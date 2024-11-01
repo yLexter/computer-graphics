@@ -15,6 +15,18 @@ public class Point3D {
         this.z = point.z;
     }
 
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getZ() {
+        return z;
+    }
+
     @Override
     public String toString() {
        return "(" + x + ", " + y + ", " + z + ")";
