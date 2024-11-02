@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.Dimension;
 import java.util.function.Consumer;
 
-import tudo3D.geometry3d.figures3d.Cube;
 import tudo3D.geometry3d.points3d.Point3D;
 import geometry.points.Point2D;
 

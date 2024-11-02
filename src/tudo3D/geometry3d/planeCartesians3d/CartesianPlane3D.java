@@ -13,6 +13,8 @@ import java.util.function.Consumer;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+// DEU ERRADO !!
+
 public class CartesianPlane3D extends JPanel {
 
     private static final int FRAME_WIDTH = 800;
@@ -66,12 +68,12 @@ public class CartesianPlane3D extends JPanel {
         lineDrawer.desenhaLinha(origin, xNegative);
 
         g.setColor(Color.BLUE);
-        lineDrawer.desenhaLinha(origin, yPositive);
-        lineDrawer.desenhaLinha(origin, yNegative);
-
-        g.setColor(Color.GREEN);
         lineDrawer.desenhaLinha(origin, zPositive);
         lineDrawer.desenhaLinha(origin, zNegative);
+
+        g.setColor(Color.GREEN);
+        lineDrawer.desenhaLinha(origin, yPositive);
+        lineDrawer.desenhaLinha(origin, yNegative);
     }
 
     private Point2D projectPoint(Point3D point, int width, int height) {
