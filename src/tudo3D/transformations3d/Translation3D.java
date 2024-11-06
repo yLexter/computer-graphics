@@ -1,41 +1,51 @@
 package tudo3D.transformations3d;
 
 import tudo3D.geometry3d.points3d.Point3D;
+import view.utils.Matrix;
 
 public class Translation3D {
-    private double tx, ty, tz;
 
-    // Construtor que define os valores de translação
-    public Translation3D(double tx, double ty, double tz) {
-        this.tx = tx;
-        this.ty = ty;
-        this.tz = tz;
+	// Método para transladar um ponto 3D usando uma matriz de translação
+    public static Point3D translatePoint(Point3D point, double tx, double ty, double tz) {
+        double[][] pointHomogeneous = new double[][] {
+            { point.x, point.y, point.z, 1 }
+        };
+
+        double[][] matrix = getMatrixTranslation(tx, ty, tz);
+        double[][] result = Matrix.multiply(pointHomogeneous, matrix);
+
+        return new Point3D(
+            result[0][0],
+            result[0][1],
+            result[0][2]
+        );
     }
 
-    // Método para aplicar a translação a um ponto e retornar o ponto resultante
-    public Point3D apply(Point3D point) {
-        double x = point.getX() + tx;
-        double y = point.getY() + ty;
-        double z = point.getZ() + tz;
-        return new Point3D(x, y, z);
+    // Retorna a matriz de translação 4x4 para 3D
+    public static double[][] getMatrixTranslation(double tx, double ty, double tz) {
+        return new double[][] {
+        	{ 1, 0, 0, 0 },
+            { 0, 1, 0, 0 },
+            { 0, 0, 1, 0 },
+            { tx, ty, tz, 1 }
+        };
     }
 
-    // Getters para acessar os valores de translação
-    public double getTx() {
-        return tx;
-    }
+    // Exemplo de translação
+    public static void main(String[] args) {
+        // Cria um ponto 3D inicial
+        Point3D originalPoint = new Point3D(2.0, 3.0, 4.0);
+        System.out.println("Ponto original: " + originalPoint);
 
-    public double getTy() {
-        return ty;
-    }
+        // Define os valores de translação
+        double tx = 5.0;
+        double ty = -2.0;
+        double tz = 3.0;
 
-    public double getTz() {
-        return tz;
-    }
+        // Aplica a translação ao ponto
+        Point3D translatedPoint = Translation3D.translatePoint(originalPoint, tx, ty, tz);
 
-    // toString para exibir a transformação
-    @Override
-    public String toString() {
-        return "Translation3D(" + tx + ", " + ty + ", " + tz + ")";
+        // Exibe o ponto após a translação
+        System.out.println("Ponto após translação: " + translatedPoint);
     }
 }

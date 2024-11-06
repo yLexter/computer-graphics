@@ -1,14 +1,16 @@
 package tudo3D.geometry3d.planeCartesians3d;
+
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import tudo3D.geometry3d.points3d.Point3D;
-import tudo3D.transformations3d.Translation3D;
 
 public class CartesianPlane3D {
     private long window;
+    private Point3D[] cubeVertices; // Armazena os vértices do cubo
 
-    public void run() {
+    public void run(Point3D[] cubeVertices) {
+        this.cubeVertices = cubeVertices; // Armazena os vértices fornecidos
         init();
         loop();
         
@@ -55,14 +57,6 @@ public class CartesianPlane3D {
 
             // Desenha os eixos X, Y e Z
             drawAxes();
-
-            // Define os vértices de um cubo no primeiro quadrante com um vértice na origem
-            Point3D[] cubeVertices = {
-                new Point3D(0, 0, 0), new Point3D(1, 0, 0),
-                new Point3D(1, 1, 0), new Point3D(0, 1, 0),
-                new Point3D(0, 0, 1), new Point3D(1, 0, 1),
-                new Point3D(1, 1, 1), new Point3D(0, 1, 1)
-            };
 
             // Desenha o cubo com os vértices fornecidos
             drawCube(cubeVertices);
@@ -126,12 +120,12 @@ public class CartesianPlane3D {
     }
 
     private void desenhaLinhaNo3d(Point3D start, Point3D end) {
+        // Removeu o arredondamento, agora usa as coordenadas originais
         GL11.glVertex3f((float) start.getX(), (float) start.getY(), (float) start.getZ());
         GL11.glVertex3f((float) end.getX(), (float) end.getY(), (float) end.getZ());
     }
-    
+
     public long getWindow() {
         return window;
     }
-
 }
