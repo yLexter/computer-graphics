@@ -1,8 +1,8 @@
 package view.inputsPanel.transformations2dinputs;
 
-import geometry.figures.BaseFigure;
-import geometry.points.Point2D;
-import transformations2d.Translation;
+import project_cg.geometry.figures.BaseFigure;
+import project_cg.geometry.points.Point2D;
+import project_cg.transformations2d.Translation;
 import view.inputsPanel.ShapePanel;
 import view.mainScreen.MainScreen;
 import view.mainScreen.MainScreenSingleton;

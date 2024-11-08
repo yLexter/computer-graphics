@@ -1,9 +1,9 @@
 package view.mainScreen;
 
-import geometry.planeCartesians.bases.BaseCartesianPlane2D;
+import project_cg.geometry.planeCartesians.bases.BaseCartesianPlane2D;
 import view.mainScreen.mainScreenPanels.LogsOperationPanel;
-import geometry.planeCartesians.bases.BaseCartesianPlane;
-import geometry.planeCartesians.CartesianPlane2D;
+import project_cg.geometry.planeCartesians.bases.BaseCartesianPlane;
+import project_cg.geometry.planeCartesians.CartesianPlane2D;
 
 import javax.swing.*;
 
@@ -22,10 +22,6 @@ public class MainScreenSingleton {
         return mainScreen;
     }
 
-    public static BaseCartesianPlane2D getCartesianPlane2D() {
-        var mainScreen = getMainScreen();
-        return (BaseCartesianPlane2D) mainScreen.getCartesianPlane();
-    }
 
     public static JComboBox<String> getComboBoxGeometriFigures() {
         var mainScreen = getMainScreen();

@@ -1,6 +1,6 @@
 package view.utils;
 
-import geometry.figures.BaseFigure;
+import project_cg.geometry.figures.BaseFigure;
 
 import javax.swing.*;
 import java.util.*;
@@ -10,11 +10,11 @@ public class GeometricFiguresHandler {
 
     public Map<String, List<BaseFigure>> hashFigures;
 
-    public CartesianPlaneHandler cartesianPlaneHandler;
+    public JPanelHandler JPanelHandler;
 
-    public GeometricFiguresHandler(CartesianPlaneHandler cartesianPlaneHandler) {
+    public GeometricFiguresHandler(JPanelHandler JPanelHandler) {
         this.hashFigures = new LinkedHashMap<>();
-        this.cartesianPlaneHandler = cartesianPlaneHandler;
+        this.JPanelHandler = JPanelHandler;
 
         this.setCategorys();
     }
@@ -26,7 +26,7 @@ public class GeometricFiguresHandler {
     }
 
     public void setCategorys() {
-        List<String> categories = cartesianPlaneHandler.getCategories();
+        List<String> categories = JPanelHandler.getCategories();
 
         for (String category : categories) {
             hashFigures.put(category, new ArrayList<>());
@@ -45,11 +45,11 @@ public class GeometricFiguresHandler {
     }
 
     public List<BaseFigure> getFigures() {
-        return hashFigures.get(cartesianPlaneHandler.getCurrentCategory());
+        return hashFigures.get(JPanelHandler.getCurrentCategory());
     }
 
     public void resetFigures() {
-        hashFigures.put(cartesianPlaneHandler.getCurrentCategory(), new ArrayList<>());
+        hashFigures.put(JPanelHandler.getCurrentCategory(), new ArrayList<>());
     }
 
     public JComboBox<String> getComboBoxFigures() {

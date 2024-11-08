@@ -1,10 +1,10 @@
 package view.select;
 
-import geometry.planeCartesians.bases.BaseCartesianPlane2D;
+import project_cg.geometry.planeCartesians.bases.BaseCartesianPlane2D;
 import utils.Constants;
 import view.mainScreen.MainScreen;
 import view.inputsPanel.DataOptions;
-import geometry.planeCartesians.bases.BaseCartesianPlane;
+import project_cg.geometry.planeCartesians.bases.BaseCartesianPlane;
 import view.mainScreen.MainScreenSingleton;
 
 import javax.swing.*;

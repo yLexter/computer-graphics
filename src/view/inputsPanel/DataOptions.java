@@ -18,7 +18,7 @@ public class DataOptions {
     public void addOption(String category, String option, ShapePanel panelInputs) {
         MainScreen mainScreen = MainScreenSingleton.getMainScreen();
 
-        if (mainScreen.cartesianPlaneHandler.getCartesianPlaneByCategory(category) == null) {
+        if (mainScreen.JPanelHandler.getPanelByCategory(category) == null) {
             throw new IllegalArgumentException("A Cateogria precisa de uma tela principal");
         }
 

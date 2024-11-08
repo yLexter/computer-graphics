@@ -1,6 +1,6 @@
 package view.inputsPanel.pixelInputs;
 
-import pixel.Coordinates;
+import project_cg.pixel.Coordinates;
 
 import javax.swing.*;
 import java.awt.*;

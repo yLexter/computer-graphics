@@ -1,11 +1,10 @@
 package view.mainScreen;
 
-import geometry.figures.BaseFigure;
-import geometry.planeCartesians.bases.BaseCartesianPlane2D;
-import geometry.points.Point2D;
+import project_cg.geometry.figures.BaseFigure;
+import project_cg.geometry.points.Point2D;
 import utils.Constants;
-import geometry.planeCartesians.bases.BaseCartesianPlane;
-import view.utils.CartesianPlaneHandler;
+import project_cg.geometry.planeCartesians.bases.BaseCartesianPlane;
+import view.utils.JPanelHandler;
 import view.utils.GeometricFiguresHandler;
 
 import javax.swing.*;
@@ -13,22 +12,22 @@ import java.awt.*;
 
 public class MainScreen extends JFrame {
 
-    private JPanel cartesianPlane;
+    private JPanel homePanel;
     private JScrollPane operationLogsScroll;
     private JScrollPane inputsScroll;
-    public final CartesianPlaneHandler cartesianPlaneHandler;
+    public final JPanelHandler JPanelHandler;
     public GeometricFiguresHandler geometricFiguresHandler;
 
-    public MainScreen(JPanel cartesianPlane, JPanel operationLogs) {
-        this.cartesianPlaneHandler = new CartesianPlaneHandler();
+    public MainScreen(JPanel homePanel, JPanel operationLogs) {
+        this.JPanelHandler = new JPanelHandler();
         this.operationLogsScroll = new JScrollPane(operationLogs);
-        this.cartesianPlane = cartesianPlane;
+        this.homePanel = homePanel;
 
         initializeScreen();
     }
 
-    public CartesianPlaneHandler getCartesianPlaneHandler() {
-        return cartesianPlaneHandler;
+    public JPanelHandler getCartesianPlaneHandler() {
+        return JPanelHandler;
     }
 
     public void setInputs(JPanel inputs) {
@@ -77,7 +76,7 @@ public class MainScreen extends JFrame {
         gbc.weightx = 0.8; // 80% da largura
         gbc.weighty = 0.8; // 80% da altura
         gbc.gridwidth = 1; // Ocupa uma coluna
-        add(cartesianPlane, gbc);
+        add(homePanel, gbc);
 
         // Adiciona o painel operationLogs (20% da largura, 80% da altura)
         gbc.gridx = 1;
@@ -94,31 +93,27 @@ public class MainScreen extends JFrame {
     }
 
     private void initializeScreen() {
-        setTitle("Figure Designer");
+        setTitle("Projeto Computação Gráfica/Processamento de Imagem");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(Constants.WIDTH_MAIN_SCREEN, Constants.HEIGHT_MAIN_SCREEN);
     }
 
-    public BaseCartesianPlane getCartesianPlane() {
-        return cartesianPlaneHandler.getCurrentCartesianPlane();
-    }
-
     public void changeCartesianPlaneScreen(String categoryCatersianPlane) {
-        this.cartesianPlaneHandler.setCurrentCategory(categoryCatersianPlane);
-        this.cartesianPlane = cartesianPlaneHandler.getCurrentCartesianPlane();
+        this.JPanelHandler.setCurrentCategory(categoryCatersianPlane);
+        JPanel currentPanel = JPanelHandler.getCurrentCartesianPlane();
 
         getContentPane().removeAll();
-        setLayoutPanel(cartesianPlane);
+        setLayoutPanel(currentPanel);
         revalidate();
         repaint();
     }
 
     public void resetCartesianPlaneScreen() {
-        this.cartesianPlaneHandler.resetCurrentCartesianPlane();
-        this.cartesianPlane = this.cartesianPlaneHandler.getCurrentCartesianPlane();
+        this.JPanelHandler.resetCurrentCartesianPlane();
+        JPanel currentPanel = this.JPanelHandler.getCurrentCartesianPlane();
 
         getContentPane().removeAll();
-        setLayoutPanel(cartesianPlane);
+        setLayoutPanel(currentPanel);
         revalidate();
         repaint();
     }
@@ -129,7 +124,7 @@ public class MainScreen extends JFrame {
     }
 
     public void updateFigures() {
-        BaseCartesianPlane cartesianPlane1 = cartesianPlaneHandler.getCurrentCartesianPlane();
+        BaseCartesianPlane cartesianPlane1 = JPanelHandler.getCurrentCartesianPlane();
         cartesianPlane1.clearCartesianPlane();
 
         for(BaseFigure figure : geometricFiguresHandler.getFigures()) {
@@ -141,12 +136,5 @@ public class MainScreen extends JFrame {
         cartesianPlane1.repaint();
     }
 
-    public JScrollPane getOperationLogsScroll() {
-        return operationLogsScroll;
-    }
-
-    public JScrollPane getInputsScroll() {
-        return inputsScroll;
-    }
 
 }

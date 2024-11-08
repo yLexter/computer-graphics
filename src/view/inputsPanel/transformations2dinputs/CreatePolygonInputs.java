@@ -1,11 +1,11 @@
 package view.inputsPanel.transformations2dinputs;
 
-import geometry.figures.Square;
-import geometry.points.Point2D;
-import primitives.MidpointLine;
+import project_cg.geometry.figures.Square;
+import project_cg.geometry.points.Point2D;
+import project_cg.primitives.MidpointLine;
 import view.mainScreen.MainScreen;
 import view.inputsPanel.ShapePanel;
-import geometry.planeCartesians.CartesianPlane2D;
+import project_cg.geometry.planeCartesians.CartesianPlane2D;
 import view.mainScreen.MainScreenSingleton;
 
 import javax.swing.*;

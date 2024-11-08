@@ -1,13 +1,12 @@
 package view.mainScreen.mainScreenPanels;
 
-import geometry.planeCartesians.windowViewport.WindowViewport;
-import utils.Constants;
+import project_cg.geometry.planeCartesians.windowViewport.WindowViewport;
 import view.mainScreen.MainScreen;
 import view.inputsPanel.DataOptions;
 import view.inputsPanel.primitivesInputs.*;
 import view.inputsPanel.transformations2dinputs.*;
-import geometry.planeCartesians.CartesianPlane2D;
-import geometry.planeCartesians.PixelCartesianPlane;
+import project_cg.geometry.planeCartesians.CartesianPlane2D;
+import project_cg.geometry.planeCartesians.PixelCartesianPlane;
 import view.select.SelectOptions;
 import view.mainScreen.MainScreenSingleton;
 import view.utils.GeometricFiguresHandler;
@@ -32,10 +31,10 @@ public class InputsPanel extends JPanel {
         WindowViewport windowViewport = new WindowViewport();
 
         // Adicionando os planos cartesianos
-        mainScreen.cartesianPlaneHandler.addCartesianPlane("Primitivas", primitivaPlane);
-        mainScreen.cartesianPlaneHandler.addCartesianPlane("Transformações", transformacoesPlane);
-        mainScreen.cartesianPlaneHandler.addCartesianPlane("Pixel", pixelPlane);
-        mainScreen.cartesianPlaneHandler.addCartesianPlane("Janela p/ Viewport", windowViewport);
+        mainScreen.JPanelHandler.addCartesianPlane("Primitivas", primitivaPlane);
+        mainScreen.JPanelHandler.addCartesianPlane("Transformações", transformacoesPlane);
+        mainScreen.JPanelHandler.addCartesianPlane("Pixel", pixelPlane);
+        mainScreen.JPanelHandler.addCartesianPlane("Janela p/ Viewport", windowViewport);
 
         // ToDo fluxo
         mainScreen.setGeometricFiguresHandler(new GeometricFiguresHandler(mainScreen.getCartesianPlaneHandler()));
