@@ -1,6 +1,8 @@
 import tudo3D.geometry3d.planeCartesians3d.CartesianPlane3D;
 import tudo3D.geometry3d.points3d.Point3D;
-import tudo3D.transformations3d.Reflection3D;
+
+import tudo3D.transformations3d.Rotation3D;
+
 
 public class MainPara3d {
 
@@ -16,43 +18,29 @@ public class MainPara3d {
             new Point3D(1, 1, 1), new Point3D(0, 1, 1)
         };
 
-        // Exibe os pontos antes da reflexão
-        System.out.println("Pontos do cubo antes da reflexão:");
+        // Exibe os pontos antes da rotação
+        System.out.println("Pontos do cubo antes da rotação:");
         for (Point3D point : cubeVertices) {
             System.out.println(point);
         }
 
-        // Escolha o tipo de reflexão: XY, XZ, YZ ou Origin
-        String reflectionPlane = "Origin"; // Pode ser "XY", "XZ", "YZ", ou "Origin"
+        // Ângulo de rotação em graus
+        double angle = 45.0;
 
-        // Aplica reflexão para cada vértice do cubo
-        Point3D[] reflectedVertices = new Point3D[cubeVertices.length];
+        // Aplica rotação em torno do eixo Y para cada vértice do cubo
+        Point3D[] rotatedVertices = new Point3D[cubeVertices.length];
         for (int i = 0; i < cubeVertices.length; i++) {
-            switch (reflectionPlane) {
-                case "XY":
-                    reflectedVertices[i] = Reflection3D.reflectInXY(cubeVertices[i]);
-                    break;
-                case "XZ":
-                    reflectedVertices[i] = Reflection3D.reflectInXZ(cubeVertices[i]);
-                    break;
-                case "YZ":
-                    reflectedVertices[i] = Reflection3D.reflectInYZ(cubeVertices[i]);
-                    break;
-                case "Origin":
-                    reflectedVertices[i] = Reflection3D.reflectInOrigin(cubeVertices[i]);
-                    break;
-                default:
-                    reflectedVertices[i] = cubeVertices[i]; // Sem reflexão
-            }
+            rotatedVertices[i] = Rotation3D.rotateZ(cubeVertices[i], angle);
         }
 
-        // Exibe os pontos após a reflexão
-        System.out.println("\nPontos do cubo após a reflexão no plano " + reflectionPlane + ":");
-        for (Point3D point : reflectedVertices) {
+        // Exibe os pontos após a rotação
+        System.out.println("\nPontos do cubo após a rotação em torno do eixo Y:");
+        for (Point3D point : rotatedVertices) {
             System.out.println(point);
         }
 
-        // Passa os vértices refletidos para o plano cartesiano e inicia o contexto OpenGL
-        plane.run(reflectedVertices);
+        // Passa os vértices rotacionados para o plano cartesiano e inicia o contexto OpenGL
+        plane.run(rotatedVertices);
     }
 }
+

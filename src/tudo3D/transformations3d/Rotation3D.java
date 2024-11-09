@@ -66,7 +66,7 @@ public class Rotation3D {
 
     // Retorna a matriz de rotação em torno do eixo Y
     public static double[][] getMatrixRotationY(double angle) {
-        double radians = Math.toRadians(angle);
+        double radians = Math.toRadians(-angle);
         return new double[][] {
             { Math.cos(radians), 0, Math.sin(radians), 0 },
             { 0, 1, 0, 0 },
