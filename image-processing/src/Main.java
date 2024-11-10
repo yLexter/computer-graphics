@@ -12,6 +12,10 @@ import javax.swing.border.LineBorder;
 
 public class Main extends JFrame {
     private JButton carregarImagemButton;
+    private JMenuBar mb;
+    private JMenu escolherFiltroButton;
+    private JMenuItem f1,f2,f3,f4,f5,f6,f7,f8;
+    //private JButton escolherFiltroButton;
     private JPanel TelaPrincipal;
     private JLabel Titulo;
     private BufferedImage imagemExibida;
@@ -23,7 +27,9 @@ public class Main extends JFrame {
         TelaPrincipal.setLayout(null);
 
         // Inicializa e configura os componentes
+        mb = new JMenuBar();
         carregarImagemButton = new JButton("Carregar Imagem");
+        escolherFiltroButton = new JMenu("Filtros");
         Titulo = new JLabel("Processamento de Imagem");
 
         // Define fontes para os componentes
@@ -33,20 +39,30 @@ public class Main extends JFrame {
         // Aplica as fontes aos componentes
         Titulo.setFont(fonteTitulo);
         carregarImagemButton.setFont(fonteBotao);
+        escolherFiltroButton.setFont(fonteBotao);
 
-        // Define posições dos componentes
+        // Define posições dos componentes setBounds(int x-coordinate, int y-coordinate, int width, int height)
         Titulo.setBounds(425, 55, 390, 36);
-        carregarImagemButton.setBounds(215, 466, 170, 24);
+        carregarImagemButton.setBounds(215, 444, 170, 30);
+        escolherFiltroButton.setBounds(582,177,104,30);
 
-        // Configurações do botão
+        // Configurações dos botoes
         carregarImagemButton.setBorder(new LineBorder(Color.BLACK));
         carregarImagemButton.setOpaque(false);
         carregarImagemButton.setContentAreaFilled(false);
         carregarImagemButton.setFocusPainted(false);
 
+        escolherFiltroButton.setBorder(new LineBorder(Color.BLACK));
+        escolherFiltroButton.setOpaque(false);
+        escolherFiltroButton.setContentAreaFilled(false);
+        escolherFiltroButton.setFocusPainted(false);
+
+
+
         // Adiciona os componentes ao painel
         TelaPrincipal.add(Titulo);
         TelaPrincipal.add(carregarImagemButton);
+        TelaPrincipal.add(escolherFiltroButton);
 
         // Configura o JFrame
         setContentPane(TelaPrincipal);
@@ -83,6 +99,17 @@ public class Main extends JFrame {
             }
         });
 
+        escolherFiltroButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+
+
+
+
+        });
+
         // Adiciona o mouse motion listener para capturar a posição do mouse
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
@@ -108,9 +135,9 @@ public class Main extends JFrame {
 
             int largura = scanner.nextInt();
             int altura = scanner.nextInt();
-            int maxValor = scanner.nextInt();
+            int maxValor = scanner.nextInt(); // valor maximo dos niveis de cinza
 
-            BufferedImage imagem = new BufferedImage(largura, altura, BufferedImage.TYPE_BYTE_GRAY);
+            BufferedImage imagem = new BufferedImage(largura, altura, BufferedImage.TYPE_BYTE_GRAY); //Represents a unsigned byte grayscale image, non-indexed.
 
             // Preenche os pixels da imagem
             for (int y = 0; y < altura; y++) {
@@ -135,7 +162,7 @@ public class Main extends JFrame {
 
         if (imagemExibida != null) {
             // Desenha a imagem
-            g.drawImage(imagemExibida, 114, 124, null);
+            g.drawImage(imagemExibida, 180, 184, null);
 
             // Exibe a malha 3x3 em uma área separada à direita
             if (mouseX >= 0 && mouseY >= 0 && mouseX < imagemExibida.getWidth() && mouseY < imagemExibida.getHeight()) {
