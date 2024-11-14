@@ -1,2 +1,8 @@
-package project_ip.filters;public class ImageFilter {
+package project_ip.filters;
+
+import java.awt.image.BufferedImage;
+
+abstract class ImageFilter {
+
 }
+

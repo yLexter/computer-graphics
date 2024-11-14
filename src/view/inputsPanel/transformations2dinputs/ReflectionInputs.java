@@ -1,7 +1,6 @@
 package view.inputsPanel.transformations2dinputs;
 
 import project_cg.geometry.figures.BaseFigure;
-import project_cg.geometry.planeCartesians.CartesianPlane2D;
 import project_cg.geometry.points.Point2D;
 import project_cg.transformations2d.Reflection;
 import view.inputsPanel.ShapePanel;

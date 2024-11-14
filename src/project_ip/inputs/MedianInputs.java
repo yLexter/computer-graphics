@@ -1,2 +1,4 @@
-package project_ip.inputs;public class MedianInputs {
+package project_ip.inputs;
+
+public class MedianInputs {
 }

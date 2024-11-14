@@ -1,14 +1,10 @@
 package view.inputsPanel.primitivesInputs;
 
 import project_cg.geometry.figures.Line;
-import project_cg.geometry.planeCartesians.bases.BaseCartesianPlane2D;
 import project_cg.geometry.points.Point2D;
-import project_cg.primitives.DDALine;
 import project_cg.primitives.MidpointLine;
 import project_cg.primitives.bases.BaseLine;
-import utils.Constants;
 import view.inputsPanel.ShapePanel;
-import project_cg.geometry.planeCartesians.CartesianPlane2D;
 import view.mainScreen.MainScreen;
 import view.mainScreen.MainScreenSingleton;
 

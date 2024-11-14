@@ -1,14 +1,8 @@
 package view.inputsPanel.primitivesInputs;
 
-import project_cg.geometry.figures.Circle;
 import project_cg.geometry.figures.Ellipse;
-import project_cg.geometry.planeCartesians.bases.BaseCartesianPlane2D;
-import project_cg.primitives.CircleExplicit;
 import project_cg.primitives.MidpointElipse;
-import project_cg.primitives.bases.BaseCircle;
-import utils.Constants;
 import view.inputsPanel.ShapePanel;
-import project_cg.geometry.planeCartesians.CartesianPlane2D;
 import view.mainScreen.MainScreen;
 import view.mainScreen.MainScreenSingleton;
 

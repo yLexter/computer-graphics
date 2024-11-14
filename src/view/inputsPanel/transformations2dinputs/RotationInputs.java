@@ -1,7 +1,6 @@
 package view.inputsPanel.transformations2dinputs;
 
 import project_cg.geometry.figures.BaseFigure;
-import project_cg.geometry.planeCartesians.CartesianPlane2D;
 import project_cg.geometry.points.Point2D;
 import project_cg.transformations2d.Rotation;
 import view.inputsPanel.ShapePanel;
@@ -26,7 +25,7 @@ public class RotationInputs extends ShapePanel {
 
     @Override
     protected void onCalculate() {
-        int angle = Integer.parseInt(angleInput.getText());
+        double angle = Double.parseDouble(angleInput.getText());
 
         MainScreen mainScreen = MainScreenSingleton.getMainScreen();
 

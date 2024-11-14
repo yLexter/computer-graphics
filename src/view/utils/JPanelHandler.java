@@ -34,6 +34,13 @@ public class JPanelHandler {
         return cartesiansPlane.get(category);
     }
 
+    public JPanel getCurrentPanel() {
+        return cartesiansPlane.get(currentCartesianPlaneString);
+    }
+
+    public void addJPanel(String category, JPanel JPanel) {
+        cartesiansPlane.put(category, JPanel);
+    }
 
     // Manipular os planos cartesianos
     public void resetCurrentCartesianPlane() {
@@ -45,10 +52,6 @@ public class JPanelHandler {
         }
 
         throw new RuntimeException("Função chamada indevidamente");
-    }
-
-    public void addCartesianPlane(String category, BaseCartesianPlane cartesianPlane) {
-        cartesiansPlane.put(category, cartesianPlane);
     }
 
     public BaseCartesianPlane getCurrentCartesianPlane() {

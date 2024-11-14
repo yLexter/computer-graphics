@@ -1,10 +1,8 @@
 package view.select;
 
-import project_cg.geometry.planeCartesians.bases.BaseCartesianPlane2D;
 import utils.Constants;
 import view.mainScreen.MainScreen;
 import view.inputsPanel.DataOptions;
-import project_cg.geometry.planeCartesians.bases.BaseCartesianPlane;
 import view.mainScreen.MainScreenSingleton;
 
 import javax.swing.*;
@@ -77,7 +75,7 @@ public class SelectOptions extends JPanel {
                 MainScreen mainScreen = MainScreenSingleton.getMainScreen();
                 updateComboBox2(dataOptions.getSecondComboBoxOptions(selectedCategory));
 
-                mainScreen.changeCartesianPlaneScreen(selectedCategory);
+                mainScreen.updateCurrentPanel(selectedCategory);
             }
         });
 

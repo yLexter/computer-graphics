@@ -31,12 +31,12 @@ public class InputsPanel extends JPanel {
         WindowViewport windowViewport = new WindowViewport();
 
         // Adicionando os planos cartesianos
-        mainScreen.JPanelHandler.addCartesianPlane("Primitivas", primitivaPlane);
-        mainScreen.JPanelHandler.addCartesianPlane("Transformações", transformacoesPlane);
-        mainScreen.JPanelHandler.addCartesianPlane("Pixel", pixelPlane);
-        mainScreen.JPanelHandler.addCartesianPlane("Janela p/ Viewport", windowViewport);
+        mainScreen.JPanelHandler.addJPanel("Primitivas", primitivaPlane);
+        mainScreen.JPanelHandler.addJPanel("Transformações", transformacoesPlane);
+        mainScreen.JPanelHandler.addJPanel("Pixel", pixelPlane);
+        mainScreen.JPanelHandler.addJPanel("Janela p/ Viewport", windowViewport);
 
-        // ToDo fluxo
+        // ToDo fluxo, não mexer p n estourar o codigo
         mainScreen.setGeometricFiguresHandler(new GeometricFiguresHandler(mainScreen.getCartesianPlaneHandler()));
 
         // Criação de instâncias de inputs para transformações
@@ -55,10 +55,15 @@ public class InputsPanel extends JPanel {
         MidpointLineInputs midpointLineInputs = new MidpointLineInputs();
         MidpointElipseInputs midpointElipseInputs = new MidpointElipseInputs();
 
+        // Adicioanr Lena Options
+
+        // dataOptions.addOption("Lena Filtro", "Teste", midpointCircleInputs);
+
+
         // Adicionando as opções de transformação
         // dataOptions.addOption("Transformações", "Desenhar Circulo", midpointCircleInputs);
         //dataOptions.addOption("Transformações", "Desenhar Ellipse", midpointElipseInputs);
-        // dataOptions.addOption("Transformações", "Desenhar Reta", midpointLineInputs);
+        dataOptions.addOption("Transformações", "Desenhar Reta", midpointLineInputs);
 
         dataOptions.addOption("Transformações", "Desenhar Quadrado", polygonInputs);
         dataOptions.addOption("Transformações", "Aplicar Rotação", rotationInputs);

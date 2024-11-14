@@ -98,9 +98,9 @@ public class MainScreen extends JFrame {
         setSize(Constants.WIDTH_MAIN_SCREEN, Constants.HEIGHT_MAIN_SCREEN);
     }
 
-    public void changeCartesianPlaneScreen(String categoryCatersianPlane) {
+    public void updateCurrentPanel(String categoryCatersianPlane) {
         this.JPanelHandler.setCurrentCategory(categoryCatersianPlane);
-        JPanel currentPanel = JPanelHandler.getCurrentCartesianPlane();
+        JPanel currentPanel = JPanelHandler.getCurrentPanel();
 
         getContentPane().removeAll();
         setLayoutPanel(currentPanel);
