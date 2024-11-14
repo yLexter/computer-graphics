@@ -1,31 +1,33 @@
-package view.inputsPanel.transformations2dinputs;
+package project_cg.inputsPanel.transformations2dinputs;
 
 import project_cg.geometry.figures.BaseFigure;
 import project_cg.geometry.points.Point2D;
-import project_cg.transformations2d.Rotation;
-import view.inputsPanel.ShapePanel;
+import project_cg.transformations2d.Translation;
+import view.utils.ShapePanel;
 import view.mainScreen.MainScreen;
 import view.mainScreen.MainScreenSingleton;
 
 import javax.swing.*;
 
-public class RotationInputs extends ShapePanel {
-    private JTextField angleInput;
+public class TranslationInputs extends ShapePanel {
+    private JTextField translationX, translationY;
 
     private JComboBox<String> comboBoxFigures;
-
     @Override
     protected void initializeInputs() {
-        angleInput = new JTextField(10);
+        translationX = new JTextField(10);
+        translationY = new JTextField(10);
         comboBoxFigures = MainScreenSingleton.getComboBoxGeometriFigures();
 
         addComboBox("Escolha uma figura", comboBoxFigures);
-        addInputField("Ângulo de Rotação:", angleInput);
+        addInputField("Translação X:", translationX);
+        addInputField("Translação Y:", translationY);
     }
 
     @Override
     protected void onCalculate() {
-        double angle = Double.parseDouble(angleInput.getText());
+        int tx = Integer.parseInt(translationX.getText());
+        int ty = Integer.parseInt(translationY.getText());
 
         MainScreen mainScreen = MainScreenSingleton.getMainScreen();
 
@@ -34,12 +36,12 @@ public class RotationInputs extends ShapePanel {
 
         figure.getVertex(
                 point2D -> {
-                    Point2D pointRotated = Rotation.rotatePoint(point2D, angle);
-                    point2D.updatePoint(pointRotated);
+                    Point2D pointTransladed = Translation.translatePoint(point2D, tx, ty);
+                    point2D.updatePoint(pointTransladed);
                 }
         );
 
         mainScreen.updateFigures();
     }
-}
 
+}

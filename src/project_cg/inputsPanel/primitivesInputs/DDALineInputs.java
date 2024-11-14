@@ -1,16 +1,16 @@
-package view.inputsPanel.primitivesInputs;
+package project_cg.inputsPanel.primitivesInputs;
 
 import project_cg.geometry.figures.Line;
 import project_cg.geometry.points.Point2D;
-import project_cg.primitives.MidpointLine;
-import project_cg.primitives.bases.BaseLine;
-import view.inputsPanel.ShapePanel;
+import project_cg.primitives.DDALine;
+import view.utils.ShapePanel;
 import view.mainScreen.MainScreen;
 import view.mainScreen.MainScreenSingleton;
+// import project_cg.primitives.DDALine;
 
 import javax.swing.*;
 
-public class MidpointLineInputs extends ShapePanel {
+public class DDALineInputs extends ShapePanel {
     private JTextField inputP1;
     private JTextField inputP2;
 
@@ -39,12 +39,12 @@ public class MidpointLineInputs extends ShapePanel {
 
             MainScreen mainScreen = MainScreenSingleton.getMainScreen();
 
-            BaseLine ddaLine = new MidpointLine();
+            DDALine ddaLine = new DDALine();
 
             Line line = new Line(
-                    new Point2D(x1, y1),
-                    new Point2D(x2, y2),
-                    ddaLine
+                new Point2D(x1, y1),
+                new Point2D(x2, y2),
+                ddaLine
             );
 
             mainScreen.geometricFiguresHandler.addFigure(line);
@@ -53,9 +53,5 @@ public class MidpointLineInputs extends ShapePanel {
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Por favor, insira valores válidos para P1 e P2.");
         }
-
     }
-
-
 }
-

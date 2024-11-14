@@ -1,6 +1,7 @@
-package project_cg.ecgSimulator;
+package project_cg.inputsPanel.ecgInputs;
 
-import view.inputsPanel.ShapePanel;
+import project_cg.ecgSimulator.ECGSimulation;
+import view.utils.ShapePanel;
 import view.mainScreen.MainScreen;
 import view.mainScreen.MainScreenSingleton;
 

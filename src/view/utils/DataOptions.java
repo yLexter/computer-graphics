@@ -1,4 +1,4 @@
-package view.inputsPanel;
+package view.utils;
 
 import view.mainScreen.MainScreen;
 import view.mainScreen.MainScreenSingleton;

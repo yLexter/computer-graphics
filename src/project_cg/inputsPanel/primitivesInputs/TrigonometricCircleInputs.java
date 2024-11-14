@@ -1,8 +1,8 @@
-package view.inputsPanel.primitivesInputs;
+package project_cg.inputsPanel.primitivesInputs;
 
 import project_cg.geometry.figures.Circle;
 import project_cg.primitives.bases.BaseCircle;
-import view.inputsPanel.ShapePanel;
+import view.utils.ShapePanel;
 import view.mainScreen.MainScreen;
 import view.mainScreen.MainScreenSingleton;
 import project_cg.primitives.TrigometricCircle;

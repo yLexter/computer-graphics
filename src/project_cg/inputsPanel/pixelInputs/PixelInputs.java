@@ -1,9 +1,4 @@
-package view.inputsPanel.pixelInputs;
-
-import project_cg.pixel.Coordinates;
-
-import javax.swing.*;
-import java.awt.*;
+package project_cg.inputsPanel.pixelInputs;
 
 
 /*

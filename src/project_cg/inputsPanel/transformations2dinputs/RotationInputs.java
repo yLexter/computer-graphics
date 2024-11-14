@@ -1,35 +1,31 @@
-package view.inputsPanel.transformations2dinputs;
+package project_cg.inputsPanel.transformations2dinputs;
 
 import project_cg.geometry.figures.BaseFigure;
 import project_cg.geometry.points.Point2D;
-import project_cg.transformations2d.Scale;
-import view.inputsPanel.ShapePanel;
+import project_cg.transformations2d.Rotation;
+import view.utils.ShapePanel;
 import view.mainScreen.MainScreen;
 import view.mainScreen.MainScreenSingleton;
 
 import javax.swing.*;
 
-public class ScaleInputs extends ShapePanel {
-    private JTextField scaleX, scaleY;
+public class RotationInputs extends ShapePanel {
+    private JTextField angleInput;
 
     private JComboBox<String> comboBoxFigures;
 
     @Override
     protected void initializeInputs() {
-        scaleX = new JTextField(10);
-        scaleY = new JTextField(10);
-
+        angleInput = new JTextField(10);
         comboBoxFigures = MainScreenSingleton.getComboBoxGeometriFigures();
 
         addComboBox("Escolha uma figura", comboBoxFigures);
-        addInputField("Escala X:", scaleX);
-        addInputField("Escala Y:", scaleY);
+        addInputField("Ângulo de Rotação:", angleInput);
     }
 
     @Override
     protected void onCalculate() {
-        double sx = Double.parseDouble(scaleX.getText());
-        double sy = Double.parseDouble(scaleY.getText());
+        double angle = Double.parseDouble(angleInput.getText());
 
         MainScreen mainScreen = MainScreenSingleton.getMainScreen();
 
@@ -38,8 +34,8 @@ public class ScaleInputs extends ShapePanel {
 
         figure.getVertex(
                 point2D -> {
-                    Point2D pointScaled = Scale.scalePoint(point2D, sx, sy);
-                    point2D.updatePoint(pointScaled);
+                    Point2D pointRotated = Rotation.rotatePoint(point2D, angle);
+                    point2D.updatePoint(pointRotated);
                 }
         );
 

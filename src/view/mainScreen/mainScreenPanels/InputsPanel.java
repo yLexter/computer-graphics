@@ -1,12 +1,12 @@
 package view.mainScreen.mainScreenPanels;
 
 import project_cg.ecgSimulator.ECGSimulation;
-import project_cg.ecgSimulator.ECGSimulationInputs;
+import project_cg.inputsPanel.ecgInputs.ECGSimulationInputs;
 import project_cg.geometry.planeCartesians.windowViewport.WindowViewport;
 import view.mainScreen.MainScreen;
-import view.inputsPanel.DataOptions;
-import view.inputsPanel.primitivesInputs.*;
-import view.inputsPanel.transformations2dinputs.*;
+import view.utils.DataOptions;
+import project_cg.inputsPanel.primitivesInputs.*;
+import project_cg.inputsPanel.transformations2dinputs.*;
 import project_cg.geometry.planeCartesians.CartesianPlane2D;
 import project_cg.geometry.planeCartesians.PixelCartesianPlane;
 import view.select.SelectOptions;

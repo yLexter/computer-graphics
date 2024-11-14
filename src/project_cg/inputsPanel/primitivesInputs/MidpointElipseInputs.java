@@ -1,8 +1,8 @@
-package view.inputsPanel.primitivesInputs;
+package project_cg.inputsPanel.primitivesInputs;
 
 import project_cg.geometry.figures.Ellipse;
 import project_cg.primitives.MidpointElipse;
-import view.inputsPanel.ShapePanel;
+import view.utils.ShapePanel;
 import view.mainScreen.MainScreen;
 import view.mainScreen.MainScreenSingleton;
 

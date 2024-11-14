@@ -2,7 +2,7 @@ package view.select;
 
 import utils.Constants;
 import view.mainScreen.MainScreen;
-import view.inputsPanel.DataOptions;
+import view.utils.DataOptions;
 import view.mainScreen.MainScreenSingleton;
 
 import javax.swing.*;
