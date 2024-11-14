@@ -16,6 +16,7 @@ public class MainScreen extends JFrame {
     private JScrollPane operationLogsScroll;
     private JScrollPane inputsScroll;
     public final JPanelHandler JPanelHandler;
+
     public GeometricFiguresHandler geometricFiguresHandler;
 
     public MainScreen(JPanel homePanel, JPanel operationLogs) {

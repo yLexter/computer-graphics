@@ -62,14 +62,6 @@ public class InputsPanel extends JPanel {
         // Input do ECG
         ECGSimulationInputs ecgSimulationInputs = new ECGSimulationInputs();
 
-        // Adicioanr Lena Options
-
-        // dataOptions.addOption("Lena Filtro", "Teste", midpointCircleInputs);
-        // Adicionando as opções de transformação
-        // dataOptions.addOption("Transformações", "Desenhar Circulo", midpointCircleInputs);
-        //dataOptions.addOption("Transformações", "Desenhar Ellipse", midpointElipseInputs);
-
-
         dataOptions.addOption("Transformações", "Desenhar Reta", midpointLineInputs);
 
         dataOptions.addOption("Transformações", "Desenhar Quadrado", polygonInputs);
