@@ -30,7 +30,7 @@ public class PixelCartesianPlane extends BaseCartesianPlane {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
         drawPlanoCartesiano(g);
         drawPoint(g, DCX, DCY);

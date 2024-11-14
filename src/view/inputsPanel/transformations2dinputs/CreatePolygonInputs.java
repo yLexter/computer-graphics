@@ -5,7 +5,6 @@ import geometry.points.Point2D;
 import primitives.MidpointLine;
 import view.mainScreen.MainScreen;
 import view.inputsPanel.ShapePanel;
-import geometry.planeCartesians.CartesianPlane2D;
 import view.mainScreen.MainScreenSingleton;
 
 import javax.swing.*;
@@ -77,7 +76,6 @@ public class CreatePolygonInputs extends ShapePanel {
 
        mainScreen.geometricFiguresHandler.addFigure(square);
        mainScreen.updateFigures();
-
     }
 
 
