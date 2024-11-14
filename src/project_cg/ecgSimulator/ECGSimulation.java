@@ -1,5 +1,7 @@
 package project_cg.ecgSimulator;
 
+import project_cg.geometry.planeCartesians.CartesianPlane2D;
+import project_cg.geometry.planeCartesians.bases.BaseCartesianPlane;
 import project_cg.geometry.points.Point2D;
 import project_cg.primitives.MidpointLine;
 
@@ -12,22 +14,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ECGSimulation extends JPanel implements ActionListener {
+public class ECGSimulation extends CartesianPlane2D implements ActionListener {
 
     private List<Integer> ecgData = new ArrayList<>(); // Lista para armazenar valores do ECG
     private int maxDataPoints = 300;
     private Timer timer;
     private int time = 0;
+    private int animationDuration; // Duração total da animação em milissegundos
+    private long startTime; // Momento em que a animação foi iniciada
     private MidpointLine midpointLine; // Instância de MidpointLine para desenhar as linhas
-    private BufferedImage image; // Imagem onde os pixels serão desenhados
 
     public ECGSimulation() {
-        midpointLine = new MidpointLine();
-        timer = new Timer(15, this); // Intervalo de atualização da animação
-        timer.start();
-
-        // Inicializa a imagem com o mesmo tamanho do painel
-        image = new BufferedImage(800, 400, BufferedImage.TYPE_INT_RGB);
+        this.midpointLine = new MidpointLine();
+        this.drawCartesianPlane();
     }
 
     @Override
@@ -76,6 +75,7 @@ public class ECGSimulation extends JPanel implements ActionListener {
         g.drawImage(image, 0, 0, null);
     }
 
+    @Override
     public void setPixel(Point2D point, int rgb) {
         int screenX = (int) (point.getX());
         int screenY = (int) (getHeight() - point.getY());
@@ -86,9 +86,46 @@ public class ECGSimulation extends JPanel implements ActionListener {
     }
 
     @Override
+    public void drawCartesianPlane() {
+        int backgroundColor = new Color(0, 50, 0).getRGB();
+
+        for (int x = 0; x < image.getWidth(); x++) {
+            for (int y = 0; y < image.getHeight(); y++) {
+                image.setRGB(x, y, backgroundColor);
+            }
+        }
+    }
+
+    @Override
+    public CartesianPlane2D reset() {
+        return new ECGSimulation();
+    }
+
+    @Override
+    public void clearCartesianPlane() {}
+
+    public void startAnimation(int duration) {
+        this.animationDuration = duration; // Define a duração total da animação em milissegundos
+        this.startTime = System.currentTimeMillis(); // Marca o início da animação
+
+        this.timer = new Timer(15, this);
+        this.timer.start();
+    }
+
+    @Override
     public void actionPerformed(ActionEvent e) {
+        // Interrompe a animação após o tempo total
+
+        int currentTimeAnimation = (int) (System.currentTimeMillis() - startTime) / 1000;
+
+        if (currentTimeAnimation >= animationDuration) {
+            timer.stop();
+            return;
+        }
+
         // Função para simular o padrão de um batimento cardíaco
         int ecgValue;
+
         if (time % 100 < 15) {
             ecgValue = (int) (100 * Math.sin(0.2 * time)); // Pico alto do batimento
         } else if (time % 100 < 30) {
@@ -106,15 +143,7 @@ public class ECGSimulation extends JPanel implements ActionListener {
         }
 
         time++;
-        repaint(); // Atualiza a tela para o próximo quadro
-    }
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("ECG Simulation");
-        ECGSimulation ecgSimulation = new ECGSimulation();
-        frame.add(ecgSimulation);
-        frame.setSize(800, 400);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+        repaint(); // Atualiza a tela para o próximo quadro
     }
 }

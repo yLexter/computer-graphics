@@ -1,5 +1,6 @@
 package view.utils;
 
+import project_cg.ecgSimulator.ECGSimulation;
 import project_cg.geometry.planeCartesians.bases.BaseCartesianPlane;
 
 import javax.swing.*;
@@ -41,6 +42,13 @@ public class JPanelHandler {
     public void addJPanel(String category, JPanel JPanel) {
         cartesiansPlane.put(category, JPanel);
     }
+
+
+    // obter ECG Simulator
+    public ECGSimulation getECGSimulation() {
+        return (ECGSimulation) getCurrentPanel();
+    }
+
 
     // Manipular os planos cartesianos
     public void resetCurrentCartesianPlane() {

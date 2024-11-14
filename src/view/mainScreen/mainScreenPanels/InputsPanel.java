@@ -1,5 +1,7 @@
 package view.mainScreen.mainScreenPanels;
 
+import project_cg.ecgSimulator.ECGSimulation;
+import project_cg.ecgSimulator.ECGSimulationInputs;
 import project_cg.geometry.planeCartesians.windowViewport.WindowViewport;
 import view.mainScreen.MainScreen;
 import view.inputsPanel.DataOptions;
@@ -29,12 +31,14 @@ public class InputsPanel extends JPanel {
         CartesianPlane2D transformacoesPlane = new CartesianPlane2D();
         PixelCartesianPlane pixelPlane = new PixelCartesianPlane();
         WindowViewport windowViewport = new WindowViewport();
+        ECGSimulation ecgSimulation = new ECGSimulation();
 
         // Adicionando os planos cartesianos
         mainScreen.JPanelHandler.addJPanel("Primitivas", primitivaPlane);
         mainScreen.JPanelHandler.addJPanel("Transformações", transformacoesPlane);
         mainScreen.JPanelHandler.addJPanel("Pixel", pixelPlane);
         mainScreen.JPanelHandler.addJPanel("Janela p/ Viewport", windowViewport);
+        mainScreen.JPanelHandler.addJPanel("Simulador de Coracão", ecgSimulation);
 
         // ToDo fluxo, não mexer p n estourar o codigo
         mainScreen.setGeometricFiguresHandler(new GeometricFiguresHandler(mainScreen.getCartesianPlaneHandler()));
@@ -55,14 +59,17 @@ public class InputsPanel extends JPanel {
         MidpointLineInputs midpointLineInputs = new MidpointLineInputs();
         MidpointElipseInputs midpointElipseInputs = new MidpointElipseInputs();
 
+        // Input do ECG
+        ECGSimulationInputs ecgSimulationInputs = new ECGSimulationInputs();
+
         // Adicioanr Lena Options
 
         // dataOptions.addOption("Lena Filtro", "Teste", midpointCircleInputs);
-
-
         // Adicionando as opções de transformação
         // dataOptions.addOption("Transformações", "Desenhar Circulo", midpointCircleInputs);
         //dataOptions.addOption("Transformações", "Desenhar Ellipse", midpointElipseInputs);
+
+
         dataOptions.addOption("Transformações", "Desenhar Reta", midpointLineInputs);
 
         dataOptions.addOption("Transformações", "Desenhar Quadrado", polygonInputs);
@@ -89,6 +96,9 @@ public class InputsPanel extends JPanel {
         dataOptions.addOption("Janela p/ Viewport", "Aplicar Cisalhamento", shearInputs);
         dataOptions.addOption("Janela p/ Viewport", "Aplicar Translação", translationInputs);
         dataOptions.addOption("Janela p/ Viewport", "Aplicar Reflexão", reflectionInputs);
+
+        // Opções do ECG
+        dataOptions.addOption("Simulador de Coracão", "Definir Tempo", ecgSimulationInputs);
 
         add(new SelectOptions(dataOptions), BorderLayout.CENTER);
 
