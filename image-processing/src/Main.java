@@ -10,6 +10,8 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.border.LineBorder;
 import Filtros.*;
+import OpMorfologico.Dilatacao;
+import OpMorfologico.Erosao;
 
 public class Main extends JFrame {
     private JButton carregarImagemButton;
@@ -26,10 +28,14 @@ public class Main extends JFrame {
     private int mouseX = -1, mouseY = -1; // Coordenadas do mouse
     private JLabel mascaraLabel;
 
-
+    //operadores morfologicos
     private JMenuBar mb2;
     private JMenu escolherMorfologico;
+    private JMenu dimensaoKernalErosao;
+    private JMenu dimensaoKernalDilatacao;
     private JMenuItem dil,ero,fec,abe,tophat,bottomhat;
+    private JMenuItem ero3x3,ero5x5,ero7x7;
+    private JMenuItem dil3x3,dil5x5,dil7x7;
 
 
     public Main() {
@@ -43,6 +49,8 @@ public class Main extends JFrame {
         carregarImagemButton = new JButton("Carregar Imagem");
         escolherFiltroButton = new JMenu("Filtros");
         escolherMorfologico = new JMenu("Operadores Morfológicos");
+        dimensaoKernalErosao = new JMenu("Erosão");
+        dimensaoKernalDilatacao = new JMenu("Dilatação");
         Titulo = new JLabel("Processamento de Imagem");
         Output= new JLabel("Output");
 
@@ -88,15 +96,32 @@ public class Main extends JFrame {
         bottomhat = new JMenuItem("Bottom-Hat");
 
 
+        //dimensoes de kernal
+        ero3x3 = new JMenuItem("Kernel 3x3");
+        ero5x5 = new JMenuItem("Kernel 5x5");
+        ero7x7 = new JMenuItem("Kernel 7x7");
+        dil3x3 = new JMenuItem("Kernel 3x3");
+        dil5x5 = new JMenuItem("Kernel 5x5");
+        dil7x7 = new JMenuItem("Kernel 7x7");
+        dimensaoKernalErosao.add(ero3x3);
+        dimensaoKernalErosao.add(ero5x5);
+        dimensaoKernalErosao.add(ero7x7);
+        dimensaoKernalDilatacao.add(dil3x3);
+        dimensaoKernalDilatacao.add(dil5x5);
+        dimensaoKernalDilatacao.add(dil7x7);
 
         // Adicionar os filtros no menu 2
         mb2.add(escolherMorfologico);
-        escolherMorfologico.add(dil);
-        escolherMorfologico.add(ero);
+        //mb2.add(dimensaoKernalDilatacao);
+        //mb2.add(dimensaoKernalErosao);
+        escolherMorfologico.add(dimensaoKernalDilatacao);
+        escolherMorfologico.add(dimensaoKernalErosao);
         escolherMorfologico.add(fec);
         escolherMorfologico.add(abe);
         escolherMorfologico.add(tophat);
         escolherMorfologico.add(bottomhat);
+
+
 
 
         //ações de selecionar os filtros
@@ -169,6 +194,119 @@ public class Main extends JFrame {
             }
         });;
 
+        dil3x3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                TelaPrincipal.add(Output);
+
+                Dilatacao dilatacao = new Dilatacao();
+
+                // Verifica se a imagem foi carregada antes de aplicar o filtro
+                if (imagemExibida != null) {
+                    imagemOutput = dilatacao.operadorDilatacao(imagemExibida,3);   // Chama o filtro na imagem exibida
+                    // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
+                    repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                } else {
+                    System.out.println("Imagem não carregada.");
+                }
+            }
+        });;
+
+        dil5x5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                TelaPrincipal.add(Output);
+
+                Dilatacao dilatacao = new Dilatacao();
+
+                // Verifica se a imagem foi carregada antes de aplicar o filtro
+                if (imagemExibida != null) {
+                    imagemOutput = dilatacao.operadorDilatacao(imagemExibida,5);   // Chama o filtro na imagem exibida
+                    // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
+                    repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                } else {
+                    System.out.println("Imagem não carregada.");
+                }
+            }
+        });;
+
+        dil7x7.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                TelaPrincipal.add(Output);
+
+                Dilatacao dilatacao = new Dilatacao();
+
+                // Verifica se a imagem foi carregada antes de aplicar o filtro
+                if (imagemExibida != null) {
+                    imagemOutput = dilatacao.operadorDilatacao(imagemExibida,7);   // Chama o filtro na imagem exibida
+                    // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
+                    repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                } else {
+                    System.out.println("Imagem não carregada.");
+                }
+            }
+        });;
+
+        ero3x3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                TelaPrincipal.add(Output);
+
+                Erosao erosao = new Erosao();
+
+                // Verifica se a imagem foi carregada antes de aplicar o filtro
+                if (imagemExibida != null) {
+                    imagemOutput = erosao.operadorErosao(imagemExibida,3);   // Chama o filtro na imagem exibida
+                    // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
+                    repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                } else {
+                    System.out.println("Imagem não carregada.");
+                }
+            }
+        });;
+
+        ero5x5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                TelaPrincipal.add(Output);
+
+                Erosao erosao = new Erosao();
+
+                // Verifica se a imagem foi carregada antes de aplicar o filtro
+                if (imagemExibida != null) {
+                    imagemOutput = erosao.operadorErosao(imagemExibida,5);   // Chama o filtro na imagem exibida
+                    // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
+                    repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                } else {
+                    System.out.println("Imagem não carregada.");
+                }
+            }
+        });;
+
+        ero7x7.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                TelaPrincipal.add(Output);
+
+                Erosao erosao = new Erosao();
+
+                // Verifica se a imagem foi carregada antes de aplicar o filtro
+                if (imagemExibida != null) {
+                    imagemOutput = erosao.operadorErosao(imagemExibida,7);   // Chama o filtro na imagem exibida
+                    // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
+                    repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                } else {
+                    System.out.println("Imagem não carregada.");
+                }
+            }
+        });;
 
         // Define posições dos componentes setBounds(int x-coordinate, int y-coordinate, int width, int height)
         Titulo.setBounds(425, 55, 390, 36);
@@ -194,6 +332,15 @@ public class Main extends JFrame {
         escolherMorfologico.setOpaque(false);
         escolherMorfologico.setContentAreaFilled(false);
         escolherMorfologico.setFocusPainted(false);
+
+        dimensaoKernalDilatacao.setOpaque(false);
+        dimensaoKernalDilatacao.setContentAreaFilled(false);
+        dimensaoKernalDilatacao.setFocusPainted(false);
+
+
+        dimensaoKernalErosao.setOpaque(false);
+        dimensaoKernalErosao.setContentAreaFilled(false);
+        dimensaoKernalErosao.setFocusPainted(false);
 
 
 
