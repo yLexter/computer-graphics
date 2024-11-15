@@ -13,7 +13,7 @@ import Filtros.*;
 
 public class Main extends JFrame {
     private JButton carregarImagemButton;
-    private JMenuBar mb;
+    private JMenuBar mb1;
     private JMenu escolherFiltroButton;
     private JMenuItem f1,f2,f3,f4,f5,f6,f7,f8;
     //private JButton escolherFiltroButton;
@@ -26,15 +26,23 @@ public class Main extends JFrame {
     private int mouseX = -1, mouseY = -1; // Coordenadas do mouse
     private JLabel mascaraLabel;
 
+
+    private JMenuBar mb2;
+    private JMenu escolherMorfologico;
+    private JMenuItem dil,ero,fec,abe,tophat,bottomhat;
+
+
     public Main() {
         // Inicializa o painel
         TelaPrincipal = new JPanel();
         TelaPrincipal.setLayout(null);
 
         // Inicializa e configura os componentes
-        mb = new JMenuBar();
+        mb1 = new JMenuBar();
+        mb2 = new JMenuBar();
         carregarImagemButton = new JButton("Carregar Imagem");
         escolherFiltroButton = new JMenu("Filtros");
+        escolherMorfologico = new JMenu("Operadores Morfológicos");
         Titulo = new JLabel("Processamento de Imagem");
         Output= new JLabel("Output");
 
@@ -58,15 +66,37 @@ public class Main extends JFrame {
         Output.setFont(fonteTitulo);
         carregarImagemButton.setFont(fonteBotao);
         escolherFiltroButton.setFont(fonteBotao);
+        escolherMorfologico.setFont(fonteBotao);
 
         //Os filtros disponiveis
         f1 = new JMenuItem("Filtro da Média");
         f2 = new JMenuItem("Filtro da Mediana");
+        f3 = new JMenuItem("Filtro Negativo");
 
-        // Adicionar os filtros no menu
-        mb.add(escolherFiltroButton);
+        // Adicionar os filtros no menu 1
+        mb1.add(escolherFiltroButton);
         escolherFiltroButton.add(f1);
         escolherFiltroButton.add(f2);
+        escolherFiltroButton.add(f3);
+
+        //OP morf disponiveis
+        dil = new JMenuItem("Dilatação");
+        ero = new JMenuItem("Erosão");
+        fec = new JMenuItem("Fechamento");
+        abe = new JMenuItem("Abertura");
+        tophat = new JMenuItem("Top-Hat");
+        bottomhat = new JMenuItem("Bottom-Hat");
+
+
+
+        // Adicionar os filtros no menu 2
+        mb2.add(escolherMorfologico);
+        escolherMorfologico.add(dil);
+        escolherMorfologico.add(ero);
+        escolherMorfologico.add(fec);
+        escolherMorfologico.add(abe);
+        escolherMorfologico.add(tophat);
+        escolherMorfologico.add(bottomhat);
 
 
         //ações de selecionar os filtros
@@ -120,11 +150,32 @@ public class Main extends JFrame {
             }
         });;
 
+        f3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                TelaPrincipal.add(Output);
+
+                Negativo negativo = new Negativo();
+
+                // Verifica se a imagem foi carregada antes de aplicar o filtro
+                if (imagemExibida != null) {
+                    imagemOutput = negativo.negativoFiltro(imagemExibida);   // Chama o filtro na imagem exibida
+                    // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
+                    repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                } else {
+                    System.out.println("Imagem não carregada.");
+                }
+            }
+        });;
+
+
         // Define posições dos componentes setBounds(int x-coordinate, int y-coordinate, int width, int height)
         Titulo.setBounds(425, 55, 390, 36);
         Output.setBounds(255,730,170,24);
         carregarImagemButton.setBounds(215, 410, 170, 30);
-        mb.setBounds(582,177,104,30);
+        mb1.setBounds(582,177,104,30);
+        mb2.setBounds(582,340,170,30);
         //escolherFiltroButton.setBounds(582,177,104,30);
 
         // Configurações dos botoes
@@ -139,11 +190,18 @@ public class Main extends JFrame {
         escolherFiltroButton.setFocusPainted(false);
 
 
+        escolherMorfologico.setBorder(new LineBorder(Color.BLACK));
+        escolherMorfologico.setOpaque(false);
+        escolherMorfologico.setContentAreaFilled(false);
+        escolherMorfologico.setFocusPainted(false);
+
+
 
         // Adiciona os componentes ao painel
         TelaPrincipal.add(Titulo);
         TelaPrincipal.add(carregarImagemButton);
-        TelaPrincipal.add(mb);
+        TelaPrincipal.add(mb1);
+        TelaPrincipal.add(mb2);
         //TelaPrincipal.add(escolherFiltroButton);
 
         // Configura o JFrame
