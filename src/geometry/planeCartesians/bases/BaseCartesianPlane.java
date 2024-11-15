@@ -8,4 +8,5 @@ public abstract class BaseCartesianPlane extends JPanel {
     public abstract void drawCartesianPlane();
     public abstract BaseCartesianPlane reset();
     public abstract void clearCartesianPlane();
+    public abstract int getPixel(int x, int y);
 }

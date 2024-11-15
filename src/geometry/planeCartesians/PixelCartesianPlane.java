@@ -106,4 +106,9 @@ public class PixelCartesianPlane extends BaseCartesianPlane {
 
     }
 
+	@Override
+	public int getPixel(int x, int y) {
+		return 0;
+	}
+
 }

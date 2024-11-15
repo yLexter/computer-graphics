@@ -1,18 +1,14 @@
 package geometry.figures;
 
 import geometry.points.Point2D;
-import primitives.MidpointLine;
 import primitives.bases.BaseLine;
 
-import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class Square extends BaseFigure {
 
     private Point2D[] vertices;
-
     private BaseLine lineAlgorithm;
-
     public String id;
 
     public Square(Point2D[] vertices, BaseLine lineAlgorithm) {
@@ -31,11 +27,8 @@ public class Square extends BaseFigure {
     @Override
     public void getVertex(Consumer<Point2D> callback) {
         for (int i = 0; i < 4; i++) {
-          callback.accept(this.vertices[i]);
+            callback.accept(this.vertices[i]);
         }
-
-        this.points = new ArrayList<>();
-        this.generatePoints();
     }
 
     public void generatePoints() {
@@ -46,15 +39,10 @@ public class Square extends BaseFigure {
             Point2D end = vertices[(i + 1) % 4];
             lineAlgorithm.desenhaLinha(start, end);
         }
-
     }
 
     @Override
     public void iterateToPoints(Consumer<Point2D> callback) {
-        for (int i = 0; i < 4; i++) {
-            callback.accept(this.vertices[i]);
-        }
-
         for (Point2D point : points) {
             callback.accept(point);
         }
@@ -64,5 +52,4 @@ public class Square extends BaseFigure {
     public String getID() {
         return this.id;
     }
-
 }
