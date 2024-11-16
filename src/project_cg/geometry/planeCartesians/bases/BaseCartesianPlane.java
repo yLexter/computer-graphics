@@ -5,6 +5,8 @@ import javax.swing.*;
 
 public abstract class BaseCartesianPlane extends JPanel {
     public abstract void setPixel(Point2D coordinates, int rgb);
+
+    public abstract  int getPixel(int x, int y);
     public abstract void drawCartesianPlane();
     public abstract BaseCartesianPlane reset();
     public abstract void clearCartesianPlane();

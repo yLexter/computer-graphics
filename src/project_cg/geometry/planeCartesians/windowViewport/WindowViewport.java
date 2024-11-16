@@ -8,7 +8,6 @@ import utils.Constants;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-
 public class WindowViewport extends BaseCartesianPlane2D {
     private Window window;
     private Viewport viewport;
@@ -40,6 +39,11 @@ public class WindowViewport extends BaseCartesianPlane2D {
         if (screenX >= 0 && screenX < image.getWidth() && screenY >= 0 && screenY < image.getHeight()) {
             image.setRGB(screenX, screenY, rgb);
         }
+    }
+
+    @Override
+    public int getPixel(int x, int y) {
+        return 0;
     }
 
     @Override

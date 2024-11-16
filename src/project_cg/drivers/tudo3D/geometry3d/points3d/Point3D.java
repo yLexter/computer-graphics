@@ -1,4 +1,4 @@
-package project_cg.tudo3D.geometry3d.points3d;
+package project_cg.drivers.tudo3D.geometry3d.points3d;
 
 public class Point3D {
     public double x, y, z;

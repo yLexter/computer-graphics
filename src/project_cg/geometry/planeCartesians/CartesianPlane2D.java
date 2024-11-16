@@ -21,6 +21,17 @@ public class CartesianPlane2D extends BaseCartesianPlane2D {
     }
 
     @Override
+    public int getPixel(int x, int y) {
+        int screenX = x + image.getWidth() / 2;
+        int screenY = image.getHeight() / 2 - y;
+
+        if (screenX >= 0 && screenX < image.getWidth() && screenY >= 0 && screenY < image.getHeight()) {
+            return image.getRGB(screenX, screenY);
+        }
+        return Constants.BACKGROUND_CARTESIAN_PLANE;
+    }
+
+    @Override
     public void setPixel(Point2D point, int rgb) {
         int screenX = (int) (point.x + image.getWidth() / 2);
         int screenY = (int) (image.getHeight() / 2 - point.y);
