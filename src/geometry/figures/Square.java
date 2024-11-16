@@ -3,6 +3,7 @@ package geometry.figures;
 import geometry.points.Point2D;
 import primitives.bases.BaseLine;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class Square extends BaseFigure {
@@ -27,8 +28,10 @@ public class Square extends BaseFigure {
     @Override
     public void getVertex(Consumer<Point2D> callback) {
         for (int i = 0; i < 4; i++) {
-            callback.accept(this.vertices[i]);
+          callback.accept(this.vertices[i]);
         }
+        this.points = new ArrayList<>();
+        this.generatePoints();
     }
 
     public void generatePoints() {
@@ -43,6 +46,9 @@ public class Square extends BaseFigure {
 
     @Override
     public void iterateToPoints(Consumer<Point2D> callback) {
+        for (int i = 0; i < 4; i++) {
+            callback.accept(this.vertices[i]);
+        }
         for (Point2D point : points) {
             callback.accept(point);
         }

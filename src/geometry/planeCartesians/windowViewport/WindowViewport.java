@@ -71,4 +71,10 @@ public class WindowViewport extends BaseCartesianPlane2D {
         this.drawCartesianPlane();
     }
 
+	@Override
+	public int getPixel(int x, int y) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

@@ -1,10 +1,11 @@
 package geometry.planeCartesians.bases;
 
-import geometry.points.Point2D;
 import utils.Constants;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+
+import geometry.planeCartesians.CartesianPlane2D;
 
 public abstract class BaseCartesianPlane2D extends BaseCartesianPlane {
 
@@ -20,52 +21,29 @@ public abstract class BaseCartesianPlane2D extends BaseCartesianPlane {
     }
 
     @Override
-    public abstract void setPixel(Point2D coordinates, int rgb);
-    
+    public BaseCartesianPlane2D reset() {
+        return new CartesianPlane2D();
+    }
     @Override
-    public int getPixel(int x, int y) {
-        int screenX = (int) (x + image.getWidth() / 2);
-        int screenY = (int) (image.getHeight() / 2 - y);
-
-        if (screenX >= 0 && screenX < image.getWidth() && screenY >= 0 && screenY < image.getHeight()) {
-            return image.getRGB(screenX, screenY);
-        }
-
-        return Constants.BACKGROUND_CARTESIAN_PLANE; // Retorna a cor de fundo
+    public int getHeight() {
+        return height;
     }
 
     @Override
-    public BaseCartesianPlane reset() {
-        return new BaseCartesianPlane2D(width, height) {
-            @Override
-            public void setPixel(Point2D coordinates, int rgb) {
-                // Implementação padrão
-            }
-
-            @Override
-            public void drawCartesianPlane() {
-                // Implementação padrão
-            }
-
-            @Override
-            public void clearCartesianPlane() {
-                // Implementação padrão
-            }
-        };
+    public int getWidth() {
+        return width;
     }
 
     @Override
-    public void clearCartesianPlane() {
+    public void drawCartesianPlane() {
+        int width = image.getWidth();
+        int height = image.getHeight();
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 image.setRGB(x, y, Constants.BACKGROUND_CARTESIAN_PLANE);
             }
         }
-        repaint();
-    }
 
-    @Override
-    public void drawCartesianPlane() {
         for (int x = 0; x < width; x++) {
             image.setRGB(x, height / 2, Constants.COLOR_LINES_CARTESIAN_PLANE);
         }
@@ -74,5 +52,10 @@ public abstract class BaseCartesianPlane2D extends BaseCartesianPlane {
             image.setRGB(width / 2, y, Constants.COLOR_LINES_CARTESIAN_PLANE);
         }
         repaint();
+    }
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(image, 0, 0, this);
     }
 }

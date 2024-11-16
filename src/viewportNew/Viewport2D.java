@@ -1,7 +1,8 @@
 package viewportNew;
 
-import geometry.planeCartesians.CartesianPlane2D;
+import geometry.planeCartesians.bases.BaseCartesianPlane2D;
 import geometry.points.Point2D;
+import utils.Constants;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -29,12 +30,18 @@ public class Viewport2D {
         g.dispose();
     }
 
-    public void renderFromCartesian(CartesianPlane2D plane, int worldXMin, int worldYMin, int worldXMax, int worldYMax) {
+    public void renderFromCartesian(BaseCartesianPlane2D plane, int worldXMin, int worldYMin, int worldXMax, int worldYMax) {
         clearViewport();
 
         for (int x = worldXMin; x <= worldXMax; x++) {
             for (int y = worldYMin; y <= worldYMax; y++) {
                 int cartesianRGB = plane.getPixel(x, y);
+
+                // Ignora apenas os pixels que pertencem aos eixos
+                if (cartesianRGB == Constants.COLOR_LINES_CARTESIAN_PLANE) {
+                    continue;
+                }
+
                 if (cartesianRGB != Color.BLACK.getRGB()) { // Apenas pixels não vazios
                     Point2D viewportPoint = mapToViewport(x, y, worldXMin, worldYMin, worldXMax, worldYMax);
                     if (viewportPoint != null) {
@@ -45,12 +52,10 @@ public class Viewport2D {
         }
     }
 
-    // Mapeia as coordenadas do plano cartesiano para a viewport
     public Point2D mapToViewport(int x, int y, int worldXMin, int worldYMin, int worldXMax, int worldYMax) {
         double normalizedX = (double) (x - worldXMin) / (worldXMax - worldXMin);
         double normalizedY = (double) (y - worldYMin) / (worldYMax - worldYMin);
 
-        // Converte coordenadas normalizadas para a escala da viewport
         int viewportX = (int) (normalizedX * viewportWidth);
         int viewportY = (int) ((1 - normalizedY) * viewportHeight); // Inverte o eixo Y para a tela
 
@@ -71,12 +76,10 @@ public class Viewport2D {
         g.drawImage(image, viewportX, viewportY, null);
     }
 
-    // Adiciona um getter para a imagem, caso necessário
     public BufferedImage getImage() {
         return this.image;
     }
 
-    // Getter para largura e altura da viewport
     public int getWidth() {
         return viewportWidth;
     }
@@ -85,4 +88,3 @@ public class Viewport2D {
         return viewportHeight;
     }
 }
-

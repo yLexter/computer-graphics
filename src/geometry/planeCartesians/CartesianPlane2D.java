@@ -1,11 +1,10 @@
 package geometry.planeCartesians;
 
-import java.awt.image.BufferedImage;
-
 import geometry.planeCartesians.bases.BaseCartesianPlane2D;
 import geometry.points.Point2D;
 import utils.Constants;
 
+import java.awt.image.BufferedImage;
 
 public class CartesianPlane2D extends BaseCartesianPlane2D {
 
@@ -15,9 +14,15 @@ public class CartesianPlane2D extends BaseCartesianPlane2D {
     }
 
     @Override
-    public void setPixel(Point2D coordinates, int rgb) {
-        int screenX = (int) (coordinates.x + image.getWidth() / 2);
-        int screenY = (int) (image.getHeight() / 2 - coordinates.y);
+    public void clearCartesianPlane() {
+        this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        this.drawCartesianPlane();
+    }
+
+    @Override
+    public void setPixel(Point2D point, int rgb) {
+        int screenX = (int) (point.x + image.getWidth() / 2);
+        int screenY = (int) (image.getHeight() / 2 - point.y);
 
         if (screenX >= 0 && screenX < image.getWidth() && screenY >= 0 && screenY < image.getHeight()) {
             image.setRGB(screenX, screenY, rgb);
@@ -25,18 +30,13 @@ public class CartesianPlane2D extends BaseCartesianPlane2D {
     }
 
     @Override
-    public void clearCartesianPlane() {
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                image.setRGB(x, y, Constants.BACKGROUND_CARTESIAN_PLANE);
-            }
+    public int getPixel(int x, int y) {
+        int screenX = x + image.getWidth() / 2;
+        int screenY = image.getHeight() / 2 - y;
+
+        if (screenX >= 0 && screenX < image.getWidth() && screenY >= 0 && screenY < image.getHeight()) {
+            return image.getRGB(screenX, screenY);
         }
-        repaint();
+        return Constants.BACKGROUND_CARTESIAN_PLANE;
     }
-    
-    public BufferedImage getImage() {
-        return this.image;
-    }
-
 }
-

@@ -7,6 +7,7 @@ import utils.Constants;
 import geometry.planeCartesians.bases.BaseCartesianPlane;
 import view.utils.CartesianPlaneHandler;
 import view.utils.GeometricFiguresHandler;
+import viewportNew.ViewportWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,12 +20,21 @@ public class MainScreen extends JFrame {
     public final CartesianPlaneHandler cartesianPlaneHandler;
     public GeometricFiguresHandler geometricFiguresHandler;
 
+    private ViewportWindow viewportWindow; // Nova janela para exibir a viewport
+
     public MainScreen(JPanel cartesianPlane, JPanel operationLogs) {
         this.cartesianPlaneHandler = new CartesianPlaneHandler();
         this.operationLogsScroll = new JScrollPane(operationLogs);
         this.cartesianPlane = cartesianPlane;
 
         initializeScreen();
+        initializeViewportWindow(); // Inicializa a nova janela
+    }
+
+    private void initializeViewportWindow() {
+        int viewportWidth = 400;  // Largura da viewport
+        int viewportHeight = 400; // Altura da viewport
+        this.viewportWindow = new ViewportWindow(viewportWidth, viewportHeight);
     }
 
     public CartesianPlaneHandler getCartesianPlaneHandler() {
@@ -132,13 +142,21 @@ public class MainScreen extends JFrame {
         BaseCartesianPlane cartesianPlane1 = cartesianPlaneHandler.getCurrentCartesianPlane();
         cartesianPlane1.clearCartesianPlane();
 
-        for(BaseFigure figure : geometricFiguresHandler.getFigures()) {
-            for(Point2D point2D : figure.getPoints()) {
+        for (BaseFigure figure : geometricFiguresHandler.getFigures()) {
+            for (Point2D point2D : figure.getPoints()) {
                 cartesianPlane1.setPixel(point2D, figure.getColor());
             }
         }
 
         cartesianPlane1.repaint();
+        updateViewport(); // Atualiza a viewport ao modificar figuras
+    }
+
+    public void updateViewport() {
+        // Renderiza uma parte do plano cartesiano na nova janela
+        int worldXMin = -500, worldYMin = -500, worldXMax = 500, worldYMax = 500; // Região da viewport
+        viewportWindow.updateViewport((BaseCartesianPlane2D) cartesianPlaneHandler.getCurrentCartesianPlane(),
+                worldXMin, worldYMin, worldXMax, worldYMax);
     }
 
     public JScrollPane getOperationLogsScroll() {
@@ -148,5 +166,4 @@ public class MainScreen extends JFrame {
     public JScrollPane getInputsScroll() {
         return inputsScroll;
     }
-
 }
