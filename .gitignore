@@ -32,3 +32,4 @@ bin/
 libaries
 libaries/*
 *.jar
+/.metadata/

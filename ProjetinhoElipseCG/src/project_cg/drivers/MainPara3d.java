@@ -42,7 +42,7 @@ public class MainPara3d {
         }
 
         // Passa os vértices rotacionados para o plano cartesiano e inicia o contexto OpenGL
-        plane.run(rotatedVertices);
+        plane.update(rotatedVertices);
     }
 
 
