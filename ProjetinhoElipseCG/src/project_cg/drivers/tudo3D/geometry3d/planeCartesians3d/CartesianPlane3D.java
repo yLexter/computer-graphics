@@ -122,4 +122,15 @@ public class CartesianPlane3D {
         GL11.glVertex3f((float) start.getX(), (float) start.getY(), (float) start.getZ());
         GL11.glVertex3f((float) end.getX(), (float) end.getY(), (float) end.getZ());
     }
+    
+    public void resetCube() {
+        cubeVertices = new Point3D[]{
+            new Point3D(0, 0, 0), new Point3D(1, 0, 0),
+            new Point3D(1, 1, 0), new Point3D(0, 1, 0),
+            new Point3D(0, 0, 1), new Point3D(1, 0, 1),
+            new Point3D(1, 1, 1), new Point3D(0, 1, 1)
+        };
+        update(cubeVertices);
+    }
+
 }

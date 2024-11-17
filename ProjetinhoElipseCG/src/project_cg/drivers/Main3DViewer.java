@@ -6,7 +6,7 @@ import project_cg.drivers.tudo3D.transformations3dinputs.*;
 import javax.swing.*;
 import java.awt.*;
 
-public class Main3DViewer{
+public class Main3DViewer {
     public static void main(String[] args) {
         CartesianPlane3D plane3D = new CartesianPlane3D();
 
@@ -17,7 +17,7 @@ public class Main3DViewer{
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Transformações 3D - Plano Cartesiano");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(1200, 800);
+            frame.setSize(420, 600);
             frame.setLayout(new BorderLayout());
 
             JTabbedPane tabbedPane = new JTabbedPane();
@@ -29,11 +29,20 @@ public class Main3DViewer{
 
             JPanel controlPanel = new JPanel(new BorderLayout());
             controlPanel.add(tabbedPane, BorderLayout.CENTER);
-            controlPanel.setPreferredSize(new Dimension(400, 800));
 
+            // Adicionar botão "Limpar"
+            JButton clearButton = new JButton("Limpar");
+            clearButton.addActionListener(e -> {
+                plane3D.resetCube();
+            });
+
+            JPanel buttonPanel = new JPanel();
+            buttonPanel.add(clearButton);
+            controlPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+            controlPanel.setPreferredSize(new Dimension(400, 800));
             frame.add(controlPanel, BorderLayout.EAST);
             frame.setVisible(true);
         });
     }
 }
-

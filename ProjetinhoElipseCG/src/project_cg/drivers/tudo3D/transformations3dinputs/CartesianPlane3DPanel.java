@@ -24,4 +24,6 @@ public class CartesianPlane3DPanel extends JPanel {
         cartesianPlane3D.drawAxes();
         cartesianPlane3D.drawCube(cartesianPlane3D.getCubeVertices());
     }
+    
+    
 }
