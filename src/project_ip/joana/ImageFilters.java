@@ -105,6 +105,7 @@ public class ImageFilters extends JFrame {
         ero3x3 = new JMenuItem("Kernel 3x3");
         ero5x5 = new JMenuItem("Kernel 5x5");
         ero7x7 = new JMenuItem("Kernel 7x7");
+
         dil3x3 = new JMenuItem("Kernel 3x3");
         dil5x5 = new JMenuItem("Kernel 5x5");
         dil7x7 = new JMenuItem("Kernel 7x7");

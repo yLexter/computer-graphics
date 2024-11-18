@@ -35,7 +35,6 @@ public class Media {
             File inputFile = new File("C/Users/joana/Documents/computacao grafica/imagens (1)/lena.pgm");
             BufferedImage imagemOriginal = ImageIO.read(inputFile);
 
-
             if (imagemOriginal == null) {
                 System.out.println("Erro ao carregar a imagem.");
                 return;

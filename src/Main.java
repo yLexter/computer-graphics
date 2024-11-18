@@ -8,7 +8,6 @@ public class Main {
         MainScreen mainScreen = MainScreenSingleton.getMainScreen();
         mainScreen.setInputs(new InputsPanel());
         mainScreen.setLocationRelativeTo(null);
-        mainScreen.setResizable(false);
         mainScreen.setLayoutPanel();
         mainScreen.setVisible(true);
     }

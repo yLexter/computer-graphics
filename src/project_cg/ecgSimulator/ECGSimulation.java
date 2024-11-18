@@ -106,7 +106,7 @@ public class ECGSimulation extends CartesianPlane2D implements ActionListener {
         this.animationDuration = duration; // Define a duração total da animação em milissegundos
         this.startTime = System.currentTimeMillis(); // Marca o início da animação
 
-        this.timer = new Timer(15, this);
+        this.timer = new Timer(1, this);
         this.timer.start();
     }
 

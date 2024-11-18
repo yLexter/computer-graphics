@@ -7,6 +7,5 @@ public class Dilatacao {
 
     public BufferedImage operadorDilatacao (BufferedImage ImagemOriginal, int dimensaoKernel){
         return Convolucao.ConvolucaoDilatacao(ImagemOriginal,dimensaoKernel);
-
     }
 }

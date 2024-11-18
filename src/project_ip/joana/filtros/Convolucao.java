@@ -168,9 +168,6 @@ public class Convolucao {
 
 
         return resultImage;
-
-
-
     }
 
     public static BufferedImage ConvolucaoDilatacao(BufferedImage imagemOriginal, int dimensaoKernel) {

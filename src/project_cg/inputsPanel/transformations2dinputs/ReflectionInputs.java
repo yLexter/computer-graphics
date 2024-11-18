@@ -18,7 +18,7 @@ public class ReflectionInputs extends ShapePanel {
 
     @Override
     protected void initializeInputs() {
-        reflectionTypeComboBox = new JComboBox<>(new String[]{"X", "Y", "Origem", "YX"});
+        reflectionTypeComboBox = new JComboBox<>(new String[]{"X", "Y", "Origem"});
         comboBoxFigures = MainScreenSingleton.getComboBoxGeometriFigures();
 
         addComboBox("Escolha uma figura", comboBoxFigures);

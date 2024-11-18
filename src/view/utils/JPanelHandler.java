@@ -44,7 +44,7 @@ public class JPanelHandler {
     }
 
     public void resetCurrentJPanel() {
-        BaseJPanel currentCartesianPlane = getCurrentCartesianPlane();
+        BaseJPanel currentCartesianPlane = getCurrentPanel();
 
         this.cartesiansPlane.put(
                 currentCartesianPlaneString,

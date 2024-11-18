@@ -79,7 +79,7 @@ public class MainScreen extends JFrame {
 
     public void resetCartesianPlaneScreen() {
         this.JPanelHandler.resetCurrentJPanel();
-        JPanel currentPanel = this.JPanelHandler.getCurrentCartesianPlane();
+        JPanel currentPanel = this.JPanelHandler.getCurrentPanel();
 
         getContentPane().removeAll();
         setLayoutPanel(currentPanel);
