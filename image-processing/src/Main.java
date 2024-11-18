@@ -1,27 +1,36 @@
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.InputMismatchException;
-import java.util.Scanner;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.border.LineBorder;
+
 import Filtros.*;
 import OpMorfologico.Abertura;
 import OpMorfologico.Dilatacao;
 import OpMorfologico.Erosao;
 import OpMorfologico.Fechamento;
+import Op_Aritmeticas.Op_ari;
+import Op_Aritmeticas.OperadoresWindow;
+import Op_Logicos.OperadoresWindow2;
+
+import Funcoes.CarregarImagens;
 
 public class Main extends JFrame {
+    // upar iamgem
     private JButton carregarImagemButton;
+
+    // filtros
     private JMenuBar mb1;
     private JMenu escolherFiltroButton;
-    private JMenuItem f1,f2,f3,f4,f5,f6,f7,f8;
-    //private JButton escolherFiltroButton;
+    private JMenuItem f1, f2, f3, f4,  f6, f7, f8,f9,f10;
+
+    private JMenu HB;
+    private JMenuItem met1, met2;
+
+
+    // tela
     private JPanel TelaPrincipal;
     private JLabel Titulo;
     private JLabel Output;
@@ -31,14 +40,28 @@ public class Main extends JFrame {
     private int mouseX = -1, mouseY = -1; // Coordenadas do mouse
     private JLabel mascaraLabel;
 
+    //pra a funcao que personaliza os "botoes"
+    AbstractButton componente;
+
     //operadores morfologicos
     private JMenuBar mb2;
     private JMenu escolherMorfologico;
     private JMenu dimensaoKernalErosao;
     private JMenu dimensaoKernalDilatacao;
-    private JMenuItem dil,ero,fec,abe,tophat,bottomhat;
-    private JMenuItem ero3x3,ero5x5,ero7x7;
-    private JMenuItem dil3x3,dil5x5,dil7x7;
+    private JMenuItem dil, ero, fec, abe, tophat, bottomhat;
+    private JMenuItem ero3x3, ero5x5, ero7x7;
+    private JMenuItem dil3x3, dil5x5, dil7x7;
+
+
+    //operadores aritmeticos
+    private JMenuItem operadoresAritmeticos;
+
+    //operadores aritmeticos
+    private JMenuItem operadoresLogicos;
+
+    //private JMenuBar mb3;
+    //private JMenu escolherAritmetico;
+    //private JMenuItem div,mul,som,sub;
 
 
     public Main() {
@@ -48,20 +71,35 @@ public class Main extends JFrame {
 
         // Inicializa e configura os componentes
         mb1 = new JMenuBar();
+        HB = new JMenu();
         mb2 = new JMenuBar();
+        //mb3 = new JMenuBar();
+
+
         carregarImagemButton = new JButton("Carregar Imagem");
         escolherFiltroButton = new JMenu("Filtros");
+
+        HB = new JMenu("High Boost");
+
+        operadoresAritmeticos= new JMenuItem("Operadores Aritméticos");
+        operadoresLogicos= new JMenuItem("Operadores Lógicos");
+        //escolherAritmetico = new JMenu("Operadores Aritméticos");
         escolherMorfologico = new JMenu("Operadores Morfológicos");
+
+
+
         dimensaoKernalErosao = new JMenu("Erosão");
         dimensaoKernalDilatacao = new JMenu("Dilatação");
         Titulo = new JLabel("Processamento de Imagem");
         Output = new JLabel("Output");
 
         // Inicializa o JLabel para a matriz máscara e define posição
-        mascara = new JLabel("Máscara");
+        mascara = new JLabel("Máscara da Média");
         mascaraLabel = new JLabel();
-        mascara.setBounds(573, 330, 60, 30);
-        mascaraLabel.setBounds(557, 349, 110, 90); // Ajuste o tamanho conforme necessário
+        mascara.setBounds(590, 184, 110, 30); // o texto da mascara
+        mascaraLabel.setBounds(595, 210, 110, 90); // matriz da mascara
+
+
 
         TelaPrincipal.add(mascaraLabel);
 
@@ -78,13 +116,23 @@ public class Main extends JFrame {
         Output.setFont(fonteTitulo);
         carregarImagemButton.setFont(fonteBotao);
         escolherFiltroButton.setFont(fonteBotao);
+        //HB.setFont(fonteBotao);
         escolherMorfologico.setFont(fonteBotao);
+        operadoresAritmeticos.setFont(fonteBotao);
+        operadoresLogicos.setFont(fonteBotao);
+
+        //escolherAritmetico.setFont(fonteBotao);
 
         //Os filtros disponiveis
         f1 = new JMenuItem("Filtro da Média");
         f2 = new JMenuItem("Filtro da Mediana");
         f3 = new JMenuItem("Filtro Negativo");
         f4 = new JMenuItem("Transformção Gamma");
+        //f5 = new JMenuItem("High Boost");
+        f6 = new JMenuItem("Operador de Roberts");
+        f7 = new JMenuItem("Operador de Sobel");
+        f8 = new JMenuItem("Operador de Prewitt");
+        f9 = new JMenuItem("Filtro Passa-Alta");
 
         // Adicionar os filtros no menu 1
         mb1.add(escolherFiltroButton);
@@ -93,9 +141,19 @@ public class Main extends JFrame {
         escolherFiltroButton.add(f3);
         escolherFiltroButton.add(f4);
 
+        //high boost
+        escolherFiltroButton.add(HB);
+        met1 = new JMenuItem("Método 1");
+        met2 = new JMenuItem("Método 2");
+        HB.add(met1);
+        HB.add(met2);
+
+        escolherFiltroButton.add(f6);
+        escolherFiltroButton.add(f7);
+        escolherFiltroButton.add(f8);
+        escolherFiltroButton.add(f9);
+
         //OP morf disponiveis
-        //dil = new JMenuItem("Dilatação");
-        //ero = new JMenuItem("Erosão");
         fec = new JMenuItem("Fechamento");
         abe = new JMenuItem("Abertura");
         tophat = new JMenuItem("Top-Hat");
@@ -125,6 +183,8 @@ public class Main extends JFrame {
         escolherMorfologico.add(abe);
         escolherMorfologico.add(tophat);
         escolherMorfologico.add(bottomhat);
+
+
 
 
         //ações de selecionar os filtros
@@ -202,23 +262,23 @@ public class Main extends JFrame {
         f4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    // Painel para entrada de parâmetros C e gama
-                    JPanel panel = new JPanel(new GridLayout(2, 2));
+                // Painel para entrada de parâmetros C e gama
+                JPanel panel = new JPanel(new GridLayout(2, 2));
 
-                    // Ajustar o tamanho e estilo das fontes
-                    JLabel cLabel = new JLabel("C: ");
-                    cLabel.setFont(fonteLabel);
-                    panel.add(cLabel);
+                // Ajustar o tamanho e estilo das fontes
+                JLabel cLabel = new JLabel("C: ");
+                cLabel.setFont(fonteLabel);
+                panel.add(cLabel);
 
-                    JTextField cField = new JTextField();
-                    panel.add(cField);
+                JTextField cField = new JTextField();
+                panel.add(cField);
 
-                    JLabel gammaLabel = new JLabel("Gama: ");
-                    gammaLabel.setFont(fonteLabel);
-                    panel.add(gammaLabel);
+                JLabel gammaLabel = new JLabel("Gama: ");
+                gammaLabel.setFont(fonteLabel);
+                panel.add(gammaLabel);
 
-                    JTextField gammaField = new JTextField();
-                    panel.add(gammaField);
+                JTextField gammaField = new JTextField();
+                panel.add(gammaField);
 
                 // Exibe o diálogo
                 int result = JOptionPane.showConfirmDialog(
@@ -228,7 +288,7 @@ public class Main extends JFrame {
                         JOptionPane.OK_CANCEL_OPTION,
                         JOptionPane.PLAIN_MESSAGE
                 );
-             
+
 
                 // Captura os valores inseridos pelo usuário
                 if (result == JOptionPane.OK_OPTION) {
@@ -242,7 +302,7 @@ public class Main extends JFrame {
 
                         // Verifica se a imagem foi carregada antes de aplicar o filtro
                         if (imagemExibida != null) {
-                            imagemOutput = gamma.gammaFiltro(imagemExibida,cValue,gammaValue);   // Chama o filtro na imagem exibida
+                            imagemOutput = gamma.gammaFiltro(imagemExibida, cValue, gammaValue);   // Chama o filtro na imagem exibida
                             // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
                             repaint();  // Repaint para atualizar a exibição da imagem filtrada
                         } else {
@@ -255,381 +315,487 @@ public class Main extends JFrame {
             }
         });
 
+        met1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Painel para entrada do parâmetro A
+                JPanel panel = new JPanel(new GridLayout(1, 2));
+                JLabel aLabel = new JLabel("Valor de A: ");
+                JTextField aField = new JTextField();
+
+                panel.add(aLabel);
+                panel.add(aField);
+
+                // Exibe o diálogo
+                int result = JOptionPane.showConfirmDialog(
+                        null,
+                        panel,
+                        "Definir valor de A",
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.PLAIN_MESSAGE
+                );
+
+                // Captura o valor inserido pelo usuário
+                if (result == JOptionPane.OK_OPTION) {
+                    try {
+                        double aValue = Double.parseDouble(aField.getText());
+                        System.out.println("Valor de A: " + aValue);
+                        Media media = new Media();
+                        BufferedImage imgPB = media.mediaFiltro(imagemExibida);
+
+                        Op_ari operacao = new Op_ari();
+                        BufferedImage MN = operacao.subtracao(imagemExibida, imgPB);
+
+                        HighBoost highBoost = new HighBoost();
+                        imagemOutput = highBoost.HB1(imagemExibida,MN, aValue); // Aplica High Boost
+
+
+                        repaint(); // Atualiza a exibição da imagem resultante
+
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "Por favor, insira um valor numérico válido!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+
+        met2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Painel para entrada do parâmetro A
+                JPanel panel = new JPanel(new GridLayout(1, 2));
+                JLabel aLabel = new JLabel("Valor de A: ");
+                JTextField aField = new JTextField();
+
+                panel.add(aLabel);
+                panel.add(aField);
+
+                // Exibe o diálogo
+                int result = JOptionPane.showConfirmDialog(
+                        null,
+                        panel,
+                        "Definir valor de A",
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.PLAIN_MESSAGE
+                );
+
+                if (result == JOptionPane.OK_OPTION) {
+                    try {
+                        double aValue = Double.parseDouble(aField.getText());
+                        System.out.println("Valor de A: " + aValue);
+
+                        HighBoost highBoost = new HighBoost();
+
+                        // Verifica se a imagem foi carregada antes de aplicar o filtro
+                        if (imagemExibida != null) {
+                            imagemOutput = highBoost.HB2(imagemExibida, aValue);
+                            repaint(); // Atualiza a exibição da imagem resultante
+                        } else {
+                            System.out.println("Imagem não carregada.");
+                        }
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "Por favor, insira um valor numérico válido!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
 
 
 
+        f6.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                TelaPrincipal.add(Output);
+
+                Roberts roberts = new Roberts();
+
+                // Verifica se a imagem foi carregada antes de aplicar o filtro
+                if (imagemExibida != null) {
+                    imagemOutput = roberts.robertsFiltro(imagemExibida,3);   // Chama o filtro na imagem exibida
+                    // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
+                    repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                } else {
+                    System.out.println("Imagem não carregada.");
+                }
+            }
+        });
+
+        f7.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                TelaPrincipal.add(Output);
+
+                Sobel sobel = new Sobel();
+
+                // Verifica se a imagem foi carregada antes de aplicar o filtro
+                if (imagemExibida != null) {
+                    imagemOutput = sobel.sobelFiltro(imagemExibida);   // Chama o filtro na imagem exibida
+                    // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
+                    repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                } else {
+                    System.out.println("Imagem não carregada.");
+                }
+            }
+        });
+        f8.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                TelaPrincipal.add(Output);
+
+                Prewitt prewitt = new Prewitt();
+
+                // Verifica se a imagem foi carregada antes de aplicar o filtro
+                if (imagemExibida != null) {
+                    imagemOutput = prewitt.prewittFiltro(imagemExibida);   // Chama o filtro na imagem exibida
+                    // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
+                    repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                } else {
+                    System.out.println("Imagem não carregada.");
+                }
+            }
+        });
+
+        f9.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                TelaPrincipal.add(Output);
+
+                PassaAlta passaAlta = new PassaAlta();
+
+                // Verifica se a imagem foi carregada antes de aplicar o filtro
+                if (imagemExibida != null) {
+                    imagemOutput = passaAlta.passaAltaFiltro(imagemExibida);   // Chama o filtro na imagem exibida
+                    // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
+                    repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                } else {
+                    System.out.println("Imagem não carregada.");
+                }
+            }
+        });
+        ;
 
         dil3x3.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-                    TelaPrincipal.add(Output);
+                TelaPrincipal.add(Output);
 
-                    Dilatacao dilatacao = new Dilatacao();
+                Dilatacao dilatacao = new Dilatacao();
 
-                    // Verifica se a imagem foi carregada antes de aplicar o filtro
-                    if (imagemExibida != null) {
-                        imagemOutput = dilatacao.operadorDilatacao(imagemExibida, 3);   // Chama o filtro na imagem exibida
-                        // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
-                        repaint();  // Repaint para atualizar a exibição da imagem filtrada
-                    } else {
-                        System.out.println("Imagem não carregada.");
-                    }
+                // Verifica se a imagem foi carregada antes de aplicar o filtro
+                if (imagemExibida != null) {
+                    imagemOutput = dilatacao.operadorDilatacao(imagemExibida, 3);   // Chama o filtro na imagem exibida
+                    // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
+                    repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                } else {
+                    System.out.println("Imagem não carregada.");
                 }
-            });
-            ;
+            }
+        });
+        ;
 
-            dil5x5.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
+        dil5x5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-                    TelaPrincipal.add(Output);
+                TelaPrincipal.add(Output);
 
-                    Dilatacao dilatacao = new Dilatacao();
+                Dilatacao dilatacao = new Dilatacao();
 
-                    // Verifica se a imagem foi carregada antes de aplicar o filtro
-                    if (imagemExibida != null) {
-                        imagemOutput = dilatacao.operadorDilatacao(imagemExibida, 5);   // Chama o filtro na imagem exibida
-                        // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
-                        repaint();  // Repaint para atualizar a exibição da imagem filtrada
-                    } else {
-                        System.out.println("Imagem não carregada.");
-                    }
+                // Verifica se a imagem foi carregada antes de aplicar o filtro
+                if (imagemExibida != null) {
+                    imagemOutput = dilatacao.operadorDilatacao(imagemExibida, 5);   // Chama o filtro na imagem exibida
+                    // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
+                    repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                } else {
+                    System.out.println("Imagem não carregada.");
                 }
-            });
-            ;
+            }
+        });
+        ;
 
-            dil7x7.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
+        dil7x7.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-                    TelaPrincipal.add(Output);
+                TelaPrincipal.add(Output);
 
-                    Dilatacao dilatacao = new Dilatacao();
+                Dilatacao dilatacao = new Dilatacao();
 
-                    // Verifica se a imagem foi carregada antes de aplicar o filtro
-                    if (imagemExibida != null) {
-                        imagemOutput = dilatacao.operadorDilatacao(imagemExibida, 7);   // Chama o filtro na imagem exibida
-                        // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
-                        repaint();  // Repaint para atualizar a exibição da imagem filtrada
-                    } else {
-                        System.out.println("Imagem não carregada.");
-                    }
+                // Verifica se a imagem foi carregada antes de aplicar o filtro
+                if (imagemExibida != null) {
+                    imagemOutput = dilatacao.operadorDilatacao(imagemExibida, 7);   // Chama o filtro na imagem exibida
+                    // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
+                    repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                } else {
+                    System.out.println("Imagem não carregada.");
                 }
-            });
-            ;
+            }
+        });
+        ;
 
-            ero3x3.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
+        ero3x3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-                    TelaPrincipal.add(Output);
+                TelaPrincipal.add(Output);
 
-                    Erosao erosao = new Erosao();
+                Erosao erosao = new Erosao();
 
-                    // Verifica se a imagem foi carregada antes de aplicar o filtro
-                    if (imagemExibida != null) {
-                        imagemOutput = erosao.operadorErosao(imagemExibida, 3);   // Chama o filtro na imagem exibida
-                        // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
-                        repaint();  // Repaint para atualizar a exibição da imagem filtrada
-                    } else {
-                        System.out.println("Imagem não carregada.");
-                    }
+                // Verifica se a imagem foi carregada antes de aplicar o filtro
+                if (imagemExibida != null) {
+                    imagemOutput = erosao.operadorErosao(imagemExibida, 3);   // Chama o filtro na imagem exibida
+                    // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
+                    repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                } else {
+                    System.out.println("Imagem não carregada.");
                 }
-            });
-            ;
+            }
+        });
+        ;
 
-            ero5x5.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
+        ero5x5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-                    TelaPrincipal.add(Output);
+                TelaPrincipal.add(Output);
 
-                    Erosao erosao = new Erosao();
+                Erosao erosao = new Erosao();
 
-                    // Verifica se a imagem foi carregada antes de aplicar o filtro
-                    if (imagemExibida != null) {
-                        imagemOutput = erosao.operadorErosao(imagemExibida, 5);   // Chama o filtro na imagem exibida
-                        // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
-                        repaint();  // Repaint para atualizar a exibição da imagem filtrada
-                    } else {
-                        System.out.println("Imagem não carregada.");
-                    }
+                // Verifica se a imagem foi carregada antes de aplicar o filtro
+                if (imagemExibida != null) {
+                    imagemOutput = erosao.operadorErosao(imagemExibida, 5);   // Chama o filtro na imagem exibida
+                    // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
+                    repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                } else {
+                    System.out.println("Imagem não carregada.");
                 }
-            });
-            ;
+            }
+        });
+        ;
 
-            ero7x7.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
+        ero7x7.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-                    TelaPrincipal.add(Output);
+                TelaPrincipal.add(Output);
 
-                    Erosao erosao = new Erosao();
+                Erosao erosao = new Erosao();
 
-                    // Verifica se a imagem foi carregada antes de aplicar o filtro
-                    if (imagemExibida != null) {
-                        imagemOutput = erosao.operadorErosao(imagemExibida, 7);   // Chama o filtro na imagem exibida
-                        // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
-                        repaint();  // Repaint para atualizar a exibição da imagem filtrada
-                    } else {
-                        System.out.println("Imagem não carregada.");
-                    }
+                // Verifica se a imagem foi carregada antes de aplicar o filtro
+                if (imagemExibida != null) {
+                    imagemOutput = erosao.operadorErosao(imagemExibida, 7);   // Chama o filtro na imagem exibida
+                    // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
+                    repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                } else {
+                    System.out.println("Imagem não carregada.");
                 }
-            });
-            ;
+            }
+        });
+        ;
 
 
-            abe.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
+        abe.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-                    TelaPrincipal.add(Output);
+                TelaPrincipal.add(Output);
 
+                Abertura abertura = new Abertura();
+
+                // Verifica se a imagem foi carregada antes de aplicar o filtro
+                if (imagemExibida != null) {
+                    imagemOutput = abertura.operadorAbertura(imagemExibida);   // Chama o filtro na imagem exibida
+                    // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
+                    repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                } else {
+                    System.out.println("Imagem não carregada.");
+                }
+            }
+        });
+        ;
+
+        fec.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                TelaPrincipal.add(Output);
+
+                Fechamento fechamento = new Fechamento();
+
+                // Verifica se a imagem foi carregada antes de aplicar o filtro
+                if (imagemExibida != null) {
+                    imagemOutput = fechamento.operadorFechamento(imagemExibida);   // Chama o filtro na imagem exibida
+                    // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
+                    repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                } else {
+                    System.out.println("Imagem não carregada.");
+                }
+            }
+        });
+        ;
+
+        tophat.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (imagemExibida != null) {
                     Abertura abertura = new Abertura();
+                    BufferedImage imagemAbertura = abertura.operadorAbertura(imagemExibida);
 
-                    // Verifica se a imagem foi carregada antes de aplicar o filtro
-                    if (imagemExibida != null) {
-                        imagemOutput = abertura.operadorAbertura(imagemExibida);   // Chama o filtro na imagem exibida
-                        // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
-                        repaint();  // Repaint para atualizar a exibição da imagem filtrada
-                    } else {
-                        System.out.println("Imagem não carregada.");
-                    }
+                    Op_ari operacao = new Op_ari();
+                    imagemOutput = operacao.subtracao(imagemExibida, imagemAbertura);
+
+                    repaint(); // Atualiza a exibição da imagem resultante
+                } else {
+                    System.out.println("A imagem precisa ser carregada antes de realizar a operação.");
                 }
-            });
-            ;
+            }
+        });
 
-            fec.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
 
-                    TelaPrincipal.add(Output);
-
+        bottomhat.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (imagemExibida != null) {
                     Fechamento fechamento = new Fechamento();
+                    BufferedImage imagemFechamento = fechamento.operadorFechamento(imagemExibida);
 
-                    // Verifica se a imagem foi carregada antes de aplicar o filtro
-                    if (imagemExibida != null) {
-                        imagemOutput = fechamento.operadorFechamento(imagemExibida);   // Chama o filtro na imagem exibida
-                        // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
-                        repaint();  // Repaint para atualizar a exibição da imagem filtrada
-                    } else {
-                        System.out.println("Imagem não carregada.");
-                    }
-                }
-            });
-            ;
+                    Op_ari operacao = new Op_ari();
+                    imagemOutput = operacao.subtracao(imagemFechamento, imagemExibida);
 
-            // Define posições dos componentes setBounds(int x-coordinate, int y-coordinate, int width, int height)
-            Titulo.setBounds(425, 55, 390, 36);
-            Output.setBounds(255, 730, 170, 24);
-            carregarImagemButton.setBounds(215, 410, 170, 30);
-            mb1.setBounds(582, 177, 104, 30);
-            mb2.setBounds(582, 340, 170, 30);
-            //escolherFiltroButton.setBounds(582,177,104,30);
-
-            // Configurações dos botoes
-            carregarImagemButton.setBorder(new LineBorder(Color.BLACK));
-            carregarImagemButton.setOpaque(false);
-            carregarImagemButton.setContentAreaFilled(false);
-            carregarImagemButton.setFocusPainted(false);
-
-            escolherFiltroButton.setBorder(new LineBorder(Color.BLACK));
-            escolherFiltroButton.setOpaque(false);
-            escolherFiltroButton.setContentAreaFilled(false);
-            escolherFiltroButton.setFocusPainted(false);
-
-
-            escolherMorfologico.setBorder(new LineBorder(Color.BLACK));
-            escolherMorfologico.setOpaque(false);
-            escolherMorfologico.setContentAreaFilled(false);
-            escolherMorfologico.setFocusPainted(false);
-
-            dimensaoKernalDilatacao.setOpaque(false);
-            dimensaoKernalDilatacao.setContentAreaFilled(false);
-            dimensaoKernalDilatacao.setFocusPainted(false);
-
-
-            dimensaoKernalErosao.setOpaque(false);
-            dimensaoKernalErosao.setContentAreaFilled(false);
-            dimensaoKernalErosao.setFocusPainted(false);
-
-
-            // Adiciona os componentes ao painel
-            TelaPrincipal.add(Titulo);
-            TelaPrincipal.add(carregarImagemButton);
-            TelaPrincipal.add(mb1);
-            TelaPrincipal.add(mb2);
-            //TelaPrincipal.add(escolherFiltroButton);
-
-            // Configura o JFrame
-            setContentPane(TelaPrincipal);
-            setTitle("Processamento de Imagem");
-            setDefaultCloseOperation(EXIT_ON_CLOSE);
-            setSize(1200, 800);
-            setLocationRelativeTo(null);
-
-            // Adiciona ação ao botão
-            carregarImagemButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    FileNameExtensionFilter filter = new FileNameExtensionFilter("Imagens PGM,PBM e PNG", "pgm", "pbm", "png");
-                    JFileChooser selecionarImagem = new JFileChooser();
-                    selecionarImagem.setFileFilter(filter);
-
-                    int result = selecionarImagem.showOpenDialog(null);
-                    if (result == JFileChooser.APPROVE_OPTION) {
-                        String caminhoArquivo = selecionarImagem.getSelectedFile().getAbsolutePath();
-                        System.out.println("Imagem selecionada: " + caminhoArquivo);
-
-                        if (caminhoArquivo.endsWith(".pgm")) {
-                            imagemExibida = carregarImagemPGM(caminhoArquivo);
-                        } else if (caminhoArquivo.endsWith(".pbm")) {
-                            imagemExibida = carregarImagemPBM(caminhoArquivo);
-                        } else if (caminhoArquivo.endsWith(".png")) {
-                            imagemExibida = carregarImagemPNG(caminhoArquivo);
-                        }
-
-
-                        repaint();  // Chama repaint para atualizar a exibição da imagem
-                    }
-                }
-            });
-
-            setVisible(true);
-        }
-
-
-    // Método para carregar imagens PGM (formato P2) ou PBM (formato P1 ou P4)
-    private BufferedImage carregarImagemPGM(String caminhoArquivo) {
-        try (Scanner scanner = new Scanner(new FileInputStream(caminhoArquivo))) {
-            // Lê o cabeçalho
-            String tipo = scanner.next();  // Deve ser "P2"
-            if (!"P2".equals(tipo)) {
-                throw new IOException("Formato PGM não suportado: " + tipo);
-            }
-
-            int largura = scanner.nextInt();
-            int altura = scanner.nextInt();
-            int maxValor = scanner.nextInt(); // valor maximo dos niveis de cinza
-
-            BufferedImage imagem = new BufferedImage(largura, altura, BufferedImage.TYPE_BYTE_GRAY); //Represents a unsigned byte grayscale image, non-indexed.
-
-            // Preenche os pixels da imagem
-            for (int y = 0; y < altura; y++) {
-                for (int x = 0; x < largura; x++) {
-                    int pixelValue = scanner.nextInt();
-                    int cor = (pixelValue * 255) / maxValor;
-                    int rgb = new Color(cor, cor, cor).getRGB();
-                    imagem.setRGB(x, y, rgb);
+                    repaint(); // Atualiza a exibição da imagem resultante
+                } else {
+                    System.out.println("A imagem precisa ser carregada antes de realizar a operação.");
                 }
             }
-            return imagem;
-        } catch (IOException e) {
-            System.out.println("Erro ao carregar imagem PGM: " + e.getMessage());
-            return null;
-        }
+        });
+
+
+
+
+
+
+
+        // Define posições dos componentes setBounds(int x-coordinate, int y-coordinate, int width, int height)
+        Titulo.setBounds(425, 55, 390, 36);
+        Output.setBounds(255, 730, 170, 24);
+
+        carregarImagemButton.setBounds(215, 410, 170, 30);
+
+        operadoresAritmeticos.setBounds(582, 360, 170, 30);
+        operadoresLogicos.setBounds(582, 400, 170, 30);
+
+        mb1.setBounds(582, 137, 104, 30);
+        mb2.setBounds(582, 320, 170, 30);
+
+        //mb3.setBounds(582, 375, 170, 30);
+
+
+        // Configurações dos botoes
+        configBotao(carregarImagemButton);
+
+        // op arit
+
+        configBotao(operadoresAritmeticos);
+
+
+        // op log
+
+        configBotao(operadoresLogicos);
+
+
+        //filtros
+        mb1.setBorder(new LineBorder(Color.BLACK));
+        mb1.setOpaque(false);
+
+
+       // mb1.setContentAreaFilled(false);
+        //mb1.setFocusPainted(false);
+
+        // op morfologicos
+        mb2.setBorder(new LineBorder(Color.BLACK));
+        mb2.setOpaque(false);
+        //mb2.setContentAreaFilled(false);
+        //mb2.setFocusPainted(false);
+
+        //dimensao do kernal dos op morf
+        // config desses "botoes" sao diferentes
+
+        dimensaoKernalDilatacao.setOpaque(false);
+        dimensaoKernalDilatacao.setContentAreaFilled(false);
+        dimensaoKernalDilatacao.setFocusPainted(false);
+
+        dimensaoKernalErosao.setOpaque(false);
+        dimensaoKernalErosao.setContentAreaFilled(false);
+        dimensaoKernalErosao.setFocusPainted(false);
+
+
+        // Adiciona os componentes ao painel
+        TelaPrincipal.add(Titulo);
+        TelaPrincipal.add(carregarImagemButton);
+        //TelaPrincipal.add(escolherFiltroButton);
+        //TelaPrincipal.add(escolherMorfologico);
+        TelaPrincipal.add(operadoresAritmeticos);
+        TelaPrincipal.add(operadoresLogicos);
+        TelaPrincipal.add(mb1);
+        TelaPrincipal.add(mb2);
+        //TelaPrincipal.add(mb3);
+
+
+        // Configura o JFrame
+        setContentPane(TelaPrincipal);
+        setTitle("Processamento de Imagem");
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(1200, 800);
+        setLocationRelativeTo(null);
+
+        // Adiciona ação ao botão
+        carregarImagemButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("Imagens PGM,PBM e PNG", "pgm", "pbm", "png");
+                JFileChooser selecionarImagem = new JFileChooser();
+                selecionarImagem.setFileFilter(filter);
+
+                int result = selecionarImagem.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    String caminhoArquivo = selecionarImagem.getSelectedFile().getAbsolutePath();
+                    System.out.println("Imagem selecionada: " + caminhoArquivo);
+
+                    if (caminhoArquivo.endsWith(".pgm")) {
+                        imagemExibida = CarregarImagens.carregarImagemPGM(caminhoArquivo);
+                    } else if (caminhoArquivo.endsWith(".pbm")) {
+                        imagemExibida = CarregarImagens.carregarImagemPBM(caminhoArquivo);
+                    } else if (caminhoArquivo.endsWith(".png")) {
+                        imagemExibida = CarregarImagens.carregarImagemPNG(caminhoArquivo);
+                    }
+
+
+                    repaint();  // Chama repaint para atualizar a exibição da imagem
+                }
+            }
+        });
+
+        // Ação para abrir a nova janela
+        operadoresAritmeticos.addActionListener(e -> new OperadoresWindow());
+        operadoresLogicos.addActionListener(e -> new OperadoresWindow2());
+
+        setVisible(true);
     }
 
-    private BufferedImage carregarImagemPNG(String caminhoArquivo) {
-        try {
-            // Carrega a imagem PNG
-            BufferedImage imagem = ImageIO.read(new File(caminhoArquivo));
-
-            // Verifica se a imagem é binária (branco e preto)
-            BufferedImage imagemBinaria = new BufferedImage(
-                    imagem.getWidth(),
-                    imagem.getHeight(),
-                    BufferedImage.TYPE_BYTE_BINARY
-            );
-
-            for (int y = 0; y < imagem.getHeight(); y++) {
-                for (int x = 0; x < imagem.getWidth(); x++) {
-                    // Obtém a cor original do pixel
-                    int rgb = imagem.getRGB(x, y);
-
-                    // Converte para preto ou branco baseado em um limite (grayscale)
-                    int r = (rgb >> 16) & 0xFF;
-                    int g = (rgb >> 8) & 0xFF;
-                    int b = rgb & 0xFF;
-
-                    // Calcula intensidade média (grayscale)
-                    int intensidade = (r + g + b) / 3;
-
-                    // Define como branco (255) ou preto (0) com base em um limite
-                    int corBinaria = (intensidade > 127) ? 0xFFFFFF : 0x000000;
-                    imagemBinaria.setRGB(x, y, corBinaria);
-                }
-            }
-            return imagemBinaria;
-
-        } catch (IOException e) {
-            System.out.println("Erro ao carregar imagem PNG: " + e.getMessage());
-            return null;
-        }
+    public void configBotao (AbstractButton componente) {
+        // Centraliza o texto horizontal e verticalmente
+        componente.setHorizontalAlignment(SwingConstants.CENTER);  // Centraliza horizontalmente
+        componente.setVerticalAlignment(SwingConstants.CENTER);    // Centraliza verticalmente
+        componente.setBorder(new LineBorder(Color.BLACK));      // Define a borda
+        componente.setOpaque(false);                             // Deixa o fundo transparente
+        componente.setContentAreaFilled(false);                  // Impede o preenchimento do fundo
+        componente.setFocusPainted(false);                       // Remove o contorno de foco
     }
-
-
-    private BufferedImage carregarImagemPBM(String caminhoArquivo) {
-        try (FileInputStream fis = new FileInputStream(caminhoArquivo)) {
-            Scanner scanner = new Scanner(fis);
-
-            // Ignorar comentários no cabeçalho
-            String tipo;
-            do {
-                tipo = scanner.next();
-            } while (tipo.startsWith("#"));
-
-            if (!"P1".equals(tipo) && !"P4".equals(tipo)) {
-                throw new IOException("Formato PBM não suportado: " + tipo);
-            }
-
-            // Ignorar comentários e ler dimensões
-            while (scanner.hasNext("#")) {
-                scanner.nextLine();
-            }
-            int largura = scanner.nextInt();
-            int altura = scanner.nextInt();
-
-            BufferedImage imagem = new BufferedImage(largura, altura, BufferedImage.TYPE_BYTE_BINARY);
-
-            if ("P1".equals(tipo)) {
-                // Leitura de texto (0 ou 1)
-                for (int y = 0; y < altura; y++) {
-                    for (int x = 0; x < largura; x++) {
-                        int pixelValue = scanner.nextInt();
-                        int rgb = (pixelValue == 1) ? 0xFFFFFF : 0x000000; // Branco ou Preto
-                        imagem.setRGB(x, y, rgb);
-                    }
-                }
-            } else if ("P4".equals(tipo)) {
-                // Leitura binária
-                fis.skip(scanner.match().end()); // Pula o cabeçalho lido pelo scanner
-                byte[] dadosBinarios = fis.readAllBytes(); // Lê todos os dados binários
-
-                int byteIndex = 0;
-                for (int y = 0; y < altura; y++) {
-                    for (int x = 0; x < largura; x++) {
-                        int bitIndex = x % 8;
-                        int pixelValue = (dadosBinarios[byteIndex] >> (7 - bitIndex)) & 1;
-                        int rgb = (pixelValue == 1) ? 0xFFFFFF : 0x000000; // Branco ou Preto
-                        imagem.setRGB(x, y, rgb);
-
-                        // Avança para o próximo byte quando todos os bits de um byte são lidos
-                        if (bitIndex == 7) byteIndex++;
-                    }
-                }
-            }
-
-            return imagem;
-        } catch (IOException e) {
-            System.out.println("Erro ao carregar imagem PBM: " + e.getMessage());
-            return null;
-        }
-    }
-
-
-
 
 
 

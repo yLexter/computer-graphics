@@ -249,4 +249,181 @@ public class Convolucao {
 
         return resultImage;
     }
+
+    public static BufferedImage ConvolucaoRoberts(BufferedImage imagemOriginal, int dimensaoKernel) {
+        // Adiciona padding de zeros ao redor da imagem original
+        BufferedImage paddedImage = ImagePadding.addZeroPadding3x3(imagemOriginal);
+
+        int width = imagemOriginal.getWidth();
+        int height = imagemOriginal.getHeight();
+        BufferedImage resultImage = new BufferedImage(width, height, imagemOriginal.getType());
+
+        int offset = dimensaoKernel / 2; // Deslocamento para aplicar a máscara
+
+        // Verifica se a imagem está em escala de cinza
+        if (imagemOriginal.getType() == BufferedImage.TYPE_BYTE_GRAY) {
+            // Aplica a convolução usando o operador de Roberts
+            for (int y = offset; y < height + offset; y++) {
+                for (int x = offset; x < width + offset; x++) {
+                    // Extrai os pixels relevantes para Roberts
+                    int p1 = paddedImage.getRGB(x, y) & 0xFF;       // Pixel atual
+                    int p2 = paddedImage.getRGB(x + 1, y) & 0xFF;   // Direita
+                    int p3 = paddedImage.getRGB(x, y + 1) & 0xFF;   // Abaixo
+                    int p4 = paddedImage.getRGB(x + 1, y + 1) & 0xFF; // Diagonal
+
+                    // Calcula os gradientes
+                    int gradienteX = p1 - p4; // Gx
+                    int gradienteY = p2 - p3; // Gy
+
+                    // Calcula a magnitude do gradiente
+                    int magnitude = Math.abs(gradienteX) + Math.abs(gradienteY);
+
+                    // Define o novo valor do pixel na imagem resultante (escala de cinza)
+                    int newPixelColor = (magnitude << 16) | (magnitude << 8) | magnitude;
+                    resultImage.setRGB(x - offset, y - offset, newPixelColor);
+                }
+            }
+        }
+        return resultImage;
+    }
+    public static BufferedImage ConvolucaoSobel(BufferedImage imagemOriginal) {
+        // Adiciona padding de zeros ao redor da imagem original
+        BufferedImage paddedImage = ImagePadding.addZeroPadding3x3(imagemOriginal);
+
+        int width = imagemOriginal.getWidth();
+        int height = imagemOriginal.getHeight();
+        BufferedImage resultImage = new BufferedImage(width, height, imagemOriginal.getType());
+
+        // Máscaras de Sobel
+        int[][] sobelX = {
+                {-1, -2, -1},
+                { 0,  0,  0},
+                { 1,  2,  1}
+
+        };
+
+        int[][] sobelY = {
+                {-1, 0, 1},
+                {-2, 0, 2},
+                {-1, 0, 1}
+        };
+
+        // Verifica se a imagem está em escala de cinza
+        if (imagemOriginal.getType() == BufferedImage.TYPE_BYTE_GRAY) {
+            // Aplica a convolução usando o operador de Sobel
+            for (int y = 1; y < height + 1; y++) { // Ignora bordas
+                for (int x = 1; x < width + 1; x++) {
+                    int gradienteX = 0;
+                    int gradienteY = 0;
+
+                    // Aplica as máscaras de Sobel (3x3)
+                    for (int j = -1; j <= 1; j++) {
+                        for (int i = -1; i <= 1; i++) {
+                            int pixelColor = paddedImage.getRGB(x + i, y + j) & 0xFF; // Intensidade do pixel
+                            gradienteX += sobelX[j + 1][i + 1] * pixelColor;
+                            gradienteY += sobelY[j + 1][i + 1] * pixelColor;
+                        }
+                    }
+
+                    // Calcula a magnitude do gradiente
+                    int magnitude = Math.abs(gradienteX) + Math.abs(gradienteY);
+                    // Define o novo valor do pixel na imagem resultante (escala de cinza)
+                    int newPixelColor = (magnitude << 16) | (magnitude << 8) | magnitude;
+                    resultImage.setRGB(x - 1, y - 1, newPixelColor); // Ajusta para o tamanho original
+                }
+            }
+        }
+        return resultImage;
+    }
+
+    public static BufferedImage ConvolucaoPrewitt(BufferedImage imagemOriginal) {
+        // Adiciona padding de zeros ao redor da imagem original
+        BufferedImage paddedImage = ImagePadding.addZeroPadding3x3(imagemOriginal);
+
+        int width = imagemOriginal.getWidth();
+        int height = imagemOriginal.getHeight();
+        BufferedImage resultImage = new BufferedImage(width, height, imagemOriginal.getType());
+
+        // Máscaras de Prewitt
+        int[][] prewittX = {
+                {-1, -1, -1},
+                {0, 0, 0},
+                {1, 1, 1}
+        };
+
+        int[][] prewittY = {
+                {-1, 0, 1},
+                { -1,  0,  1},
+                { -1,  0,  1}
+        };
+
+        // Verifica se a imagem está em escala de cinza
+        if (imagemOriginal.getType() == BufferedImage.TYPE_BYTE_GRAY) {
+            // Aplica a convolução usando o operador de Sobel
+            for (int y = 1; y < height + 1; y++) { // Ignora bordas
+                for (int x = 1; x < width + 1; x++) {
+                    int gradienteX = 0;
+                    int gradienteY = 0;
+
+                    // Aplica as máscaras de Sobel (3x3)
+                    for (int j = -1; j <= 1; j++) {
+                        for (int i = -1; i <= 1; i++) {
+                            int pixelColor = paddedImage.getRGB(x + i, y + j) & 0xFF; // Intensidade do pixel
+                            gradienteX += prewittX[j + 1][i + 1] * pixelColor;
+                            gradienteY += prewittY[j + 1][i + 1] * pixelColor;
+                        }
+                    }
+
+                    // Calcula a magnitude do gradiente
+                    int magnitude = Math.abs(gradienteX) + Math.abs(gradienteY);
+                    // Define o novo valor do pixel na imagem resultante (escala de cinza)
+                    int newPixelColor = (magnitude << 16) | (magnitude << 8) | magnitude;
+                    resultImage.setRGB(x - 1, y - 1, newPixelColor); // Ajusta para o tamanho original
+                }
+            }
+        }
+        return resultImage;
+    }
+
+    public static BufferedImage ConvolucaoPassaAlta(BufferedImage imagemOriginal) {
+        // Adiciona padding de zeros ao redor da imagem original
+        BufferedImage paddedImage = ImagePadding.addZeroPadding3x3(imagemOriginal);
+
+        int width = imagemOriginal.getWidth();
+        int height = imagemOriginal.getHeight();
+        BufferedImage resultImage = new BufferedImage(width, height, imagemOriginal.getType());
+
+        // Máscara do filtro passa-alta (com -1 nas bordas e 8 no centro)
+        int[][] filtroPassaAlta = {
+                {-1, -1, -1},
+                {-1,  8, -1},
+                {-1, -1, -1}
+        };
+
+        // Aplica o filtro passa-alta
+        for (int y = 1; y < height + 1; y++) { // Ignora bordas
+            for (int x = 1; x < width + 1; x++) {
+                int gradiente = 0;
+
+                // Aplica a máscara do filtro passa-alta (3x3)
+                for (int j = -1; j <= 1; j++) {
+                    for (int i = -1; i <= 1; i++) {
+                        int pixelColor = paddedImage.getRGB(x + i, y + j) & 0xFF; // Intensidade do pixel
+                        gradiente += filtroPassaAlta[j + 1][i + 1] * pixelColor;
+                    }
+                }
+
+                // Limita o valor do gradiente para garantir que ele esteja entre 0 e 255
+                gradiente = Math.min(Math.max(gradiente, 0), 255);
+
+                // Define o novo valor do pixel na imagem resultante
+                int newPixelColor = (gradiente << 16) | (gradiente << 8) | gradiente;
+                resultImage.setRGB(x - 1, y - 1, newPixelColor); // Ajusta para o tamanho original
+            }
+        }
+
+        return resultImage;
+    }
+
+
 }
