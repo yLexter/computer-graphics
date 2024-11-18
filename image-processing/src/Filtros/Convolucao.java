@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
+import static java.util.Arrays.asList;
+
 public class Convolucao {
     public static BufferedImage ConvolucaoMedia(BufferedImage imagemOriginal, float[][] mascara) {
 
@@ -106,35 +108,69 @@ public class Convolucao {
 
         int offset = dimensaoKernel / 2;  // Deslocamento para aplicar a máscara
 
-        // Aplica a convolução na imagem original
+
+        // se for imagem em escala de cinza
+        if (imagemOriginal.getType()==BufferedImage.TYPE_BYTE_GRAY) {
+            // Aplica a convolução na imagem original
+            for (int y = offset; y < height + offset; y++) {
+                for (int x = offset; x < width + offset; x++) {
+                    int minGray = 255;
+                    int[] mascaraArray = new int[dimensaoKernel * dimensaoKernel];  // Array para armazenar valores de pixels
+
+                    // Preenche a máscara 3x3 com os valores ao redor do pixel
+                    int index = 0;
+                    for (int j = 0; j < dimensaoKernel; j++) {
+                        for (int i = 0; i < dimensaoKernel; i++) {
+
+                            int pixelColor = paddedImage.getRGB(x + i - offset, y + j - offset);
+                            int gray = pixelColor & 0xFF;  // Extrai a intensidade do canal de cinza
+                            mascaraArray[index++] = gray;   // Adiciona ao array
+                            minGray = Math.min(minGray, gray);
+                        }
+                    }
+
+                    // Ordena o array e encontra o primeiro valor (o mais baixo)
+                    Arrays.sort(mascaraArray);
+                    int gray = mascaraArray[0];
+
+                    // Define o novo valor do pixel na imagem resultante (escala de cinza)
+                    int newPixelColor = (minGray << 16) | (minGray << 8) | minGray;  // Forma o valor RGB com intensidade igual
+                    resultImage.setRGB(x - offset, y - offset, newPixelColor);
+                }
+            }
+
+            return resultImage;
+        }
+
+
+        // Para imagem binaria
         for (int y = offset; y < height + offset; y++) {
             for (int x = offset; x < width + offset; x++) {
-                int minGray = 255;
-                int[] mascaraArray = new int[dimensaoKernel * dimensaoKernel];  // Array para armazenar valores de pixels
+                boolean isEroded = true; // Assume inicialmente que o pixel pode ser erodido (é branco)
 
-                // Preenche a máscara 3x3 com os valores ao redor do pixel
-                int index = 0;
+
                 for (int j = 0; j < dimensaoKernel; j++) {
                     for (int i = 0; i < dimensaoKernel; i++) {
-
-                        int pixelColor = paddedImage.getRGB(x + i - offset, y + j - offset);
-                        int gray = pixelColor & 0xFF;  // Extrai a intensidade do canal de cinza
-                        mascaraArray[index++] = gray;   // Adiciona ao array
-                        minGray = Math.min(minGray, gray);
+                        int pixelColor = paddedImage.getRGB(x + i - offset, y + j - offset) & 0xFF; // Extração do valor (0 ou 255)
+                        if (pixelColor == 0) { // Se qualquer valor da máscara for preto
+                            isEroded = false; // O pixel não pode ser erodido
+                            break;
+                        }
                     }
+                    if (!isEroded) break; // Sai do loop externo se  encontrou um preto
                 }
 
-                // Ordena o array e encontra o primeiro valor (o mais baixo)
-                Arrays.sort(mascaraArray);
-                int gray = mascaraArray[0];
-
-                // Define o novo valor do pixel na imagem resultante (escala de cinza)
-                int newPixelColor = (minGray << 16) | (minGray << 8) | minGray;  // Forma o valor RGB com intensidade igual
+                // Define o valor do pixel na imagem resultante
+                int newPixelColor = isEroded ? 0xFFFFFF : 0x000000; // Branco (1) ou Preto (0)
                 resultImage.setRGB(x - offset, y - offset, newPixelColor);
             }
         }
 
+
         return resultImage;
+
+
+
     }
 
     public static BufferedImage ConvolucaoDilatacao(BufferedImage imagemOriginal, int dimensaoKernel) {
@@ -157,28 +193,56 @@ public class Convolucao {
 
         int offset = dimensaoKernel / 2;  // Deslocamento para aplicar a máscara
 
-        // Aplica a convolução na imagem original
+        // se for imagem em escala de cinza
+        if (imagemOriginal.getType()==BufferedImage.TYPE_BYTE_GRAY){
+            // Aplica a convolução na imagem original
+            for (int y = offset; y < height + offset; y++) {
+                for (int x = offset; x < width + offset; x++) {
+
+                    int maxGray = 0;
+                    int[] mascaraArray = new int[dimensaoKernel * dimensaoKernel];  // Array para armazenar valores de pixels
+
+                    // Preenche a máscara 3x3 com os valores ao redor do pixel
+                    int index = 0;
+                    for (int j = 0; j < dimensaoKernel; j++) {
+                        for (int i = 0; i < dimensaoKernel; i++) {
+
+                            int pixelColor = paddedImage.getRGB(x + i - offset, y + j - offset);
+                            int gray = pixelColor & 0xFF;  // Extrai a intensidade do canal de cinza
+                            maxGray = Math.max(maxGray, gray);
+                        }
+                    }
+
+
+
+                    // Define o novo valor do pixel na imagem resultante (escala de cinza)
+                    int newPixelColor = (maxGray << 16) | (maxGray << 8) | maxGray;  // Forma o valor RGB com intensidade igual
+                    resultImage.setRGB(x - offset, y - offset, newPixelColor);
+                }
+            }
+
+            return resultImage;
+        }
+
+        // Para imagem binaria
         for (int y = offset; y < height + offset; y++) {
             for (int x = offset; x < width + offset; x++) {
+                boolean isDilated = false; // Assume inicialmente que o pixel é preto
 
-                int maxGray = 0;
-                int[] mascaraArray = new int[dimensaoKernel * dimensaoKernel];  // Array para armazenar valores de pixels
-
-                // Preenche a máscara 3x3 com os valores ao redor do pixel
-                int index = 0;
+                // Verifica os valores ao redor do pixel (aplicando a máscara)
                 for (int j = 0; j < dimensaoKernel; j++) {
                     for (int i = 0; i < dimensaoKernel; i++) {
-
-                        int pixelColor = paddedImage.getRGB(x + i - offset, y + j - offset);
-                        int gray = pixelColor & 0xFF;  // Extrai a intensidade do canal de cinza
-                        maxGray = Math.max(maxGray, gray);
+                        int pixelColor = paddedImage.getRGB(x + i - offset, y + j - offset) & 0xFF; // Extração do valor (0 ou 255)
+                        if (pixelColor == 255) { // Se qualquer valor da máscara for branco
+                            isDilated = true; // O pixel será branco
+                            break;
+                        }
                     }
+                    if (isDilated) break; // Sai do loop externo se já encontrou um branco
                 }
 
-
-
-                // Define o novo valor do pixel na imagem resultante (escala de cinza)
-                int newPixelColor = (maxGray << 16) | (maxGray << 8) | maxGray;  // Forma o valor RGB com intensidade igual
+                // Define o valor do pixel na imagem resultante
+                int newPixelColor = isDilated ? 0xFFFFFF : 0x000000; // Branco (1) ou Preto (0)
                 resultImage.setRGB(x - offset, y - offset, newPixelColor);
             }
         }
