@@ -1,6 +1,6 @@
 package project_cg.geometry.planeCartesians.bases;
 
-import project_cg.geometry.planeCartesians.CartesianPlane2D;
+import project_cg.geometry.planeCartesians.cartesiansPlane.CartesianPlane2D;
 import utils.Constants;
 
 import java.awt.*;

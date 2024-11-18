@@ -3,6 +3,7 @@ package view.mainScreen.mainScreenPanels;
 import project_cg.drivers.tudo3D.geometry3d.planeCartesians3d.CartesianPlane3D;
 import project_cg.drivers.tudo3D.transformations3dinputs.*;
 import project_cg.ecgSimulator.ECGSimulation;
+import project_cg.geometry.planeCartesians.cartesiansPlane.cartesianWithViewport.CartesianPlane2DWithViewport;
 import project_cg.inputsPanel.ecgInputs.ECGSimulationInputs;
 import project_ip.histogram.HistogramEqualization;
 import project_ip.imageOperators.ImageOperator;
@@ -11,8 +12,8 @@ import view.mainScreen.MainScreen;
 import view.utils.DataOptions;
 import project_cg.inputsPanel.primitivesInputs.*;
 import project_cg.inputsPanel.transformations2dinputs.*;
-import project_cg.geometry.planeCartesians.CartesianPlane2D;
-import project_cg.geometry.planeCartesians.PixelCartesianPlane;
+import project_cg.geometry.planeCartesians.cartesiansPlane.CartesianPlane2D;
+import project_cg.geometry.planeCartesians.cartesiansPlane.PixelCartesianPlane;
 import view.select.SelectOptions;
 import view.mainScreen.MainScreenSingleton;
 import view.utils.GeometricFiguresHandler;
@@ -33,7 +34,8 @@ public class InputsPanel extends JPanel {
 
         // Criação de novas instâncias de CartesianPlane2D e PixelCartesianPlane
         CartesianPlane2D primitivaPlane = new CartesianPlane2D();
-        CartesianPlane2D transformacoesPlane = new CartesianPlane2D();
+        CartesianPlane2DWithViewport transformacoesPlane = new CartesianPlane2DWithViewport();
+
         PixelCartesianPlane pixelPlane = new PixelCartesianPlane();
         ECGSimulation ecgSimulation = new ECGSimulation();
         HistogramEqualization histogramEqualization = new HistogramEqualization();

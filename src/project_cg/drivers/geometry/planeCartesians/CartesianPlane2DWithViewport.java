@@ -1,7 +1,7 @@
 package project_cg.drivers.geometry.planeCartesians;
 
-import project_cg.drivers.viewportNew.Viewport2D;
-import project_cg.geometry.planeCartesians.CartesianPlane2D;
+import project_cg.geometry.planeCartesians.cartesiansPlane.cartesianWithViewport.Viewport2D;
+import project_cg.geometry.planeCartesians.cartesiansPlane.CartesianPlane2D;
 import project_cg.geometry.points.Point2D;
 
 import java.awt.*;

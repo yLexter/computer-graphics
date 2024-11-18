@@ -1,6 +1,7 @@
 package view.mainScreen;
 
-import project_cg.drivers.viewportNew.ViewportWindow;
+import project_cg.geometry.planeCartesians.cartesiansPlane.cartesianWithViewport.CartesianPlane2DWithViewport;
+import project_cg.geometry.planeCartesians.cartesiansPlane.cartesianWithViewport.ViewportWindow;
 import project_cg.geometry.figures.BaseFigure;
 import project_cg.geometry.points.Point2D;
 import utils.Constants;
@@ -20,9 +21,6 @@ public class MainScreen extends JFrame {
 
     public GeometricFiguresHandler geometricFiguresHandler;
 
-    private ViewportWindow viewportWindow; // Nova janela para exibir a viewport
-
-
     public MainScreen(JPanel homePanel) {
         this.JPanelHandler = new JPanelHandler();
         this.homePanel = homePanel;
@@ -34,13 +32,6 @@ public class MainScreen extends JFrame {
     private void initializeViewportWindow() {
         int viewportWidth = 400;  // Largura da viewport
         int viewportHeight = 400; // Altura da viewport
-        this.viewportWindow = new ViewportWindow(viewportWidth, viewportHeight);
-    }
-
-    public void updateViewport() {
-        // Renderiza uma parte do plano cartesiano na nova janela
-        int worldXMin = -500, worldYMin = -500, worldXMax = 500, worldYMax = 500; // Região da viewport
-        viewportWindow.updateViewport(JPanelHandler.getCurrentCartesianPlane(), worldXMin, worldYMin, worldXMax, worldYMax);
     }
 
     public JPanelHandler getCartesianPlaneHandler() {
@@ -120,8 +111,11 @@ public class MainScreen extends JFrame {
             }
         }
 
+        if (cartesianPlane1 instanceof CartesianPlane2DWithViewport) {
+            ((CartesianPlane2DWithViewport) cartesianPlane1).updateViewport();
+        }
+
         cartesianPlane1.repaint();
-        updateViewport();
     }
 
 

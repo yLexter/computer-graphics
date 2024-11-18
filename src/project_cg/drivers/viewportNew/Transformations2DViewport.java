@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
 import project_cg.geometry.figures.Square;
-import project_cg.geometry.planeCartesians.PixelCartesianPlane;
+import project_cg.geometry.planeCartesians.cartesiansPlane.PixelCartesianPlane;
 import project_cg.geometry.points.Point2D;
 import project_cg.primitives.MidpointLine;
 

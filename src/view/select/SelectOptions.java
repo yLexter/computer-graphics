@@ -1,5 +1,6 @@
 package view.select;
 
+import project_cg.geometry.planeCartesians.cartesiansPlane.cartesianWithViewport.CartesianPlane2DWithViewport;
 import utils.Constants;
 import view.mainScreen.MainScreen;
 import view.utils.DataOptions;
@@ -76,7 +77,18 @@ public class SelectOptions extends JPanel {
                 MainScreen mainScreen = MainScreenSingleton.getMainScreen();
                 updateComboBox2(dataOptions.getSecondComboBoxOptions(selectedCategory));
 
+                CartesianPlane2DWithViewport cartesianPlane2DWithViewport = (CartesianPlane2DWithViewport) mainScreen.JPanelHandler.getPanelByCategory("Transformações");
+
+                assert selectedCategory != null;
+                if (selectedCategory.equals("Transformações")) {
+                    cartesianPlane2DWithViewport.viewportWindow.enableViewport();
+                } else {
+                    cartesianPlane2DWithViewport.viewportWindow.disableViewport();
+                }
+
                 mainScreen.updateCurrentPanel(selectedCategory);
+
+
             }
         });
 

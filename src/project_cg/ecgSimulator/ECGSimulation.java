@@ -1,7 +1,6 @@
 package project_cg.ecgSimulator;
 
-import project_cg.geometry.planeCartesians.CartesianPlane2D;
-import project_cg.geometry.planeCartesians.bases.BaseCartesianPlane;
+import project_cg.geometry.planeCartesians.cartesiansPlane.CartesianPlane2D;
 import project_cg.geometry.points.Point2D;
 import project_cg.primitives.MidpointLine;
 
@@ -9,7 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 

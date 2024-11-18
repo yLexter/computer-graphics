@@ -1,9 +1,5 @@
 package view.mainScreen;
 
-import project_cg.geometry.planeCartesians.bases.BaseCartesianPlane2D;
-import project_cg.geometry.planeCartesians.bases.BaseCartesianPlane;
-import project_cg.geometry.planeCartesians.CartesianPlane2D;
-
 import javax.swing.*;
 
 public class MainScreenSingleton {

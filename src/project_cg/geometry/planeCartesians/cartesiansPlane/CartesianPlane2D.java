@@ -1,4 +1,4 @@
-package project_cg.geometry.planeCartesians;
+package project_cg.geometry.planeCartesians.cartesiansPlane;
 
 import project_cg.geometry.planeCartesians.bases.BaseCartesianPlane2D;
 import project_cg.geometry.points.Point2D;

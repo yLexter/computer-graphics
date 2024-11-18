@@ -3,6 +3,7 @@ package view.utils;
 import project_cg.drivers.tudo3D.geometry3d.planeCartesians3d.CartesianPlane3D;
 import project_cg.ecgSimulator.ECGSimulation;
 import project_cg.geometry.planeCartesians.bases.BaseCartesianPlane;
+import project_cg.geometry.planeCartesians.cartesiansPlane.cartesianWithViewport.CartesianPlane2DWithViewport;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -71,6 +72,16 @@ public class JPanelHandler {
 
 
     // Manipular os planos cartesianos
+    public CartesianPlane2DWithViewport getCurrentCartesianPlaneWiewport() {
+        JPanel currentPanel = cartesiansPlane.get(currentCartesianPlaneString);
+
+        if (currentPanel instanceof CartesianPlane2DWithViewport) {
+            return (CartesianPlane2DWithViewport) currentPanel;
+        }
+
+        throw new RuntimeException("Função chamada indevidamente");
+    }
+
     public BaseCartesianPlane getCurrentCartesianPlane() {
         JPanel currentPanel = cartesiansPlane.get(currentCartesianPlaneString);
 

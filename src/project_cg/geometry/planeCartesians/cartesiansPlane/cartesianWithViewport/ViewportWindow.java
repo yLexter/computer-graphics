@@ -1,4 +1,4 @@
-package project_cg.drivers.viewportNew;
+package project_cg.geometry.planeCartesians.cartesiansPlane.cartesianWithViewport;
 
 import project_cg.geometry.planeCartesians.bases.BaseCartesianPlane2D;
 
@@ -31,13 +31,19 @@ public class ViewportWindow extends JFrame {
 
         viewportPanel.setPreferredSize(new Dimension(width, height));
         add(viewportPanel, BorderLayout.CENTER);
-
-        setVisible(true);
     }
 
     public void updateViewport(JPanel plane, int worldXMin, int worldYMin, int worldXMax, int worldYMax) {
         viewport.renderFromCartesian((BaseCartesianPlane2D) plane, worldXMin, worldYMin, worldXMax, worldYMax);
         viewportPanel.repaint();
+    }
+
+    public void enableViewport() {
+        setVisible(true);
+    }
+
+    public void disableViewport() {
+        setVisible(false);
     }
 
 }
