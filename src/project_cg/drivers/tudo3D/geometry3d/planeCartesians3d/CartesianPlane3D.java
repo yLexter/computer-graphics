@@ -4,8 +4,9 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import project_cg.drivers.tudo3D.geometry3d.points3d.Point3D;
+import view.utils.BaseJPanel;
 
-public class CartesianPlane3D {
+public class CartesianPlane3D extends BaseJPanel {
     private long window;
     private Point3D[] cubeVertices;
 
@@ -16,6 +17,13 @@ public class CartesianPlane3D {
             new Point3D(0, 0, 1), new Point3D(1, 0, 1),
             new Point3D(1, 1, 1), new Point3D(0, 1, 1)
         };
+    }
+
+    @Override
+    public BaseJPanel reset() {
+        this.resetCube();
+
+        return this;
     }
 
     public void start() {

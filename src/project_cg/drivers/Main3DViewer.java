@@ -9,7 +9,13 @@ import java.awt.*;
 
 public class Main3DViewer extends BaseJPanel {
 
+    @Override
+    public BaseJPanel reset() {
+        return null;
+    }
 
+
+    /*
     public static void main(String[] args) {
         CartesianPlane3D plane3D = new CartesianPlane3D();
 
@@ -53,4 +59,7 @@ public class Main3DViewer extends BaseJPanel {
     public Main3DViewer reset() {
         return null;
     }
+     */
+
+
 }

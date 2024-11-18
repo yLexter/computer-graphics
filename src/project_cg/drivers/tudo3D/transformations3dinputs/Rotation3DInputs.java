@@ -3,6 +3,8 @@ package project_cg.drivers.tudo3D.transformations3dinputs;
 import project_cg.drivers.tudo3D.geometry3d.planeCartesians3d.CartesianPlane3D;
 import project_cg.drivers.tudo3D.geometry3d.points3d.Point3D;
 import project_cg.drivers.tudo3D.transformations3d.Rotation3D;
+import view.mainScreen.MainScreen;
+import view.mainScreen.MainScreenSingleton;
 import view.utils.ShapePanel;
 
 import javax.swing.*;
@@ -12,11 +14,7 @@ import java.util.function.BiFunction;
 public class Rotation3DInputs extends ShapePanel {
     private JComboBox<String> rotationAxisComboBox;
     private JTextField angleInput;
-    private CartesianPlane3D plane3D;
-
-    public Rotation3DInputs(CartesianPlane3D plane3D) {
-        this.plane3D = plane3D; // Referência ao plano cartesiano 3D
-    }
+    public Rotation3DInputs() {}
 
     @Override
     protected void initializeInputs() {
@@ -31,6 +29,9 @@ public class Rotation3DInputs extends ShapePanel {
     @Override
     protected void onCalculate() {
         try {
+            MainScreen mainScreen = MainScreenSingleton.getMainScreen();
+            CartesianPlane3D plane3D = mainScreen.JPanelHandler.getCartesianPlane3D();
+
             String axis = (String) rotationAxisComboBox.getSelectedItem();
             double angle = Double.parseDouble(angleInput.getText());
 

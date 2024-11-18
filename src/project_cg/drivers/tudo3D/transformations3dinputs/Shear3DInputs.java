@@ -3,6 +3,8 @@ package project_cg.drivers.tudo3D.transformations3dinputs;
 import project_cg.drivers.tudo3D.geometry3d.planeCartesians3d.CartesianPlane3D;
 import project_cg.drivers.tudo3D.geometry3d.points3d.Point3D;
 import project_cg.drivers.tudo3D.transformations3d.Shear3D;
+import view.mainScreen.MainScreen;
+import view.mainScreen.MainScreenSingleton;
 import view.utils.ShapePanel;
 
 import javax.swing.*;
@@ -12,11 +14,8 @@ public class Shear3DInputs extends ShapePanel {
     private JComboBox<String> shearAxisComboBox;
     private JTextField shearFactor1Input;
     private JTextField shearFactor2Input;
-    private CartesianPlane3D plane3D;
 
-    public Shear3DInputs(CartesianPlane3D plane3D) {
-        this.plane3D = plane3D; // Referência ao plano cartesiano 3D
-    }
+    public Shear3DInputs() {}
 
     @Override
     protected void initializeInputs() {
@@ -33,15 +32,18 @@ public class Shear3DInputs extends ShapePanel {
     @Override
     protected void onCalculate() {
         try {
+            MainScreen mainScreen = MainScreenSingleton.getMainScreen();
+            CartesianPlane3D plane3D = mainScreen.JPanelHandler.getCartesianPlane3D();
+
             String axis = (String) shearAxisComboBox.getSelectedItem();
             double shearFactor1 = Double.parseDouble(shearFactor1Input.getText());
             double shearFactor2 = Double.parseDouble(shearFactor2Input.getText());
 
             // Seleciona a função de cisalhamento com base no eixo escolhido
             ShearFunction shearFunction = switch (Objects.requireNonNull(axis)) {
-                case "X (Y, Z)" -> (point, f1, f2) -> Shear3D.shearX(point, f1, f2);
-                case "Y (X, Z)" -> (point, f1, f2) -> Shear3D.shearY(point, f1, f2);
-                case "Z (X, Y)" -> (point, f1, f2) -> Shear3D.shearZ(point, f1, f2);
+                case "X (Y, Z)" -> Shear3D::shearX;
+                case "Y (X, Z)" -> Shear3D::shearY;
+                case "Z (X, Y)" -> Shear3D::shearZ;
                 default -> null;
             };
 
@@ -60,6 +62,7 @@ public class Shear3DInputs extends ShapePanel {
 
                     // Reinicia a renderização do plano para refletir as mudanças
                     new Thread(() -> plane3D.update(vertices)).start();
+
                 } else {
                     JOptionPane.showMessageDialog(this, "Vértices inválidos ou ausentes.", "Erro", JOptionPane.ERROR_MESSAGE);
                 }

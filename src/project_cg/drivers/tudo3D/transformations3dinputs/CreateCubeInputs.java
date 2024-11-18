@@ -2,6 +2,8 @@ package project_cg.drivers.tudo3D.transformations3dinputs;
 
 import project_cg.drivers.tudo3D.geometry3d.planeCartesians3d.CartesianPlane3D;
 import project_cg.drivers.tudo3D.geometry3d.points3d.Point3D;
+import view.mainScreen.MainScreen;
+import view.mainScreen.MainScreenSingleton;
 import view.utils.ShapePanel;
 
 import javax.swing.*;
@@ -21,29 +23,32 @@ public class CreateCubeInputs extends ShapePanel {
     @Override
     protected void initializeInputs() {
         // Inicializa os campos de entrada para os 8 vértices do cubo
-        pointInput1 = new JTextField(30);
-        pointInput2 = new JTextField(30);
-        pointInput3 = new JTextField(30);
-        pointInput4 = new JTextField(30);
-        pointInput5 = new JTextField(30);
-        pointInput6 = new JTextField(30);
-        pointInput7 = new JTextField(30);
-        pointInput8 = new JTextField(30);
+        pointInput1 = new JTextField(50);
+        pointInput2 = new JTextField(50);
+        pointInput3 = new JTextField(50);
+        pointInput4 = new JTextField(50);
+        pointInput5 = new JTextField(50);
+        pointInput6 = new JTextField(50);
+        pointInput7 = new JTextField(50);
+        pointInput8 = new JTextField(50);
 
         // Adiciona os campos de entrada com os rótulos apropriados
-        addInputField("Digite as coordenadas (x, y, z) do Ponto 1:", pointInput1);
-        addInputField("Digite as coordenadas (x, y, z) do Ponto 2:", pointInput2);
-        addInputField("Digite as coordenadas (x, y, z) do Ponto 3:", pointInput3);
-        addInputField("Digite as coordenadas (x, y, z) do Ponto 4:", pointInput4);
-        addInputField("Digite as coordenadas (x, y, z) do Ponto 5:", pointInput5);
-        addInputField("Digite as coordenadas (x, y, z) do Ponto 6:", pointInput6);
-        addInputField("Digite as coordenadas (x, y, z) do Ponto 7:", pointInput7);
-        addInputField("Digite as coordenadas (x, y, z) do Ponto 8:", pointInput8);
+        addInputField("Digite o (x, y, z) do Ponto 1:", pointInput1);
+        addInputField("Digite o (x, y, z) do Ponto 2:", pointInput2);
+        addInputField("Digite o (x, y, z) do Ponto 3:", pointInput3);
+        addInputField("Digite o (x, y, z) do Ponto 4:", pointInput4);
+        addInputField("Digite o (x, y, z) do Ponto 5:", pointInput5);
+        addInputField("Digite o (x, y, z) do Ponto 6:", pointInput6);
+        addInputField("Digite o (x, y, z) do Ponto 7:", pointInput7);
+        addInputField("Digite o (x, y, z) do Ponto 8:", pointInput8);
     }
 
     @Override
     protected void onCalculate() {
         try {
+            MainScreen mainScreen = MainScreenSingleton.getMainScreen();
+            CartesianPlane3D plane3D = mainScreen.JPanelHandler.getCartesianPlane3D();
+
             // Processa os textos de entrada para criar os pontos 3D
             Point3D p1 = createPointFromInput(pointInput1);
             Point3D p2 = createPointFromInput(pointInput2);
@@ -58,7 +63,6 @@ public class CreateCubeInputs extends ShapePanel {
             Point3D[] cubeVertices = {p1, p2, p3, p4, p5, p6, p7, p8};
 
             // Inicia o plano cartesiano 3D e desenha o cubo
-            CartesianPlane3D plane3D = new CartesianPlane3D();
             new Thread(() -> plane3D.update(cubeVertices)).start();
 
         } catch (NumberFormatException e) {

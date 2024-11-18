@@ -1,6 +1,8 @@
 package view.mainScreen.mainScreenPanels;
 
 import project_cg.drivers.Main3DViewer;
+import project_cg.drivers.tudo3D.geometry3d.planeCartesians3d.CartesianPlane3D;
+import project_cg.drivers.tudo3D.transformations3dinputs.*;
 import project_cg.ecgSimulator.ECGSimulation;
 import project_cg.inputsPanel.ecgInputs.ECGSimulationInputs;
 import project_cg.geometry.planeCartesians.windowViewport.WindowViewport;
@@ -38,6 +40,7 @@ public class InputsPanel extends JPanel {
         ECGSimulation ecgSimulation = new ECGSimulation();
         HistogramEqualization histogramEqualization = new HistogramEqualization();
         ImageOperator imageOperator = new ImageOperator();
+        CartesianPlane3D cartesianPlane3D = new CartesianPlane3D();
 
         // Main3DViewer main3DViewer = new Main3DViewer();
 
@@ -46,8 +49,7 @@ public class InputsPanel extends JPanel {
         mainScreen.JPanelHandler.addJPanel("Transformações", transformacoesPlane);
         mainScreen.JPanelHandler.addJPanel("Pixel", pixelPlane);
         mainScreen.JPanelHandler.addJPanel("Simulador de Coracão", ecgSimulation);
-
-        // mainScreen.JPanelHandler.addJPanel("Plano 3D", main3DViewer);
+        mainScreen.JPanelHandler.addJPanel("Plano 3D", cartesianPlane3D);
 
         mainScreen.JPanelHandler.addJPanel("-----------------------", ecgSimulation);
         mainScreen.JPanelHandler.addJPanel("Equalizador de Histograma", histogramEqualization);
@@ -95,17 +97,22 @@ public class InputsPanel extends JPanel {
         // Opções do ECG
         dataOptions.addOption("Simulador de Coracão", "Definir Tempo", ecgSimulationInputs);
 
-        // Equalizador de Histograma
-        dataOptions.addOption("Equalizador de Histograma", Constants.DISABLED_OPTION_SELECT, new OptionDisabled());
-
         // Transformácões 3d
+        dataOptions.addOption("Plano 3D",  "Iniciar Janela 3D", new StartCartesianPlaneInputs());
+        dataOptions.addOption("Plano 3D",  "Criar Cubo", new CreateCubeInputs());
+        dataOptions.addOption("Plano 3D",  "Aplicar uma Rotação", new Rotation3DInputs());
+        dataOptions.addOption("Plano 3D",  "Aplicar uma Reflexão", new Reflection3DInputs());
+        dataOptions.addOption("Plano 3D",  "Aplicar uma Escala", new Scale3DInputs());
+        dataOptions.addOption("Plano 3D",  "Aplicar um Cisalhamento", new Shear3DInputs());
+        dataOptions.addOption("Plano 3D",  "Aplicar uma Translação", new Translation3DInputs());
 
         // Operador de imagem
         dataOptions.addOption("Operadores de Imagem", "Operações com Imagem", new OptionDisabled());
 
+        // Equalizador de Histograma
+        dataOptions.addOption("Equalizador de Histograma", Constants.DISABLED_OPTION_SELECT, new OptionDisabled());
 
         add(new SelectOptions(dataOptions), BorderLayout.CENTER);
-
         add(clearButton, BorderLayout.SOUTH);
 
         clearButton.addActionListener(e-> {

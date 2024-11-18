@@ -3,6 +3,8 @@ package project_cg.drivers.tudo3D.transformations3dinputs;
 import project_cg.drivers.tudo3D.geometry3d.planeCartesians3d.CartesianPlane3D;
 import project_cg.drivers.tudo3D.geometry3d.points3d.Point3D;
 import project_cg.drivers.tudo3D.transformations3d.Translation3D;
+import view.mainScreen.MainScreen;
+import view.mainScreen.MainScreenSingleton;
 import view.utils.ShapePanel;
 
 import javax.swing.*;
@@ -11,11 +13,8 @@ public class Translation3DInputs extends ShapePanel {
     private JTextField translateXInput;
     private JTextField translateYInput;
     private JTextField translateZInput;
-    private CartesianPlane3D plane3D;
 
-    public Translation3DInputs(CartesianPlane3D plane3D) {
-        this.plane3D = plane3D; // Referência ao plano cartesiano 3D
-    }
+    public Translation3DInputs() {}
 
     @Override
     protected void initializeInputs() {
@@ -32,6 +31,9 @@ public class Translation3DInputs extends ShapePanel {
     @Override
     protected void onCalculate() {
         try {
+            MainScreen mainScreen = MainScreenSingleton.getMainScreen();
+            CartesianPlane3D plane3D = mainScreen.JPanelHandler.getCartesianPlane3D();
+
             // Obtém os valores de translação fornecidos pelo usuário
             double tx = Double.parseDouble(translateXInput.getText());
             double ty = Double.parseDouble(translateYInput.getText());
@@ -54,6 +56,7 @@ public class Translation3DInputs extends ShapePanel {
             } else {
                 JOptionPane.showMessageDialog(this, "Vértices inválidos ou ausentes.", "Erro", JOptionPane.ERROR_MESSAGE);
             }
+
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Valor de translação inválido. Insira valores numéricos válidos.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
