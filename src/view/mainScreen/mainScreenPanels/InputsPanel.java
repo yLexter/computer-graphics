@@ -1,11 +1,9 @@
 package view.mainScreen.mainScreenPanels;
 
-import project_cg.drivers.Main3DViewer;
 import project_cg.drivers.tudo3D.geometry3d.planeCartesians3d.CartesianPlane3D;
 import project_cg.drivers.tudo3D.transformations3dinputs.*;
 import project_cg.ecgSimulator.ECGSimulation;
 import project_cg.inputsPanel.ecgInputs.ECGSimulationInputs;
-import project_cg.geometry.planeCartesians.windowViewport.WindowViewport;
 import project_ip.histogram.HistogramEqualization;
 import project_ip.imageOperators.ImageOperator;
 import utils.Constants;

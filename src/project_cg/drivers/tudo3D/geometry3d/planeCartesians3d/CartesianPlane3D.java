@@ -4,11 +4,13 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import project_cg.drivers.tudo3D.geometry3d.points3d.Point3D;
+import project_cg.drivers.viewport3d.Viewport3D;
 import view.utils.BaseJPanel;
 
 public class CartesianPlane3D extends BaseJPanel {
     private long window;
     private Point3D[] cubeVertices;
+    private Viewport3D viewport3D;
 
     public CartesianPlane3D() {
         cubeVertices = new Point3D[]{
@@ -17,26 +19,28 @@ public class CartesianPlane3D extends BaseJPanel {
             new Point3D(0, 0, 1), new Point3D(1, 0, 1),
             new Point3D(1, 1, 1), new Point3D(0, 1, 1)
         };
+        
+        viewport3D = new Viewport3D(800, 50, 400, 400, this); // Posição e tamanho da viewport
     }
 
     @Override
-    public BaseJPanel reset() {
+    public CartesianPlane3D reset() {
         this.resetCube();
-
         return this;
     }
 
     public void start() {
-        init();
+        init(); // Inicializa GLFW no thread principal
         loop();
     }
 
     private void init() {
+
         if (!GLFW.glfwInit()) {
             throw new IllegalStateException("Falha ao inicializar GLFW");
         }
 
-        window = GLFW.glfwCreateWindow(800, 600, "Plano Cartesiano 3D com Cubo", 0, 0);
+        window = GLFW.glfwCreateWindow(1300, 600, "Plano Cartesiano 3D com Cubo", 0, 0);
         if (window == 0) {
             throw new RuntimeException("Falha ao criar a janela GLFW");
         }
@@ -54,13 +58,17 @@ public class CartesianPlane3D extends BaseJPanel {
     private void loop() {
         while (!GLFW.glfwWindowShouldClose(window)) {
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-            GL11.glLoadIdentity();
 
+            // Renderiza o plano cartesiano principal
+            GL11.glViewport(0, 0, 800, 600); // Configura o viewport principal
+            GL11.glLoadIdentity();
             GL11.glRotatef(45, 1.0f, 0.0f, 0.0f);
             GL11.glRotatef(45, 0.0f, 1.0f, 0.0f);
-
             drawAxes();
             drawCube(cubeVertices);
+            
+            // Renderiza o conteúdo da viewport 3D
+            viewport3D.renderViewport();
 
             GLFW.glfwSwapBuffers(window);
             GLFW.glfwPollEvents();
@@ -130,7 +138,7 @@ public class CartesianPlane3D extends BaseJPanel {
         GL11.glVertex3f((float) start.getX(), (float) start.getY(), (float) start.getZ());
         GL11.glVertex3f((float) end.getX(), (float) end.getY(), (float) end.getZ());
     }
-    
+
     public void resetCube() {
         cubeVertices = new Point3D[]{
             new Point3D(0, 0, 0), new Point3D(1, 0, 0),
@@ -140,5 +148,4 @@ public class CartesianPlane3D extends BaseJPanel {
         };
         update(cubeVertices);
     }
-
 }

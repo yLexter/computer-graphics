@@ -1,7 +1,8 @@
 package project_cg.drivers.viewportNew;
 
 
-import project_cg.geometry.planeCartesians.bases.BaseCartesianPlane2D;
+import project_cg.geometry.planeCartesians.bases.BaseCartesianPlane;
+
 import project_cg.geometry.points.Point2D;
 import utils.Constants;
 
@@ -31,7 +32,7 @@ public class Viewport2D {
         g.dispose();
     }
 
-    public void renderFromCartesian(BaseCartesianPlane2D plane, int worldXMin, int worldYMin, int worldXMax, int worldYMax) {
+    public void renderFromCartesian(BaseCartesianPlane plane, int worldXMin, int worldYMin, int worldXMax, int worldYMax) {
         clearViewport();
 
         for (int x = worldXMin; x <= worldXMax; x++) {

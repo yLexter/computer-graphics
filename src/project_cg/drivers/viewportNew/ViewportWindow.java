@@ -15,6 +15,7 @@ public class ViewportWindow extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(width, height);
         setLayout(new BorderLayout());
+        setResizable(false);
 
         // Inicializa a viewport
         viewport = new Viewport2D(0, 0, width, height);
@@ -27,14 +28,15 @@ public class ViewportWindow extends JFrame {
                 viewport.draw(g);
             }
         };
+
         viewportPanel.setPreferredSize(new Dimension(width, height));
         add(viewportPanel, BorderLayout.CENTER);
 
         setVisible(true);
     }
 
-    public void updateViewport(BaseCartesianPlane2D plane, int worldXMin, int worldYMin, int worldXMax, int worldYMax) {
-        viewport.renderFromCartesian(plane, worldXMin, worldYMin, worldXMax, worldYMax);
+    public void updateViewport(JPanel plane, int worldXMin, int worldYMin, int worldXMax, int worldYMax) {
+        viewport.renderFromCartesian((BaseCartesianPlane2D) plane, worldXMin, worldYMin, worldXMax, worldYMax);
         viewportPanel.repaint();
     }
 

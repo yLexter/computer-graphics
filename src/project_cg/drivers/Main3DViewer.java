@@ -2,24 +2,17 @@ package project_cg.drivers;
 
 import project_cg.drivers.tudo3D.geometry3d.planeCartesians3d.CartesianPlane3D;
 import project_cg.drivers.tudo3D.transformations3dinputs.*;
-import view.utils.BaseJPanel;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class Main3DViewer extends BaseJPanel {
-
-    @Override
-    public BaseJPanel reset() {
-        return null;
-    }
-
+public class Main3DViewer {
 
     /*
     public static void main(String[] args) {
         CartesianPlane3D plane3D = new CartesianPlane3D();
 
-        // Thread para executar o OpenGL
+        // Thread para executar o OpenGL principal
         Thread renderThread = new Thread(plane3D::start);
         renderThread.start();
 
@@ -39,7 +32,7 @@ public class Main3DViewer extends BaseJPanel {
             JPanel controlPanel = new JPanel(new BorderLayout());
             controlPanel.add(tabbedPane, BorderLayout.CENTER);
 
-            // Adicionar botão "Limpar"
+            // Botão "Limpar"
             JButton clearButton = new JButton("Limpar");
             clearButton.addActionListener(e -> {
                 plane3D.resetCube();
@@ -53,13 +46,9 @@ public class Main3DViewer extends BaseJPanel {
             frame.add(controlPanel, BorderLayout.EAST);
             frame.setVisible(true);
         });
-    }
 
-    @Override
-    public Main3DViewer reset() {
-        return null;
     }
      */
-
-
 }
+
+
