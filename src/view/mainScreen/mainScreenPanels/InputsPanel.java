@@ -5,9 +5,6 @@ import project_cg.drivers.tudo3D.transformations3dinputs.*;
 import project_cg.ecgSimulator.ECGSimulation;
 import project_cg.geometry.planeCartesians.cartesiansPlane.cartesianWithViewport.CartesianPlane2DWithViewport;
 import project_cg.inputsPanel.ecgInputs.ECGSimulationInputs;
-import project_ip.histogram.HistogramEqualization;
-import project_ip.imageOperators.ImageOperator;
-import utils.Constants;
 import view.mainScreen.MainScreen;
 import view.utils.DataOptions;
 import project_cg.inputsPanel.primitivesInputs.*;
@@ -17,7 +14,6 @@ import project_cg.geometry.planeCartesians.cartesiansPlane.PixelCartesianPlane;
 import view.select.SelectOptions;
 import view.mainScreen.MainScreenSingleton;
 import view.utils.GeometricFiguresHandler;
-import view.utils.OptionDisabled;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,8 +34,6 @@ public class InputsPanel extends JPanel {
 
         PixelCartesianPlane pixelPlane = new PixelCartesianPlane();
         ECGSimulation ecgSimulation = new ECGSimulation();
-        HistogramEqualization histogramEqualization = new HistogramEqualization();
-        ImageOperator imageOperator = new ImageOperator();
         CartesianPlane3D cartesianPlane3D = new CartesianPlane3D();
 
         // Main3DViewer main3DViewer = new Main3DViewer();
@@ -50,10 +44,6 @@ public class InputsPanel extends JPanel {
         mainScreen.JPanelHandler.addJPanel("Pixel", pixelPlane);
         mainScreen.JPanelHandler.addJPanel("Simulador de Coracão", ecgSimulation);
         mainScreen.JPanelHandler.addJPanel("Plano 3D", cartesianPlane3D);
-
-        mainScreen.JPanelHandler.addJPanel("-----------------------", ecgSimulation);
-        mainScreen.JPanelHandler.addJPanel("Equalizador de Histograma", histogramEqualization);
-        mainScreen.JPanelHandler.addJPanel("Operadores de Imagem", imageOperator);
 
         // ToDo fluxo, não mexer p n estourar o codigo
         mainScreen.setGeometricFiguresHandler(new GeometricFiguresHandler(mainScreen.getCartesianPlaneHandler()));
@@ -106,11 +96,6 @@ public class InputsPanel extends JPanel {
         dataOptions.addOption("Plano 3D",  "Aplicar um Cisalhamento", new Shear3DInputs());
         dataOptions.addOption("Plano 3D",  "Aplicar uma Translação", new Translation3DInputs());
 
-        // Operador de imagem
-        dataOptions.addOption("Operadores de Imagem", "Operações com Imagem", new OptionDisabled());
-
-        // Equalizador de Histograma
-        dataOptions.addOption("Equalizador de Histograma", Constants.DISABLED_OPTION_SELECT, new OptionDisabled());
 
         add(new SelectOptions(dataOptions), BorderLayout.CENTER);
         add(clearButton, BorderLayout.SOUTH);
