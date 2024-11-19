@@ -761,10 +761,75 @@ public class Main extends JFrame {
         warping.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Transformação Warping não implementada ainda!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
-                // Implemente o método warping aqui no futuro.
+                if (imagemExibida != null) {
+
+                    String[] opcoes = {
+                            "Escalamento Não Uniforme",
+                            "Cisalhamento Horizontal",
+                            "Cisalhamento Vertical",
+                            "Transformação de Perspectiva",
+                            "Curvatura",
+                            "Fish Eye",
+                            "Swirl",
+                            "Grid Distortion",
+                            "Ripple Effect"
+                    };
+
+                    // Exibindo as opções de Warping
+                    String opcaoSelecionada = (String) JOptionPane.showInputDialog(
+                            null,
+                            "Escolha uma transformação Warping:",
+                            "Escolher Warping",
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            opcoes,
+                            opcoes[0]
+                    );
+
+                    if (opcaoSelecionada != null) {
+                        Op_geo operacao = new Op_geo();
+                        BufferedImage imagemResultado = null;
+
+                        // Realizando a operação de Warping com base na opção selecionada
+                        switch (opcaoSelecionada) {
+                            case "Escalamento Não Uniforme":
+                                imagemResultado = operacao.escalamentoNaoUniforme(imagemExibida, 1.5, 0.8); //  fator
+                                break;
+                            case "Cisalhamento Horizontal":
+                                imagemResultado = operacao.cisalhamentoHorizontal(imagemExibida, 0.5); // fator
+                                break;
+                            case "Cisalhamento Vertical":
+                                imagemResultado = operacao.cisalhamentoVertical(imagemExibida, 0.5); // fator
+                                break;
+                            case "Transformação de Perspectiva":
+                                imagemResultado = operacao.transformacaoPerspectiva(imagemExibida);
+                                break;
+                            case "Curvatura":
+                                imagemResultado = operacao.curvatura(imagemExibida);
+                                break;
+                            case "Fish Eye":
+                                imagemResultado = operacao.fishEye(imagemExibida);
+                                break;
+                            case "Swirl":
+                                imagemResultado = operacao.swirl(imagemExibida, 3.0); //  nível de distorção
+                                break;
+                            case "Grid Distortion":
+                                imagemResultado = operacao.gridDistortion(imagemExibida, 20, 0.5); // gridSize e distortionFactor
+                                break;
+                            case "Ripple Effect":
+                                imagemResultado = operacao.rippleEffect(imagemExibida, 50, 10); // waveLength e amplitude
+                                break;
+                        }
+
+                        // Exibindo a imagem transformada
+                        exibirImagemEmNovaJanela(imagemResultado);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Imagem não carregada!", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
+
 
 
 
