@@ -5,6 +5,7 @@ import Funcoes.CarregarImagens;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,6 +26,29 @@ public class OperadoresWindow2 extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
+        JScrollPane scrollOriginal1, scrollOriginal2, scrollOutput;
+        JTable tabelaOriginal1, tabelaOriginal2, tabelaOutput;
+
+        // Tabela para a imagem original 1
+        tabelaOriginal1 = new JTable();
+        tabelaOriginal1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Permitir rolagem horizontal
+        scrollOriginal1 = new JScrollPane(tabelaOriginal1, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollOriginal1.setBounds(39, 430, 344, 300); // Coordenadas e dimensões
+        TelaArit.add(scrollOriginal1);
+
+        // Tabela para a imagem original 2
+        tabelaOriginal2 = new JTable();
+        tabelaOriginal2.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Permitir rolagem horizontal
+        scrollOriginal2 = new JScrollPane(tabelaOriginal2, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollOriginal2.setBounds(390, 430, 344, 300); // Coordenadas e dimensões
+        TelaArit.add(scrollOriginal2);
+
+        // Tabela para a imagem resultante
+        tabelaOutput = new JTable();
+        tabelaOutput.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Permitir rolagem horizontal
+        scrollOutput = new JScrollPane(tabelaOutput, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollOutput.setBounds(817, 430, 344, 300); // Coordenadas e dimensões
+        TelaArit.add(scrollOutput);
 
 
         Font fonteTitulo = new Font("Impact", Font.BOLD, 24);
@@ -38,9 +62,9 @@ public class OperadoresWindow2 extends JFrame {
         carregarImagemButton1.setFont(fonteBotao);
         carregarImagemButton2.setFont(fonteBotao);
         Output.setFont(fonteTitulo);
-        carregarImagemButton1.setBounds(105, 466, 170, 30);
-        carregarImagemButton2.setBounds(430, 466, 170, 30);
-        Output.setBounds(883,466,170,30);
+        carregarImagemButton1.setBounds(105, 360, 170, 30);
+        carregarImagemButton2.setBounds(460, 360, 170, 30);
+        Output.setBounds(950,360,170,30);
 
 
         // Adiciona ação ao botão
@@ -66,6 +90,8 @@ public class OperadoresWindow2 extends JFrame {
 
 
                     repaint();  // Chama repaint para atualizar a exibição da imagem
+                    updateTables(tabelaOriginal1, imagemExibida1);
+
                 }
             }
         });
@@ -93,6 +119,8 @@ public class OperadoresWindow2 extends JFrame {
 
 
                     repaint();  // Chama repaint para atualizar a exibição da imagem
+                    updateTables(tabelaOriginal2, imagemExibida2);
+
                 }
             }
         });
@@ -141,6 +169,8 @@ public class OperadoresWindow2 extends JFrame {
                     Op_log operacao = new Op_log();
                     imagemOutput = operacao.and(imagemExibida1, imagemExibida2);
                     repaint(); // Atualiza a exibição da imagem resultante
+                    updateTables(tabelaOutput, imagemOutput); // Atualiza a tabela de saída
+
                 } else {
                     System.out.println("Ambas as imagens precisam ser carregadas.");
                 }
@@ -154,6 +184,8 @@ public class OperadoresWindow2 extends JFrame {
                     Op_log operacao = new Op_log();
                     imagemOutput = operacao.or(imagemExibida1, imagemExibida2);
                     repaint();
+                    updateTables(tabelaOutput, imagemOutput); // Atualiza a tabela de saída
+
                 } else {
                     System.out.println("Ambas as imagens precisam ser carregadas.");
                 }
@@ -167,6 +199,8 @@ public class OperadoresWindow2 extends JFrame {
                     Op_log operacao = new Op_log();
                     imagemOutput = operacao.xor(imagemExibida1, imagemExibida2);
                     repaint();
+                    updateTables(tabelaOutput, imagemOutput); // Atualiza a tabela de saída
+
                 } else {
                     System.out.println("Ambas as imagens precisam ser carregadas.");
                 }
@@ -186,6 +220,41 @@ public class OperadoresWindow2 extends JFrame {
         // Exibir janela
         setVisible(true);
     }
+
+
+    // Obtém dados de pixel
+    private Object[][] getPixelDataAsRows(BufferedImage image) {
+        if (image == null) return new Object[0][0];
+
+        int width = image.getWidth();
+        int height = image.getHeight();
+        Object[][] data = new Object[height][width];
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int pixel = image.getRGB(x, y);
+                int gray = (pixel >> 16) & 0xFF;
+                data[y][x] = gray;
+            }
+        }
+        return data;
+    }
+
+    // Gera nomes de colunas
+    private String[] generateColumnNames(int width) {
+        String[] columnNames = new String[width];
+        for (int i = 0; i < width; i++) {
+            columnNames[i] = "X" + i;
+        }
+        return columnNames;
+    }
+
+    // Atualizar tabela de pixels
+    private void updateTables(JTable tabela, BufferedImage imagem) {
+        if (imagem != null) {
+            tabela.setModel(new DefaultTableModel(getPixelDataAsRows(imagem), generateColumnNames(imagem.getWidth())));
+        }
+    }
     // Método para desenhar a imagem e a malha adjacente
     @Override
     public void paint(Graphics g) {
@@ -195,7 +264,7 @@ public class OperadoresWindow2 extends JFrame {
             // Redimensiona a imagem para que não ultrapasse 260x260
             Image imagemRedimensionada1 = imagemExibida1.getScaledInstance(260, 260, Image.SCALE_SMOOTH);
             // Desenha a imagem redimensionada
-            g.drawImage(imagemRedimensionada1, 60, 160, null);
+            g.drawImage(imagemRedimensionada1, 60, 120, null);
 
 
         }
@@ -205,13 +274,13 @@ public class OperadoresWindow2 extends JFrame {
 
             // Desenha a imagem redimensionada
 
-            g.drawImage(imagemRedimensionada2, 382, 160, null);
+            g.drawImage(imagemRedimensionada2, 382, 120, null);
         }
 
         // Exibe a imagem filtrada ao lado da imagem original (também limitando o tamanho)
         if (imagemOutput != null) {
             Image imagemFiltradaRedimensionada = imagemOutput.getScaledInstance(260, 260, Image.SCALE_SMOOTH);
-            g.drawImage(imagemFiltradaRedimensionada, 838, 160, null); // Exibe a imagem filtrada em uma posição diferente
+            g.drawImage(imagemFiltradaRedimensionada, 838, 120, null); // Exibe a imagem filtrada em uma posição diferente
         }
     }
 }

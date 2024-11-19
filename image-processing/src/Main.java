@@ -2,9 +2,15 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Arrays;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
 
 import Filtros.*;
 import OpMorfologico.Abertura;
@@ -16,7 +22,9 @@ import Op_Aritmeticas.OperadoresWindow;
 import Op_Logicos.OperadoresWindow2;
 
 import Funcoes.CarregarImagens;
-import trans_geometricas.Op_geo;
+import Trans_intensidade.OperacoesIntensidade;
+import histograma.HistogramEqualization;
+
 
 public class Main extends JFrame {
     // upar iamgem
@@ -57,31 +65,59 @@ public class Main extends JFrame {
     //operadores aritmeticos
     private JMenuItem operadoresLogicos;
 
-    //transformacoes geometricos
+    //transformacoes de intensidade
     private JMenuBar mb3;
-    private JMenu escolherGeometrico;
-    private JMenuItem zoomIn, zoomOut, rotacao, reflexao, warping;
-    private Image imagemGeometrica;
+    private JMenu escolhertrans;
+    private JMenuItem transLog, transIG, transFaixaDi, transLin;
 
+    // histograma
+    private JButton equaliHist;
+
+
+    //tabela de pixels
+    private JScrollPane scrollOriginal, scrollOutput;
+    private JTable tabelaOriginal, tabelaOutput;
 
     public Main() {
         // Inicializa o painel
         TelaPrincipal = new JPanel();
         TelaPrincipal.setLayout(null);
 
+
+        // Tabela para a imagem original
+        tabelaOriginal = new JTable();
+        tabelaOriginal.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Permitir rolagem horizontal
+        scrollOriginal = new JScrollPane(tabelaOriginal, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollOriginal.setBounds(818, 100, 344, 300); // Coordenadas e dimensões
+        TelaPrincipal.add(scrollOriginal);
+
+        // Tabela para a imagem filtrada
+        tabelaOutput = new JTable();
+        tabelaOutput.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // Permitir rolagem horizontal
+        scrollOutput = new JScrollPane(tabelaOutput, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scrollOutput.setBounds(818, 450, 344, 300); // Coordenadas e dimensões
+        TelaPrincipal.add(scrollOutput);
+
         // Inicializa e configura os componentes
         mb1 = new JMenuBar();
         mb2 = new JMenuBar();
         mb3 = new JMenuBar();
 
+        transLog = new JMenuItem("Transformação Logarítmica");
+        transIG = new JMenuItem("Transferência de Intensidade Geral");
+        transFaixaDi = new JMenuItem("Transferência de Faixa Dinâmica");
+        transLin = new JMenuItem("Transferência Linear");
+
+
 
         carregarImagemButton = new JButton("Carregar Imagem");
-        escolherFiltroButton = new JMenu("Filtros");
+        escolherFiltroButton = new JMenu("Filtros e Bordas");
+        escolhertrans = new JMenu("Transformadores de Intensidade");
+        equaliHist = new JButton("Equalização de Histograma");
 
 
         operadoresAritmeticos= new JMenuItem("Operadores Aritméticos");
         operadoresLogicos= new JMenuItem("Operadores Lógicos");
-        escolherGeometrico = new JMenu("Transformações Geométricas");
         escolherMorfologico = new JMenu("Operadores Morfológicos");
 
 
@@ -93,8 +129,8 @@ public class Main extends JFrame {
         // Inicializa o JLabel para a matriz máscara e define posição
         mascara = new JLabel("Máscara da Média");
         mascaraLabel = new JLabel();
-        mascara.setBounds(590, 184, 110, 30); // o texto da mascara
-        mascaraLabel.setBounds(595, 210, 110, 90); // matriz da mascara
+        mascara.setBounds(445, 184, 110, 30); // o texto da mascara
+        mascaraLabel.setBounds(450, 210, 110, 90); // matriz da mascara
 
 
         TelaPrincipal.add(mascaraLabel);
@@ -111,9 +147,9 @@ public class Main extends JFrame {
         Titulo.setFont(fonteTitulo);
         Output.setFont(fonteTitulo);
         carregarImagemButton.setFont(fonteBotao);
+        equaliHist.setFont(fonteBotao);
         escolherFiltroButton.setFont(fonteBotao);
         escolherMorfologico.setFont(fonteBotao);
-        escolherGeometrico.setFont(fonteBotao);
         operadoresAritmeticos.setFont(fonteBotao);
         operadoresLogicos.setFont(fonteBotao);
 
@@ -175,22 +211,15 @@ public class Main extends JFrame {
         escolherMorfologico.add(tophat);
         escolherMorfologico.add(bottomhat);
 
-        // adicionar os op geometricos
 
-        zoomIn = new JMenuItem("Ampliação");
-        zoomOut = new JMenuItem("Redução");
-        rotacao = new JMenuItem("Rotação");
-        reflexao = new JMenuItem("Reflexão");
-        warping = new JMenuItem("Warping");
+        // transformacoes de intensidade
+        mb3.add(escolhertrans);
+        escolhertrans.add(transLog);
+        escolhertrans.add(transIG);
+        escolhertrans.add(transFaixaDi);
+        escolhertrans.add(transLin);
 
-
-        mb3.add(escolherGeometrico);
-        escolherGeometrico.add(zoomIn);
-        escolherGeometrico.add(zoomOut);
-        escolherGeometrico.add(rotacao);
-        escolherGeometrico.add(reflexao);
-        escolherGeometrico.add(warping);
-
+        escolhertrans.setFont(fonteBotao);
 
         //ações de selecionar os filtros
 
@@ -218,7 +247,10 @@ public class Main extends JFrame {
                     imagemOutput = media.mediaFiltro(imagemExibida);   // Chama o filtro na imagem exibida
                     // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
                     repaint();  // Repaint para atualizar a exibição da imagem filtrada
-                } else {
+                    updateTables();
+
+                    // Exibe a tabela de pixels da imagem original e da imagem output         } else {
+                    // Exibe a tabela de pixels da imagem original e da imagem output
                     System.out.println("Imagem não carregada.");
                 }
             }
@@ -237,7 +269,11 @@ public class Main extends JFrame {
                     imagemOutput = mediana.medianaFiltro(imagemExibida);   // Chama o filtro na imagem exibida
                     // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
                     repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                    updateTables();
+
+
                 } else {
+
                     System.out.println("Imagem não carregada.");
                 }
             }
@@ -257,7 +293,10 @@ public class Main extends JFrame {
                     imagemOutput = negativo.negativoFiltro(imagemExibida);   // Chama o filtro na imagem exibida
                     // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
                     repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                    updateTables();
+
                 } else {
+
                     System.out.println("Imagem não carregada.");
                 }
             }
@@ -310,7 +349,10 @@ public class Main extends JFrame {
                             imagemOutput = gamma.gammaFiltro(imagemExibida, cValue, gammaValue);   // Chama o filtro na imagem exibida
                             // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
                             repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                            updateTables();
+
                         } else {
+
                             System.out.println("Imagem não carregada.");
                         }
                     } catch (NumberFormatException ex) {
@@ -356,6 +398,9 @@ public class Main extends JFrame {
 
 
                         repaint(); // Atualiza a exibição da imagem resultante
+                        updateTables();
+
+
 
                     } catch (NumberFormatException ex) {
                         JOptionPane.showMessageDialog(null, "Por favor, insira um valor numérico válido!", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -378,7 +423,10 @@ public class Main extends JFrame {
                     imagemOutput = roberts.robertsFiltro(imagemExibida,3);   // Chama o filtro na imagem exibida
                     // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
                     repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                    updateTables();
+
                 } else {
+
                     System.out.println("Imagem não carregada.");
                 }
             }
@@ -397,7 +445,10 @@ public class Main extends JFrame {
                     imagemOutput = sobel.sobelFiltro(imagemExibida);   // Chama o filtro na imagem exibida
                     // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
                     repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                    updateTables();
+
                 } else {
+
                     System.out.println("Imagem não carregada.");
                 }
             }
@@ -415,7 +466,10 @@ public class Main extends JFrame {
                     imagemOutput = prewitt.prewittFiltro(imagemExibida);   // Chama o filtro na imagem exibida
                     // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
                     repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                    updateTables();
+
                 } else {
+
                     System.out.println("Imagem não carregada.");
                 }
             }
@@ -434,7 +488,10 @@ public class Main extends JFrame {
                     imagemOutput = passaAlta.passaAltaFiltro(imagemExibida);   // Chama o filtro na imagem exibida
                     // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
                     repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                    updateTables();
+
                 } else {
+
                     System.out.println("Imagem não carregada.");
                 }
             }
@@ -454,7 +511,10 @@ public class Main extends JFrame {
                     imagemOutput = dilatacao.operadorDilatacao(imagemExibida, 3);   // Chama o filtro na imagem exibida
                     // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
                     repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                    updateTables();
+
                 } else {
+
                     System.out.println("Imagem não carregada.");
                 }
             }
@@ -474,7 +534,10 @@ public class Main extends JFrame {
                     imagemOutput = dilatacao.operadorDilatacao(imagemExibida, 5);   // Chama o filtro na imagem exibida
                     // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
                     repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                    updateTables();
+
                 } else {
+
                     System.out.println("Imagem não carregada.");
                 }
             }
@@ -494,7 +557,10 @@ public class Main extends JFrame {
                     imagemOutput = dilatacao.operadorDilatacao(imagemExibida, 7);   // Chama o filtro na imagem exibida
                     // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
                     repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                    updateTables();
+
                 } else {
+
                     System.out.println("Imagem não carregada.");
                 }
             }
@@ -514,7 +580,10 @@ public class Main extends JFrame {
                     imagemOutput = erosao.operadorErosao(imagemExibida, 3);   // Chama o filtro na imagem exibida
                     // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
                     repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                    updateTables();
+
                 } else {
+
                     System.out.println("Imagem não carregada.");
                 }
             }
@@ -534,7 +603,10 @@ public class Main extends JFrame {
                     imagemOutput = erosao.operadorErosao(imagemExibida, 5);   // Chama o filtro na imagem exibida
                     // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
                     repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                    updateTables();
+
                 } else {
+
                     System.out.println("Imagem não carregada.");
                 }
             }
@@ -554,7 +626,10 @@ public class Main extends JFrame {
                     imagemOutput = erosao.operadorErosao(imagemExibida, 7);   // Chama o filtro na imagem exibida
                     // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
                     repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                    updateTables();
+
                 } else {
+
                     System.out.println("Imagem não carregada.");
                 }
             }
@@ -575,7 +650,10 @@ public class Main extends JFrame {
                     imagemOutput = abertura.operadorAbertura(imagemExibida);   // Chama o filtro na imagem exibida
                     // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
                     repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                    updateTables();
+
                 } else {
+
                     System.out.println("Imagem não carregada.");
                 }
             }
@@ -595,7 +673,10 @@ public class Main extends JFrame {
                     imagemOutput = fechamento.operadorFechamento(imagemExibida);   // Chama o filtro na imagem exibida
                     // g.drawImage(media.mediaFiltro(imagemExibida), 180, 497, null);
                     repaint();  // Repaint para atualizar a exibição da imagem filtrada
+                    updateTables();
+
                 } else {
+
                     System.out.println("Imagem não carregada.");
                 }
             }
@@ -613,7 +694,9 @@ public class Main extends JFrame {
                     imagemOutput = operacao.subtracao(imagemExibida, imagemAbertura);
 
                     repaint(); // Atualiza a exibição da imagem resultante
+                    updateTables();
                 } else {
+
                     System.out.println("A imagem precisa ser carregada antes de realizar a operação.");
                 }
             }
@@ -631,27 +714,28 @@ public class Main extends JFrame {
                     imagemOutput = operacao.subtracao(imagemFechamento, imagemExibida);
 
                     repaint(); // Atualiza a exibição da imagem resultante
+                    updateTables();
                 } else {
+
                     System.out.println("A imagem precisa ser carregada antes de realizar a operação.");
                 }
             }
         });
 
-
-        zoomIn.addActionListener(new ActionListener() {
+        transLog.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String fatorStr = JOptionPane.showInputDialog("Digite o fator de ampliação (ex: 2 para dobrar o tamanho):");
+                String aStr = JOptionPane.showInputDialog("Digite o valor de a (constante):");
                 try {
-                    double fator = Double.parseDouble(fatorStr);
-                    if (fator <= 0) {
-                        JOptionPane.showMessageDialog(null, "O fator deve ser maior que zero.", "Erro", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
+                    double a = Double.parseDouble(aStr);
                     if (imagemExibida != null) {
-                        Op_geo operacao = new Op_geo();
-                        exibirImagemEmNovaJanela(operacao.zoomIn(imagemExibida, fator));
+                        OperacoesIntensidade operacao = new OperacoesIntensidade();
+                        imagemOutput = operacao.transformacaoLogaritmica(imagemExibida, a);
+                        repaint();
+                        updateTables();
+
                     } else {
+
                         JOptionPane.showMessageDialog(null, "Imagem não carregada!", "Erro", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (NumberFormatException ex) {
@@ -660,20 +744,37 @@ public class Main extends JFrame {
             }
         });
 
-        zoomOut.addActionListener(new ActionListener() {
+        transIG.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String fatorStr = JOptionPane.showInputDialog("Digite o fator de redução (ex: 2 para reduzir pela metade):");
+                if (imagemExibida != null) {
+                    OperacoesIntensidade operacao = new OperacoesIntensidade();
+                    imagemOutput = operacao.transferenciaIntensidadeGeral(imagemExibida);
+                    repaint();
+                    updateTables();
+
+                } else {
+
+                    JOptionPane.showMessageDialog(null, "Imagem não carregada!", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+
+        transFaixaDi.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String wStr = JOptionPane.showInputDialog("Digite o valor de w (valor máximo de intensidade):");
                 try {
-                    double fator = Double.parseDouble(fatorStr);
-                    if (fator <= 0) {
-                        JOptionPane.showMessageDialog(null, "O fator deve ser maior que zero.", "Erro", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
+                    double w = Double.parseDouble(wStr);
                     if (imagemExibida != null) {
-                        Op_geo operacao = new Op_geo();
-                        exibirImagemEmNovaJanela(operacao.zoomOut(imagemExibida, fator));
+                        OperacoesIntensidade operacao = new OperacoesIntensidade();
+                        imagemOutput = operacao.transferenciaFaixaDinamica(imagemExibida, w);
+                        repaint();
+                        updateTables();
+
                     } else {
+
                         JOptionPane.showMessageDialog(null, "Imagem não carregada!", "Erro", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (NumberFormatException ex) {
@@ -682,153 +783,31 @@ public class Main extends JFrame {
             }
         });
 
-        rotacao.addActionListener(new ActionListener() {
+
+        transLin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String anguloStr = JOptionPane.showInputDialog("Digite o ângulo de rotação (em graus):");
+                String aStr = JOptionPane.showInputDialog("Digite o valor de a:");
+                String bStr = JOptionPane.showInputDialog("Digite o valor de b:");
                 try {
-                    double angulo = Double.parseDouble(anguloStr);
+                    double a = Double.parseDouble(aStr);
+                    double b = Double.parseDouble(bStr);
                     if (imagemExibida != null) {
-                        Op_geo operacao = new Op_geo();
-                        exibirImagemEmNovaJanela(operacao.rotacao(imagemExibida, angulo));
+                        OperacoesIntensidade operacao = new OperacoesIntensidade();
+                        imagemOutput = operacao.transferenciaLinear(imagemExibida, a, b);
+                        repaint();
+                        updateTables();
+
                     } else {
+
                         JOptionPane.showMessageDialog(null, "Imagem não carregada!", "Erro", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "Por favor, insira um valor numérico válido para o ângulo.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Por favor, insira valores numéricos válidos!", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
 
-        reflexao.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (imagemExibida != null) {
-                    // Criando as opções de reflexão, incluindo o espelhamento
-                    String[] opcoes = {
-                            "Reflexão Vertical",
-                            "Reflexão Diagonal Principal",
-                            "Reflexão Diagonal Secundária",
-                            "Reflexão Combinada",
-                            "Espelhamento Horizontal"  // Nova opção de espelhamento
-                    };
-
-                    // Exibindo um comboBox para selecionar a opção de reflexão
-                    String opcaoSelecionada = (String) JOptionPane.showInputDialog(
-                            null,
-                            "Escolha uma opção de reflexão:",
-                            "Escolher Reflexão",
-                            JOptionPane.QUESTION_MESSAGE,
-                            null,
-                            opcoes,
-                            opcoes[0]
-                    );
-
-                    if (opcaoSelecionada != null) {
-                        Op_geo operacao = new Op_geo();
-                        BufferedImage imagemResultado = null;
-
-                        // Realizando a operação de reflexão com base na opção selecionada
-                        switch (opcaoSelecionada) {
-                            case "Reflexão Vertical":
-                                imagemResultado = operacao.reflexaoVertical(imagemExibida);
-                                break;
-                            case "Reflexão Diagonal Principal":
-                                imagemResultado = operacao.reflexaoDiagonalPrincipal(imagemExibida);
-                                break;
-                            case "Reflexão Diagonal Secundária":
-                                imagemResultado = operacao.reflexaoDiagonalSecundaria(imagemExibida);
-                                break;
-                            case "Reflexão Combinada":
-                                imagemResultado = operacao.reflexaoCombinada(imagemExibida);
-                                break;
-                            case "Espelhamento Horizontal":  // Nova opção
-                                imagemResultado = operacao.reflexaoHorizontal(imagemExibida);
-                                break;
-                        }
-
-                        // Exibindo a imagem transformada
-                        exibirImagemEmNovaJanela(imagemResultado);
-                    }
-
-                } else {
-                    JOptionPane.showMessageDialog(null, "Imagem não carregada!", "Erro", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-
-
-        warping.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (imagemExibida != null) {
-
-                    String[] opcoes = {
-                            "Escalamento Não Uniforme",
-                            "Cisalhamento Horizontal",
-                            "Cisalhamento Vertical",
-                            "Transformação de Perspectiva",
-                            "Curvatura",
-                            "Fish Eye",
-                            "Swirl",
-                            "Grid Distortion",
-                            "Ripple Effect"
-                    };
-
-                    // Exibindo as opções de Warping
-                    String opcaoSelecionada = (String) JOptionPane.showInputDialog(
-                            null,
-                            "Escolha uma transformação Warping:",
-                            "Escolher Warping",
-                            JOptionPane.QUESTION_MESSAGE,
-                            null,
-                            opcoes,
-                            opcoes[0]
-                    );
-
-                    if (opcaoSelecionada != null) {
-                        Op_geo operacao = new Op_geo();
-                        BufferedImage imagemResultado = null;
-
-                        // Realizando a operação de Warping com base na opção selecionada
-                        switch (opcaoSelecionada) {
-                            case "Escalamento Não Uniforme":
-                                imagemResultado = operacao.escalamentoNaoUniforme(imagemExibida, 1.5, 0.8); //  fator
-                                break;
-                            case "Cisalhamento Horizontal":
-                                imagemResultado = operacao.cisalhamentoHorizontal(imagemExibida, 0.5); // fator
-                                break;
-                            case "Cisalhamento Vertical":
-                                imagemResultado = operacao.cisalhamentoVertical(imagemExibida, 0.5); // fator
-                                break;
-                            case "Transformação de Perspectiva":
-                                imagemResultado = operacao.transformacaoPerspectiva(imagemExibida);
-                                break;
-                            case "Curvatura":
-                                imagemResultado = operacao.curvatura(imagemExibida);
-                                break;
-                            case "Fish Eye":
-                                imagemResultado = operacao.fishEye(imagemExibida);
-                                break;
-                            case "Swirl":
-                                imagemResultado = operacao.swirl(imagemExibida, 3.0); //  nível de distorção
-                                break;
-                            case "Grid Distortion":
-                                imagemResultado = operacao.gridDistortion(imagemExibida, 20, 0.5); // gridSize e distortionFactor
-                                break;
-                            case "Ripple Effect":
-                                imagemResultado = operacao.rippleEffect(imagemExibida, 50, 10); // waveLength e amplitude
-                                break;
-                        }
-
-                        // Exibindo a imagem transformada
-                        exibirImagemEmNovaJanela(imagemResultado);
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Imagem não carregada!", "Erro", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
 
 
 
@@ -839,16 +818,19 @@ public class Main extends JFrame {
 
         carregarImagemButton.setBounds(215, 410, 180, 30);
 
-        operadoresAritmeticos.setBounds(582, 360, 180, 30);
-        operadoresLogicos.setBounds(582, 400, 180, 30);
+        operadoresAritmeticos.setBounds(560, 360, 200, 30);
+        operadoresLogicos.setBounds(560, 400, 200, 30);
 
-        mb1.setBounds(582, 137, 104, 30);
-        mb2.setBounds(582, 320, 180, 30);
-        mb3.setBounds(582, 440, 180, 30);
+        mb1.setBounds(560, 280, 104, 30);
+        mb2.setBounds(560, 320, 200, 30);
+        mb3.setBounds(560, 440, 200, 30);
+        equaliHist.setBounds(560, 480, 200, 30);
+
 
 
         // Configurações dos botoes
         configBotao(carregarImagemButton);
+        configBotao(equaliHist);
 
         // op arit
 
@@ -893,6 +875,7 @@ public class Main extends JFrame {
         // Adiciona os componentes ao painel
         TelaPrincipal.add(Titulo);
         TelaPrincipal.add(carregarImagemButton);
+        TelaPrincipal.add(equaliHist);
         //TelaPrincipal.add(escolherFiltroButton);
         //TelaPrincipal.add(escolherMorfologico);
         TelaPrincipal.add(operadoresAritmeticos);
@@ -900,6 +883,7 @@ public class Main extends JFrame {
         TelaPrincipal.add(mb1);
         TelaPrincipal.add(mb2);
         TelaPrincipal.add(mb3);
+
 
 
         // Configura o JFrame
@@ -930,11 +914,45 @@ public class Main extends JFrame {
                         imagemExibida = CarregarImagens.carregarImagemPNG(caminhoArquivo);
                     }
 
+                    updateTables(); // Atualiza as tabelas com os dados de pixel
+                    repaint();      // Recarrega a interface
+                }
 
-                    repaint();  // Chama repaint para atualizar a exibição da imagem
+            }
+        });
+
+
+
+        equaliHist.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (imagemExibida != null) {
+                    // Cria a instância da classe de equalização
+                    HistogramEqualization eq = new HistogramEqualization();
+                    BufferedImage imagemEqualizada = eq.equalizeHistogram(imagemExibida);
+
+                    if (imagemEqualizada != null) {
+                        // Atualiza a imagem exibida com a imagem original
+                        imagemOutput = imagemExibida; // Mostra a imagem original
+                        repaint();
+                        updateTables();
+
+                        // Exibe a tabela de pixels da imagem original e da imagem output
+
+
+                        // Gera os histogramas (original e equalizado)
+                        double[] histogramaOriginal = eq.computeHistogram(imagemExibida);
+                        double[] histogramaEqualizado = eq.computeHistogram(imagemEqualizada);
+
+                        // Exibe os histogramas em uma nova janela
+                        exibirHistogramas(histogramaOriginal, histogramaEqualizado);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Imagem não carregada!", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
+
 
         // Ação para abrir a nova janela
         operadoresAritmeticos.addActionListener(e -> new OperadoresWindow());
@@ -955,7 +973,7 @@ public class Main extends JFrame {
 
 
 
-    // Método para desenhar a imagem e a malha adjacente
+
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -982,24 +1000,129 @@ public class Main extends JFrame {
 
     }
 
-    public void exibirImagemEmNovaJanela(BufferedImage imagemGeometrica) {
-        JFrame frame = new JFrame("Imagem Modificada");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(imagemGeometrica.getWidth(), imagemGeometrica.getHeight());
 
-        JPanel panel = new JPanel() {
+    private void plotarHistograma(Graphics g, double[] histograma, String titulo) {
+        int width = 600; // Largura do painel
+        int height = 350; // Altura do painel
+        int padding = 40; // Espaço para os eixos e rótulos
+        int tickSize = 10; // Tamanho dos ticks nos eixos
+
+        // Fundo do gráfico
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, width + padding * 2, height + padding * 2);
+
+        // Desenha o título do histograma
+        g.setColor(Color.BLACK);
+        g.drawString(titulo, (width / 2) - (titulo.length() * 3), padding / 2); // Ajustando o título
+
+        // Calcula o maior valor do histograma para normalização
+        int max = (int) Arrays.stream(histograma).max().orElse(1);
+        if (max == 0) max = 1; // Garantir que max não seja zero
+
+        // Desenha os eixos
+        g.drawLine(padding, padding, padding, height + padding); // Eixo Y
+        g.drawLine(padding, height + padding, width + padding, height + padding); // Eixo X
+
+        // Adiciona ticks e rótulos no eixo Y
+        for (int i = 0; i <= 5; i++) {
+            int y = height + padding - i * (height / 5);
+            int value = (int) (max * (i / 5.0)); // Ajuste para refletir a distribuição
+            g.drawLine(padding - tickSize, y, padding, y);
+            g.drawString(String.valueOf(value), padding - 25, y + 5);
+        }
+
+        // Adiciona ticks e rótulos no eixo X
+        for (int i = 0; i <= 4; i++) {
+            int x = padding + i * (width / 4);
+            int grayLevel = 255 * i / 4;
+            g.drawLine(x, height + padding, x, height + padding + tickSize);
+            g.drawString(String.valueOf(grayLevel), x - 10, height + padding + 15);
+        }
+
+        // Rótulos dos eixos
+        g.drawString("Níveis de Cinza", width / 2, height + padding + 30);
+        g.drawString("Ps(sk)", padding - 20, padding - 10);
+
+        // Desenha o histograma com uma barra para cada valor de pixel
+        g.setColor(Color.BLUE);
+        for (int i = 0; i < histograma.length; i++) {
+            int barHeight = (int) (histograma[i] * height / max);
+            g.fillRect(
+                    padding + i, height + padding - barHeight,
+                    1, barHeight // Cada barra tem largura de 1 pixel
+            );
+        }
+    }
+
+    private void exibirHistogramas(double[] histogramaOriginal, double[] histogramaEqualizado) {
+        JFrame frameHistogramas = new JFrame("Histogramas");
+        frameHistogramas.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frameHistogramas.setLayout(new GridLayout(1, 2));
+
+        // Painel para o histograma original
+        JPanel painelOriginal = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.drawImage(imagemGeometrica, 0, 0, this);
+                plotarHistograma(g, histogramaOriginal, "Histograma Original");
             }
         };
-        panel.setPreferredSize(new Dimension(imagemGeometrica.getWidth(), imagemGeometrica.getHeight()));
-        frame.add(panel);
-        frame.pack();
-        frame.setLocationRelativeTo(null); // Centraliza a janela
-        frame.setVisible(true);
+
+        // Painel para o histograma equalizado
+        JPanel painelEqualizado = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                plotarHistograma(g, histogramaEqualizado, "Histograma Equalizado");
+            }
+        };
+
+        frameHistogramas.add(painelOriginal);
+        frameHistogramas.add(painelEqualizado);
+
+        frameHistogramas.setSize(1300, 500);
+        frameHistogramas.setVisible(true);
     }
+
+    // Obtém os dados de pixel de uma imagem em tons de cinza (todos os pixels do mesmo y em uma linha)
+    private Object[][] getPixelDataAsRows(BufferedImage image) {
+        if (image == null) return new Object[0][0];
+
+        int width = image.getWidth();
+        int height = image.getHeight();
+        Object[][] data = new Object[height][width];
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int pixel = image.getRGB(x, y);
+                int gray = (pixel >> 16) & 0xFF; // Obtém o valor de cinza
+                data[y][x] = gray; // Adiciona o valor de cinza na linha correspondente ao y
+            }
+        }
+        return data;
+    }
+
+    // Atualiza os dados das tabelas de pixels
+    private void updateTables() {
+        if (imagemExibida != null) {
+            tabelaOriginal.setModel(new DefaultTableModel(getPixelDataAsRows(imagemExibida), generateColumnNames(imagemExibida.getWidth())));
+        }
+        if (imagemOutput != null) {
+            tabelaOutput.setModel(new DefaultTableModel(getPixelDataAsRows(imagemOutput), generateColumnNames(imagemOutput.getWidth())));
+        }
+    }
+
+    // Gera os nomes das colunas com base na largura da imagem
+    private String[] generateColumnNames(int width) {
+        String[] columnNames = new String[width];
+        for (int i = 0; i < width; i++) {
+            columnNames[i] = "X" + i;
+        }
+        return columnNames;
+    }
+
+
+
 
 
     public static void main(String[] args) {
