@@ -16,6 +16,7 @@ import Op_Aritmeticas.OperadoresWindow;
 import Op_Logicos.OperadoresWindow2;
 
 import Funcoes.CarregarImagens;
+import trans_geometricas.Op_geo;
 
 public class Main extends JFrame {
     // upar iamgem
@@ -24,10 +25,7 @@ public class Main extends JFrame {
     // filtros
     private JMenuBar mb1;
     private JMenu escolherFiltroButton;
-    private JMenuItem f1, f2, f3, f4,  f6, f7, f8,f9,f10;
-
-    private JMenu HB;
-    private JMenuItem met1, met2;
+    private JMenuItem f1, f2, f3, f4,f5,  f6, f7, f8,f9,f10;
 
 
     // tela
@@ -59,9 +57,11 @@ public class Main extends JFrame {
     //operadores aritmeticos
     private JMenuItem operadoresLogicos;
 
-    //private JMenuBar mb3;
-    //private JMenu escolherAritmetico;
-    //private JMenuItem div,mul,som,sub;
+    //transformacoes geometricos
+    private JMenuBar mb3;
+    private JMenu escolherGeometrico;
+    private JMenuItem zoomIn, zoomOut, rotacao, reflexao, warping;
+    private Image imagemGeometrica;
 
 
     public Main() {
@@ -71,21 +71,18 @@ public class Main extends JFrame {
 
         // Inicializa e configura os componentes
         mb1 = new JMenuBar();
-        HB = new JMenu();
         mb2 = new JMenuBar();
-        //mb3 = new JMenuBar();
+        mb3 = new JMenuBar();
 
 
         carregarImagemButton = new JButton("Carregar Imagem");
         escolherFiltroButton = new JMenu("Filtros");
 
-        HB = new JMenu("High Boost");
 
         operadoresAritmeticos= new JMenuItem("Operadores Aritméticos");
         operadoresLogicos= new JMenuItem("Operadores Lógicos");
-        //escolherAritmetico = new JMenu("Operadores Aritméticos");
+        escolherGeometrico = new JMenu("Transformações Geométricas");
         escolherMorfologico = new JMenu("Operadores Morfológicos");
-
 
 
         dimensaoKernalErosao = new JMenu("Erosão");
@@ -98,7 +95,6 @@ public class Main extends JFrame {
         mascaraLabel = new JLabel();
         mascara.setBounds(590, 184, 110, 30); // o texto da mascara
         mascaraLabel.setBounds(595, 210, 110, 90); // matriz da mascara
-
 
 
         TelaPrincipal.add(mascaraLabel);
@@ -116,19 +112,19 @@ public class Main extends JFrame {
         Output.setFont(fonteTitulo);
         carregarImagemButton.setFont(fonteBotao);
         escolherFiltroButton.setFont(fonteBotao);
-        //HB.setFont(fonteBotao);
         escolherMorfologico.setFont(fonteBotao);
+        escolherGeometrico.setFont(fonteBotao);
         operadoresAritmeticos.setFont(fonteBotao);
         operadoresLogicos.setFont(fonteBotao);
 
-        //escolherAritmetico.setFont(fonteBotao);
+
 
         //Os filtros disponiveis
         f1 = new JMenuItem("Filtro da Média");
         f2 = new JMenuItem("Filtro da Mediana");
         f3 = new JMenuItem("Filtro Negativo");
         f4 = new JMenuItem("Transformção Gamma");
-        //f5 = new JMenuItem("High Boost");
+        f5 = new JMenuItem("High Boost");
         f6 = new JMenuItem("Operador de Roberts");
         f7 = new JMenuItem("Operador de Sobel");
         f8 = new JMenuItem("Operador de Prewitt");
@@ -141,12 +137,7 @@ public class Main extends JFrame {
         escolherFiltroButton.add(f3);
         escolherFiltroButton.add(f4);
 
-        //high boost
-        escolherFiltroButton.add(HB);
-        met1 = new JMenuItem("Método 1");
-        met2 = new JMenuItem("Método 2");
-        HB.add(met1);
-        HB.add(met2);
+        escolherFiltroButton.add(f5);
 
         escolherFiltroButton.add(f6);
         escolherFiltroButton.add(f7);
@@ -184,7 +175,21 @@ public class Main extends JFrame {
         escolherMorfologico.add(tophat);
         escolherMorfologico.add(bottomhat);
 
+        // adicionar os op geometricos
 
+        zoomIn = new JMenuItem("Ampliação");
+        zoomOut = new JMenuItem("Redução");
+        rotacao = new JMenuItem("Rotação");
+        reflexao = new JMenuItem("Reflexão");
+        warping = new JMenuItem("Warping");
+
+
+        mb3.add(escolherGeometrico);
+        escolherGeometrico.add(zoomIn);
+        escolherGeometrico.add(zoomOut);
+        escolherGeometrico.add(rotacao);
+        escolherGeometrico.add(reflexao);
+        escolherGeometrico.add(warping);
 
 
         //ações de selecionar os filtros
@@ -315,7 +320,7 @@ public class Main extends JFrame {
             }
         });
 
-        met1.addActionListener(new ActionListener() {
+        f5.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Painel para entrada do parâmetro A
@@ -358,48 +363,6 @@ public class Main extends JFrame {
                 }
             }
         });
-
-        met2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Painel para entrada do parâmetro A
-                JPanel panel = new JPanel(new GridLayout(1, 2));
-                JLabel aLabel = new JLabel("Valor de A: ");
-                JTextField aField = new JTextField();
-
-                panel.add(aLabel);
-                panel.add(aField);
-
-                // Exibe o diálogo
-                int result = JOptionPane.showConfirmDialog(
-                        null,
-                        panel,
-                        "Definir valor de A",
-                        JOptionPane.OK_CANCEL_OPTION,
-                        JOptionPane.PLAIN_MESSAGE
-                );
-
-                if (result == JOptionPane.OK_OPTION) {
-                    try {
-                        double aValue = Double.parseDouble(aField.getText());
-                        System.out.println("Valor de A: " + aValue);
-
-                        HighBoost highBoost = new HighBoost();
-
-                        // Verifica se a imagem foi carregada antes de aplicar o filtro
-                        if (imagemExibida != null) {
-                            imagemOutput = highBoost.HB2(imagemExibida, aValue);
-                            repaint(); // Atualiza a exibição da imagem resultante
-                        } else {
-                            System.out.println("Imagem não carregada.");
-                        }
-                    } catch (NumberFormatException ex) {
-                        JOptionPane.showMessageDialog(null, "Por favor, insira um valor numérico válido!", "Erro", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            }
-        });
-
 
 
         f6.addActionListener(new ActionListener() {
@@ -675,8 +638,133 @@ public class Main extends JFrame {
         });
 
 
+        zoomIn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String fatorStr = JOptionPane.showInputDialog("Digite o fator de ampliação (ex: 2 para dobrar o tamanho):");
+                try {
+                    double fator = Double.parseDouble(fatorStr);
+                    if (fator <= 0) {
+                        JOptionPane.showMessageDialog(null, "O fator deve ser maior que zero.", "Erro", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    if (imagemExibida != null) {
+                        Op_geo operacao = new Op_geo();
+                        exibirImagemEmNovaJanela(operacao.zoomIn(imagemExibida, fator));
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Imagem não carregada!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Por favor, insira um valor numérico válido!", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        zoomOut.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String fatorStr = JOptionPane.showInputDialog("Digite o fator de redução (ex: 2 para reduzir pela metade):");
+                try {
+                    double fator = Double.parseDouble(fatorStr);
+                    if (fator <= 0) {
+                        JOptionPane.showMessageDialog(null, "O fator deve ser maior que zero.", "Erro", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                    if (imagemExibida != null) {
+                        Op_geo operacao = new Op_geo();
+                        exibirImagemEmNovaJanela(operacao.zoomOut(imagemExibida, fator));
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Imagem não carregada!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Por favor, insira um valor numérico válido!", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        rotacao.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String anguloStr = JOptionPane.showInputDialog("Digite o ângulo de rotação (em graus):");
+                try {
+                    double angulo = Double.parseDouble(anguloStr);
+                    if (imagemExibida != null) {
+                        Op_geo operacao = new Op_geo();
+                        exibirImagemEmNovaJanela(operacao.rotacao(imagemExibida, angulo));
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Imagem não carregada!", "Erro", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Por favor, insira um valor numérico válido para o ângulo.", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        reflexao.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (imagemExibida != null) {
+                    // Criando as opções de reflexão, incluindo o espelhamento
+                    String[] opcoes = {
+                            "Reflexão Vertical",
+                            "Reflexão Diagonal Principal",
+                            "Reflexão Diagonal Secundária",
+                            "Reflexão Combinada",
+                            "Espelhamento Horizontal"  // Nova opção de espelhamento
+                    };
+
+                    // Exibindo um comboBox para selecionar a opção de reflexão
+                    String opcaoSelecionada = (String) JOptionPane.showInputDialog(
+                            null,
+                            "Escolha uma opção de reflexão:",
+                            "Escolher Reflexão",
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            opcoes,
+                            opcoes[0]
+                    );
+
+                    if (opcaoSelecionada != null) {
+                        Op_geo operacao = new Op_geo();
+                        BufferedImage imagemResultado = null;
+
+                        // Realizando a operação de reflexão com base na opção selecionada
+                        switch (opcaoSelecionada) {
+                            case "Reflexão Vertical":
+                                imagemResultado = operacao.reflexaoVertical(imagemExibida);
+                                break;
+                            case "Reflexão Diagonal Principal":
+                                imagemResultado = operacao.reflexaoDiagonalPrincipal(imagemExibida);
+                                break;
+                            case "Reflexão Diagonal Secundária":
+                                imagemResultado = operacao.reflexaoDiagonalSecundaria(imagemExibida);
+                                break;
+                            case "Reflexão Combinada":
+                                imagemResultado = operacao.reflexaoCombinada(imagemExibida);
+                                break;
+                            case "Espelhamento Horizontal":  // Nova opção
+                                imagemResultado = operacao.reflexaoHorizontal(imagemExibida);
+                                break;
+                        }
+
+                        // Exibindo a imagem transformada
+                        exibirImagemEmNovaJanela(imagemResultado);
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "Imagem não carregada!", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
 
 
+        warping.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "Transformação Warping não implementada ainda!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+                // Implemente o método warping aqui no futuro.
+            }
+        });
 
 
 
@@ -684,15 +772,14 @@ public class Main extends JFrame {
         Titulo.setBounds(425, 55, 390, 36);
         Output.setBounds(255, 730, 170, 24);
 
-        carregarImagemButton.setBounds(215, 410, 170, 30);
+        carregarImagemButton.setBounds(215, 410, 180, 30);
 
-        operadoresAritmeticos.setBounds(582, 360, 170, 30);
-        operadoresLogicos.setBounds(582, 400, 170, 30);
+        operadoresAritmeticos.setBounds(582, 360, 180, 30);
+        operadoresLogicos.setBounds(582, 400, 180, 30);
 
         mb1.setBounds(582, 137, 104, 30);
-        mb2.setBounds(582, 320, 170, 30);
-
-        //mb3.setBounds(582, 375, 170, 30);
+        mb2.setBounds(582, 320, 180, 30);
+        mb3.setBounds(582, 440, 180, 30);
 
 
         // Configurações dos botoes
@@ -713,14 +800,14 @@ public class Main extends JFrame {
         mb1.setOpaque(false);
 
 
-       // mb1.setContentAreaFilled(false);
-        //mb1.setFocusPainted(false);
-
         // op morfologicos
         mb2.setBorder(new LineBorder(Color.BLACK));
         mb2.setOpaque(false);
-        //mb2.setContentAreaFilled(false);
-        //mb2.setFocusPainted(false);
+
+
+        // trans geometricas
+        mb3.setBorder(new LineBorder(Color.BLACK));
+        mb3.setOpaque(false);
 
         //dimensao do kernal dos op morf
         // config desses "botoes" sao diferentes
@@ -734,6 +821,10 @@ public class Main extends JFrame {
         dimensaoKernalErosao.setFocusPainted(false);
 
 
+        dimensaoKernalErosao.setOpaque(false);
+        dimensaoKernalErosao.setContentAreaFilled(false);
+        dimensaoKernalErosao.setFocusPainted(false);
+
         // Adiciona os componentes ao painel
         TelaPrincipal.add(Titulo);
         TelaPrincipal.add(carregarImagemButton);
@@ -743,7 +834,7 @@ public class Main extends JFrame {
         TelaPrincipal.add(operadoresLogicos);
         TelaPrincipal.add(mb1);
         TelaPrincipal.add(mb2);
-        //TelaPrincipal.add(mb3);
+        TelaPrincipal.add(mb3);
 
 
         // Configura o JFrame
@@ -823,6 +914,26 @@ public class Main extends JFrame {
                 g.drawImage(imagemFiltradaRedimensionada, 180, 490, null); // Exibe a imagem filtrada em uma posição diferente
             }
         }
+
+    }
+
+    public void exibirImagemEmNovaJanela(BufferedImage imagemGeometrica) {
+        JFrame frame = new JFrame("Imagem Modificada");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(imagemGeometrica.getWidth(), imagemGeometrica.getHeight());
+
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(imagemGeometrica, 0, 0, this);
+            }
+        };
+        panel.setPreferredSize(new Dimension(imagemGeometrica.getWidth(), imagemGeometrica.getHeight()));
+        frame.add(panel);
+        frame.pack();
+        frame.setLocationRelativeTo(null); // Centraliza a janela
+        frame.setVisible(true);
     }
 
 
